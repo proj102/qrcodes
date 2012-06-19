@@ -4,6 +4,10 @@
 # except for .gitignore
 !.gitignore
 
+# Ignore Play! compilation files
+prototype/project/
+prototype/target/
+
 # Ignore Play! working directory #
 db
 eclipse
