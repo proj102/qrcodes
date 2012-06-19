@@ -1,0 +1,33 @@
+======================= CR du 19/06/12 =================================
+
+Ferdinand Pierrot, Medhi Belhadj, Stéphane Maire, Quentin Plessis
+
+
+
+***********           Objectifs du jour               *****************
+->1er groupe
+   Redirection avec la base: effective
+   Il manque la recherche dans la bdd à partir d'un identifiant
+->2ème groupe
+   Génération: effective
+    -> on se limite à 50 caractères dans l'URL (dont ~20 pr le nom de domaine)
+   Twitter bootstrap: Début de mise en page
+
+
+************    Objectif de la journé de mercredi:    ******************
+Matinée
+->1er groupe
+   Conception logicielle: administration, fonctionnalités, fixer un modèle de départ, valider le prototype (récupérer une URL et tester la chaine en local: génération qrcode, flash,   redirection correcte avec consultation dans la bdd)
+->2eme groupe
+   Génération d'un nom de domaine via Heroku
+
+Après-midi
+->1er groupe
+   Organistation du dépôt => mettre au propre, et notamment créer des controlleurs pour chaque action (génération, consultation bdd..)
+->2ème groupe
+   Rajout de la fonctiannilité excel, csv => tester sur une grande table pour voir si le javascript s'éxécute correctement côté client
+
+
+************          Idée service admin               ******************
+Personnalisation de la redirection + possibilté d'avoir une redirection vers une V-card 2.0 (avec photo, CV, liens linkedin, FB...)
+
