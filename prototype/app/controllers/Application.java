@@ -10,6 +10,14 @@ import org.codehaus.jackson.node.ObjectNode;
 import views.html.*;
 import models.*;
 
+import com.mongodb.DBCollection;
+import com.mongodb.DBObject;
+import com.mongodb.Mongo;
+import com.mongodb.DB;
+import com.mongodb.BasicDBObject;
+import com.mongodb.DBCursor;
+
+
 public class Application extends Controller {
   
 	public static Result index() {
@@ -31,6 +39,18 @@ public class Application extends Controller {
 		}
 		else
 			return badRequest("DB : connexion failed.");
+	}
+
+	public static Result redirection( String id ){
+		
+
+		MonDataBase db = MonDataBase.getInstance();
+/*		DBCollection coll = .getCollection("test");
+
+		BasicDBobject query  = new BasicDBobject();
+		query.put("id", id);
+		DBObject data  = coll.find(query);*/
+		return redirect(db.getUrl(id)); 
 	}
   
 	public static Result pages(int id) {

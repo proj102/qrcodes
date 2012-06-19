@@ -79,6 +79,25 @@ public class MonDataBase {
 			return null;
 		}
 	}
+
+	public String getUrl( String id ){
+                DBCollection coll = db.getCollection("test");
+
+                BasicDBObject query  = new BasicDBObject();
+                query.put("id", id);
+                DBCursor data  = coll.find(query);
+//return data.next().toString();
+                ObjectMapper mapper = new ObjectMapper();
+                mapper.configure(JsonParser.Feature.ALLOW_SINGLE_QUOTES, true);
+                try {
+                        JsonNode json = mapper.readValue(data.next().toString(), JsonNode.class);
+                        String url = json.findPath("data").getTextValue();
+                        return url;
+                }
+                catch (Exception e) {
+                        return null;
+                }
+	}
 	
 	public boolean isConnected() {
 		return authentification;
