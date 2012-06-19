@@ -16,10 +16,21 @@ public class Application extends Controller {
 		return ok("Hello world");
 	}
 	
-	public static Result bdd() {
-		Page page = new Page();
+	public static Result db() {
+		MonDataBase db = MonDataBase.getInstance();
 		
-		return ok("BDD ok : " + page.informations());
+		if (db.isConnected()) {
+			
+			String url = db.getInformations();
+			
+			if (url == null)
+				return badRequest("problem");
+			else {
+				return redirect(url);
+			}
+		}
+		else
+			return badRequest("DB : connexion failed.");
 	}
   
 	public static Result pages(int id) {

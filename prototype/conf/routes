@@ -8,8 +8,8 @@ GET     /                           controllers.Application.index()
 # Json tests
 POST	/sayHello					controllers.Application.sayHello()
 
-# BDD tests
-GET		/bdd						controllers.Application.bdd()
+# DB tests
+GET		/db							controllers.Application.db()
 
 # Redirections
 GET		/page/:id					controllers.Application.pages(id: Int)
