@@ -1,0 +1,25 @@
+Lundi 18 juin
+
+15h – 17h30
+Création compte Git Hub et récupération du dépôt Git.
+Prise en main de Play => redirections manuel, templates, architecture de Play.
+réception et analyse de la carte des technologies.
+
+actions futures :
+2 groupes :
+redirection vers bdd + prise en main base de données MongoDB
+	Quentin - Stéphane
+
+génération de QR codes avec Google Chart
+	https://developers.google.com/chart/infographics/docs/qr_codes
+	Ferdinand - Mehdi
+
+Objectif de la journée de mardi : première chaîne fonctionnel avec Qr code qui donne l'adresse du serveur et la redirection avec le serveur.
+
+Liste des fonctionnalités pour une première interface
+connection
+inscription
+….
+
+Organisation générale :
+Point presse toutes les demi journée et travail en sous groupes.
