@@ -17,11 +17,15 @@ import com.mongodb.DB;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBCursor;
 
+import play.data.*;
+import play.data.validation.Constraints.*;
+import java.util.*;
+
 
 public class Application extends Controller {
   
 	public static Result index() {
-		return ok("Hello world");
+		return ok(views.html.index.render(urlForm));
 	}
 	
 	public static Result db() {
@@ -91,5 +95,21 @@ public class Application extends Controller {
 			return ok(result);
 		}
 	}
+
+	//Get Url Form data
+
+	static Form<Url> urlForm = form(Url.class);	
+
+	 public static Result getUrl() {
+        Form<Url> form = form(Url.class).bindFromRequest();
+        if(form.hasErrors()) {
+            return badRequest(index.render(urlForm));
+        } else {
+            Url data = form.get();
+            return ok(
+                qrGenerator.render(data.url)
+            );
+        }
+    }
   
 }
