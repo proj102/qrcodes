@@ -9,14 +9,14 @@ GET     /                           controllers.Application.index()
 GET     /assets/*file               controllers.Assets.at(path="/public", file)
 
 # Redirection and Map id with the bdd 
-<<<<<<< HEAD
+
 GET	/r/:id				controllers.Application.redirection(id: String)
 
 # get URL
 GET     /getUrl                  controllers.Application.getUrl()
-=======
+
 GET		/r/:id						controllers.Application.redirection(id: String)
 
 # Test insert in db
 GET	/insert/:url						controllers.Application.testinsert(url: String)
->>>>>>> 2fad6d887742e78a8d6b84fbaff5bef1ae0ab474
+

@@ -10,7 +10,7 @@ import org.codehaus.jackson.node.ObjectNode;
 import views.html.*;
 import models.*;
 
-<<<<<<< HEAD
+
 import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 import com.mongodb.Mongo;
@@ -22,8 +22,7 @@ import play.data.*;
 import play.data.validation.Constraints.*;
 import java.util.*;
 
-=======
->>>>>>> 2fad6d887742e78a8d6b84fbaff5bef1ae0ab474
+
 
 public class Application extends Controller {
   
@@ -42,7 +41,7 @@ public class Application extends Controller {
 		db.insert(url);
 		return ok("Qr code ready");
 	}
-<<<<<<< HEAD
+
 
 	//Get Url Form data
 
@@ -60,8 +59,7 @@ public class Application extends Controller {
         }
     }
   
-=======
->>>>>>> 2fad6d887742e78a8d6b84fbaff5bef1ae0ab474
+
 }
 
 
