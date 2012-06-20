@@ -3,7 +3,6 @@ package models;
 import java.lang.Exception;
 
 import play.libs.Json;
-
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.node.ObjectNode;
 import org.codehaus.jackson.map.ObjectMapper;
@@ -30,7 +29,6 @@ public class MonDataBase {
 	private DB db;
 	boolean authentification;
 	
-	// Only one database
 	private static MonDataBase instance;
 	
 	public static MonDataBase getInstance() {
@@ -43,8 +41,8 @@ public class MonDataBase {
 		return instance;
 	}
 	
+	// connexion to the database
 	public MonDataBase() {
-		//address = "ds035127.mongolab.com";
 		address = "ds033767.mongolab.com";
 		port = 33767;
 		name = "qrcodes";
@@ -60,43 +58,25 @@ public class MonDataBase {
 			System.out.println("Mongo exception when connecting to the DB : " + e);
 		}
 	}
-	
-	public String getInformations() {
-		// get the first document of the collection test
+
+	// retrieve the url of the document whose id is equal to the argument id
+	public String getUrl( String id ) {
 		DBCollection coll = db.getCollection("test");
-		DBObject myDoc = coll.findOne();
-		
-		// map it to have a JsonNode object in order to get its values and return the url
+
+		BasicDBObject query  = new BasicDBObject();
+		query.put("id", id);
+		DBCursor data  = coll.find(query);
+
 		ObjectMapper mapper = new ObjectMapper();
 		mapper.configure(JsonParser.Feature.ALLOW_SINGLE_QUOTES, true);
 		try {
-			JsonNode json = mapper.readValue(myDoc.toString(), JsonNode.class);
-			String url = json.findPath("url").getTextValue();
-			
+			JsonNode json = mapper.readValue(data.next().toString(), JsonNode.class);
+			String url = json.findPath("data").getTextValue();
 			return url;
 		}
 		catch (Exception e) {
 			return null;
 		}
-	}
-
-	public String getUrl( String id ){
-                DBCollection coll = db.getCollection("test");
-
-                BasicDBObject query  = new BasicDBObject();
-                query.put("id", id);
-                DBCursor data  = coll.find(query);
-//return data.next().toString();
-                ObjectMapper mapper = new ObjectMapper();
-                mapper.configure(JsonParser.Feature.ALLOW_SINGLE_QUOTES, true);
-                try {
-                        JsonNode json = mapper.readValue(data.next().toString(), JsonNode.class);
-                        String url = json.findPath("data").getTextValue();
-                        return url;
-                }
-                catch (Exception e) {
-                        return null;
-                }
 	}
 	
 	public boolean isConnected() {
