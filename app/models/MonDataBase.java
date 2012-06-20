@@ -15,6 +15,10 @@ import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 import com.mongodb.DBCursor;
 
+import java.security.MessageDigest;
+import java.util.Formatter;
+import java.security.NoSuchAlgorithmException;
+
 // Class depicting a MongoDB database
 public class MonDataBase {
 
@@ -83,6 +87,91 @@ public class MonDataBase {
 	
 	public boolean isConnected() {
 		return authentification;
+	}
+	
+	public static String sha1Encrypt(String s) throws NoSuchAlgorithmException {
+		MessageDigest md = MessageDigest.getInstance("SHA-1");
+		byte[] hash = md.digest(s.getBytes());
+		
+		Formatter formatter = new Formatter();
+		for (byte b : hash)
+			formatter.format("%02x", b);
+		
+		return formatter.toString();
+	}
+	
+	// add a customer to the db after checking the validity of
+	// the informations given and after generating a unique ID
+	public void addCustomer(String login, String password, String mail, String name, String firstname, String firm) throws Exception {
+		if (login == null || login == "")
+			throw new Exception("No login.");
+		else if (password == null || password == "")
+			throw new Exception("No password.");
+		else if (mail == null || mail == "")
+			throw new Exception("No mail.");
+		
+		
+		// all requieted fields have been completed
+		// let's check their validity
+		DBCollection coll = db.getCollection("customers");
+		
+		BasicDBObject query  = new BasicDBObject();
+		query.put("login", login);
+		DBCursor data  = coll.find(query);
+		if (data.count() != 0)
+			throw new Exception("Login already used.");
+		
+		// crypt the password in SHA-1
+		password = sha1Encrypt(password);
+		
+		// add the customer
+		BasicDBObject customerInfos = new BasicDBObject();
+		customerInfos.put("id", 10);
+		customerInfos.put("login", login);
+		customerInfos.put("password", password);
+		customerInfos.put("mail", mail);
+		customerInfos.put("inscription", System.currentTimeMillis());
+		customerInfos.put("name", name);
+		customerInfos.put("firstname", firstname);
+		customerInfos.put("firm", firm);
+		customerInfos.put("avatar", "");
+		customerInfos.put("qrs", "[]");
+		
+		coll.insert(customerInfos);
+	}
+	
+	public String testPass() {
+		DBCollection coll = db.getCollection("customers");
+		
+		BasicDBObject query  = new BasicDBObject();
+		query.put("login", "plequen");
+		DBCursor data  = coll.find(query);
+		
+		if (data.count() == 0)
+			return "not found";
+		else {
+			try {
+				MessageDigest digest = MessageDigest.getInstance("SHA-1");
+				digest.reset();
+				String password = "test2";
+				password = sha1Encrypt(password);
+				
+				ObjectMapper mapper = new ObjectMapper();
+				mapper.configure(JsonParser.Feature.ALLOW_SINGLE_QUOTES, true);
+				
+			
+				JsonNode json = mapper.readValue(data.next().toString(), JsonNode.class);
+				String pass = json.findPath("password").getTextValue();
+				
+				if (pass.equals(password))
+					return "pass value ok";
+				else
+					return "pass value not ok";
+			}
+			catch (Exception e) {
+				return "pass not ok : " + e;
+			}
+		}
 	}
 
        public void insert(String url){

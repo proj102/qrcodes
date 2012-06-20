@@ -47,6 +47,25 @@ public class Application extends Controller {
 		db.insert(url);
 		return ok("Qr code ready");
 	}
+	
+	public static Result addC() {
+		MonDataBase db = MonDataBase.getInstance();
+		
+		try {
+			db.addCustomer("plequen", "test2", "plequen00@gmail.com", "Plessis", "Quentin", "Telecom");
+		
+			return ok("Customer added successfully !");
+		}
+		catch (Exception e) {
+			return badRequest(e.toString());
+		}
+	}
+	
+	public static Result testP() {
+		MonDataBase db = MonDataBase.getInstance();
+		
+		return ok(db.testPass());
+	}
 
 	//Get Url Form data
 	static Form<Url> urlForm = form(Url.class);	
