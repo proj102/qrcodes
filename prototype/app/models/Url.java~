@@ -1,0 +1,8 @@
+package models;
+
+
+
+public class Url {
+        @Required public String url;
+        
+    }

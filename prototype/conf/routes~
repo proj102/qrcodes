@@ -5,18 +5,20 @@
 # Home page
 GET     /                           controllers.Application.index()
 
+# Json tests
+POST	/sayHello					controllers.Application.sayHello()
+
+# DB tests
+GET		/db							controllers.Application.db()
+
+# Redirections
+GET		/page/:id					controllers.Application.pages(id: Int)
+
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.at(path="/public", file)
 
 # Redirection and Map id with the bdd 
-
 GET	/r/:id				controllers.Application.redirection(id: String)
 
 # get URL
-GET     /getUrl                  controllers.Application.getUrl()
-
-GET		/r/:id						controllers.Application.redirection(id: String)
-
-# Test insert in db
-GET	/insert/:url						controllers.Application.testinsert(url: String)
-
+POST     /getUrl                  controllers.Application.getUrl()
