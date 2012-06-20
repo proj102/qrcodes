@@ -28,16 +28,15 @@ public class MonDataBase {
 	private Mongo mongo;
 	private DB db;
 	boolean authentification;
-	
+	private ObjectMapper mapper;
+	  
 	private static MonDataBase instance;
 	
 	public static MonDataBase getInstance() {
 		// Return the database if it has already been created
 		// and if not create a new one
-		
 		if (instance == null)
 			instance = new MonDataBase();
-		
 		return instance;
 	}
 	
@@ -49,6 +48,7 @@ public class MonDataBase {
 		login = "plequen";
 		password = "test";
 		
+		mapper = new ObjectMapper();
 		try {
 			mongo = new Mongo(address, port);
 			db = mongo.getDB(name);
@@ -59,38 +59,50 @@ public class MonDataBase {
 		}
 	}
 
-	// retrieve the url of the document whose id is equal to the argument id
+	// Retrieve the url of the document whose id is equal to the argument id
 	public String getUrl( String id ) throws Exception {
 		DBCollection coll = db.getCollection("test");
-
 		BasicDBObject query  = new BasicDBObject();
 		query.put("id", id);
 		DBCursor data  = coll.find(query);
-
-		ObjectMapper mapper = new ObjectMapper();
-		mapper.configure(JsonParser.Feature.ALLOW_SINGLE_QUOTES, true);
-		
-		try {
-			JsonNode json = mapper.readValue(data.next().toString(), JsonNode.class);
-			String url = json.findPath("data").getTextValue();
-			
-			return url;
-		}
-		catch (Exception e) {
-			throw new Exception("url problem : " + data.next().toString());
-		}
+		return getElement(data, "data");	
 	}
 	
 	public boolean isConnected() {
 		return authentification;
 	}
 
-       public void insert(String url){
+	// Insert redirection url in new JSON document
+	public void insert(String url){
+                DBCollection coll = db.getCollection("test");
                 BasicDBObject doc = new BasicDBObject();
-                doc.put("id", "1209fe7");
+                doc.put("id", generateIdQRCode());
                 doc.put("type", "url");
                 doc.put("data", url);
-                DBCollection coll = db.getCollection("test");
-				coll.insert(doc);
+		coll.insert(doc);
         }
+
+	// Generation unique ID
+	public int generateIdQRCode(){
+		DBCollection coll = db.getCollection("test");
+		BasicDBObject query  = new BasicDBObject();
+		BasicDBObject sorted  = new BasicDBObject();
+		query.put("id", 1); // selection all id of the collection
+		sorted.put("id",-1); // sort by "id" descending
+		// find all ids; sort its and get the max one
+		DBCursor idmax = coll.find(new BasicDBObject(), query).sort(sorted).limit(1);
+		return Integer.parseInt(getElement(idmax, "id")) + 1; // max id + 1 => unique id
+	}
+
+	// Decode JSON in DBCursor and get the "key" element
+	public String getElement(DBCursor cursor, String key){
+		mapper.configure(JsonParser.Feature.ALLOW_SINGLE_QUOTES, true);
+		try {
+			JsonNode json = mapper.readValue(cursor.next().toString(), JsonNode.class);
+			return json.findPath(key).getTextValue();
+		}
+		catch(Exception e) {
+			return "problem decode Json";
+		}
+	}
 }

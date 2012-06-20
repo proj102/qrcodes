@@ -42,10 +42,11 @@ public class Application extends Controller {
 		}
 	}
 
-	public static Result testinsert(String url) {	
+	// Test genération unique ID
+	public static Result testsort() {	
 		MonDataBase db = MonDataBase.getInstance();
-		db.insert(url);
-		return ok("Qr code ready");
+		int v = db.generateIdQRCode();
+		return ok(String.valueOf(v));
 	}
 
 	//Get Url Form data
