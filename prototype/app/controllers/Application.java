@@ -25,7 +25,8 @@ import java.util.*;
 
 
 public class Application extends Controller {
-  
+	private String domain = "http://localhost:9000/"; 
+ 
 	public static Result index() {
 		return ok(views.html.index.render(urlForm));
 	}
@@ -50,17 +51,19 @@ public class Application extends Controller {
 	//Get Url Form data
 	static Form<Url> urlForm = form(Url.class);	
 
-	 public static Result getUrl() {
-        Form<Url> form = form(Url.class).bindFromRequest();
-        if(form.hasErrors()) {
-            return badRequest(index.render(urlForm));
-        } else {
-            Url data = form.get();
-            return ok(
-                qrGenerator.render(data.url)
-            );
-        }
-    }
+	// generate QRcode from url
+	public static Result getUrl() {
+		MonDataBase db = MonDataBase.getInstance();
+		
+        	Form<Url> form = form(Url.class).bindFromRequest();
+		if(form.hasErrors())
+			return badRequest(index.render(urlForm));
+		else {
+			Url data = form.get();
+			db.insert(data.url);
+			return ok(qrGenerator.render(domain + "r/1209fe7"));
+		}
+	}
 }
 
 
