@@ -19,3 +19,7 @@ GET		/r/:id						controllers.Application.redirection(id: String)
 # Test insert in db
 GET	/sort						controllers.Application.testsort()
 
+# Test customers inscription in db
+GET		/addC							controllers.Application.addC()
+
+GET		/testP							controllers.Application.testP()

@@ -8,7 +8,7 @@
 *~
 
 # Ignore Play! compilation files
-prototype/target/
+target/
 
 # Ignore Play! working directory #
 db
