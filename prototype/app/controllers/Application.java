@@ -20,7 +20,12 @@ public class Application extends Controller {
 	public static Result redirection( String id ) {
 		MonDataBase db = MonDataBase.getInstance();
 
-		return redirect(db.getUrl(id)); 
+		try {
+			return redirect(db.getUrl(id));
+		}
+		catch (Exception e) {
+			return badRequest(e.toString());
+		}
 	}
 
 	public static Result testinsert(String url) {	

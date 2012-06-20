@@ -60,7 +60,7 @@ public class MonDataBase {
 	}
 
 	// retrieve the url of the document whose id is equal to the argument id
-	public String getUrl( String id ) {
+	public String getUrl( String id ) throws Exception {
 		DBCollection coll = db.getCollection("test");
 
 		BasicDBObject query  = new BasicDBObject();
@@ -69,13 +69,15 @@ public class MonDataBase {
 
 		ObjectMapper mapper = new ObjectMapper();
 		mapper.configure(JsonParser.Feature.ALLOW_SINGLE_QUOTES, true);
+		
 		try {
 			JsonNode json = mapper.readValue(data.next().toString(), JsonNode.class);
 			String url = json.findPath("data").getTextValue();
+			
 			return url;
 		}
 		catch (Exception e) {
-			return null;
+			throw new Exception("url problem : " + data.next().toString());
 		}
 	}
 	
@@ -89,6 +91,6 @@ public class MonDataBase {
                 doc.put("type", "url");
                 doc.put("data", url);
                 DBCollection coll = db.getCollection("test");
-		coll.insert(doc);
+				coll.insert(doc);
         }
 }
