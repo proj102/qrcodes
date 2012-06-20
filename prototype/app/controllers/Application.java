@@ -22,6 +22,12 @@ public class Application extends Controller {
 
 		return redirect(db.getUrl(id)); 
 	}
+
+	public static Result testinsert(String url) {	
+		MonDataBase db = MonDataBase.getInstance();
+		db.insert(url);
+		return ok("Qr code ready");
+	}
 }
 
 

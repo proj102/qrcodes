@@ -82,4 +82,13 @@ public class MonDataBase {
 	public boolean isConnected() {
 		return authentification;
 	}
+
+       public void insert(String url){
+                BasicDBObject doc = new BasicDBObject();
+                doc.put("id", "1209fe7");
+                doc.put("type", "url");
+                doc.put("data", url);
+                DBCollection coll = db.getCollection("test");
+		coll.insert(doc);
+        }
 }
