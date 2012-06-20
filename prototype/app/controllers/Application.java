@@ -25,7 +25,7 @@ import java.util.*;
 
 
 public class Application extends Controller {
-	private String domain = "http://localhost:9000/"; 
+	private static String domain = "http://localhost:9000/"; 
  
 	public static Result index() {
 		return ok(views.html.index.render(urlForm));
