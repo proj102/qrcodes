@@ -47,9 +47,7 @@ public class Application extends Controller {
 		return ok("Qr code ready");
 	}
 
-
 	//Get Url Form data
-
 	static Form<Url> urlForm = form(Url.class);	
 
 	 public static Result getUrl() {
@@ -63,8 +61,6 @@ public class Application extends Controller {
             );
         }
     }
-  
-
 }
 
 

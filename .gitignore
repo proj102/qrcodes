@@ -4,6 +4,9 @@
 # except for .gitignore
 !.gitignore
 
+# Ignore all ~ending files
+*~
+
 # Ignore Play! compilation files
 prototype/project/
 prototype/target/
