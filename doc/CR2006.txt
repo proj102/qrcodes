@@ -1,0 +1,50 @@
+======================= CR du 20/06/12 =================================
+
+Ferdinand Pierrot, Medhi Belhadj, Stéphane Maire, Quentin Plessis
+
+
+
+***********           Objectifs du jour réalisés             *****************
+
+Validation de la chaîne de redirection :
+	- on entre une adresse vers laquelle le QRcode doit rediriger
+	- génération d'un QRcode contenant une adresse pointant sur le serveur avec un ID identifiant le QRcode
+	- insertion des infos de redirection dans la base de données MongoDB
+	- lorsqu'on flash le QRcode, le navigateur charge cette adresse
+	- la redirection s'effectue en consultant les infos de la BDD relatives à l'ID passé en paramètre
+
+Portage sur Heroku :
+	- l'application Play est sur Heroku
+	- la BDD MongoDB est pour le moment extérieure à Heroku
+
+Conception logicielle : 
+	- première version de l'interface d'administration et de l'architecture de la BDD
+
+
+Effectué en plus : 
+	- début de création de l'aspect graphique de l'interface admin
+	- des débuts d'ajouts de fonctionnalités en lien avec la BDD (ajout d'un client, génération automatique d'ID unique pour les QR codes)
+
+
+
+
+
+************    Objectif de la journé de jeudi :    ******************
+
+
+Objectif : prototype épuré fonctionnel pour vendredi soir.
+
+
+Heroku : 
+	- y mettre la BDD.
+	- fixer l'adresse pour qu'on puisse commencer à imprimer en fin de semaine.
+
+
+
+
+*************************  Objectifs pour vendredi **************************
+
+Interface administrateur :
+	- système de login et sign-up.
+	- premier système de gestion de qrcodes personnalisés (ajout, modification de la redirection)
+
