@@ -2,3 +2,8 @@
 Base de données MongoDB sur MongoLab:
 	user : proj102
 	psw : qrcodes102
+
+Heroku:
+	user : qrteam_paristech@googlegroups.com
+	psw : qrcodes102
+	url:  http://qrcodes102.herokuapp.com/
