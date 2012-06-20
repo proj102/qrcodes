@@ -1,0 +1,30 @@
+@(name: String)
+
+@main("Here is the result:") {
+    
+    <ul >
+                    <li>@name!</li>
+        
+    </ul>
+    
+
+
+<p>Render in canvas</p> 
+<div id="qrcodeCanvas"></div>
+
+
+<script>
+jQuery('#qrcodeCanvas').qrcode({
+		
+		
+  				text	: "@name"
+		
+	});
+
+	
+		
+</script>
+
+
+    
+}
