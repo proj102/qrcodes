@@ -1,10 +1,15 @@
 @(url: String)
 
 @main("Here is the result:") {
-    
-    <h1> The requested URL is @url</h1>
+
+    @header()
+        
 <div class="container-fluid">
-<!--Creat a 5-column block in Bootstrap grid-->
+
+<div class="alert alert-success">
+	<p>You have created a QrCode which will now redirect to @url </p>
+</div>
+<!--Create a 5-column block in Bootstrap grid-->
 <div class="span5">
 </div>
 <div class="span7">
