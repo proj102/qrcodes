@@ -1,0 +1,30 @@
+======================= CR du 21/06/12 =================================
+
+Ferdinand Pierrot, Medhi Belhadj, Stéphane Maire, Quentin Plessis
+
+
+
+***********           Objectifs du jour               *****************
+Heroku:
+	tout le monde peut pusher sur Heroku
+	abandon de l'importation de la bdd sur Heroku (nécessité de donner un code CB)
+	adresse fixé: http://qrteam.herokuapp.com/
+Mongolab
+	ajout QRcode et client (id automatisé)
+	en cours: parser fichier csv
+Play et bootstrap
+	Sign up ok (mais lien avec la bdd non établie)
+	en cours: login
+	page d'accueil provisoire
+
+************    Objectif de la journé de vendredi:    ******************
+Matinée
+	lien sign up <-> bdd
+	lien log in <-> bdd
+	mettre en place le système de session
+
+Après-midi
+	Importation de csv
+	Mise en place des premiers QRcodes (impression à l'école???)
+
+
