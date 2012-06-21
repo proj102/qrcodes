@@ -112,8 +112,10 @@ public class MonDataBase {
 		password = sha1Encrypt(password);
 		
 		// add the customer
+		int customerId = generateCustomerId();
+		
 		BasicDBObject customerInfos = new BasicDBObject();
-		customerInfos.put("id", 10);
+		customerInfos.put("id", customerId);
 		customerInfos.put("login", login);
 		customerInfos.put("password", password);
 		customerInfos.put("mail", mail);
@@ -126,39 +128,32 @@ public class MonDataBase {
 		coll.insert(customerInfos);
 	}
 	
-	// add a qrCode to the database and add it to the customer's qrs
-	public void addQr(int customerId, String type, String redirection, String title, String place) throws Exception {
+	// insert a qrcode in the database with the given json content
+	// to which is added significant fields such as the id of the qrcode
+	public void insertQr(BasicDBObject qrInfos) throws Exception {
+		int customerId = getCustomerId();
+		
 		// check that the customer exists
 		DBCollection customers = db.getCollection("customers");
-		
 		BasicDBObject query  = new BasicDBObject();
 		query.put("id", customerId);
 		DBCursor data  = customers.find(query);
 		if (data.count() == 0)
 			throw new Exception("Unknown customer.");
-		
-		// everything is fine : get the customer's data
-		ObjectMapper mapper = new ObjectMapper();
-		mapper.configure(JsonParser.Feature.ALLOW_SINGLE_QUOTES, true);
-		
+			
+		// everything is fine
 		try {
 			// let's add the qrcode to the qrcodes collection
 			DBCollection qrs = db.getCollection("qrcodes");
-			String qrId = "10";
+			String qrId = String.valueOf(generateIdQRCode());
 			
-			BasicDBObject qrInfos = new BasicDBObject();
 			qrInfos.put("id", qrId);
-			qrInfos.put("type", type);
-			qrInfos.put("redirection", redirection);
 			qrInfos.put("creation", System.currentTimeMillis());
-			qrInfos.put("title", title);
-			qrInfos.put("place", place);
 			qrInfos.put("flashs", 0);
 			qrs.insert(qrInfos);
 			
 			// let's add the qr id to the customer's qrs
-			JsonNode json = mapper.readValue(data.next().toString(), JsonNode.class);
-			String custQrs = json.findPath("qrs").getTextValue();
+			String custQrs = getElement(data, "qrs");
 			
 			if (custQrs.equals("[]"))
 				custQrs = "[" + qrId + "]";
@@ -173,6 +168,66 @@ public class MonDataBase {
 			throw new Exception("Error when adding the qrcode : " + e);
 		}
 	}
+	
+	// add a Qr with the data given in the "generate a Qrcode" form
+	public void addQrFromForm(String type, String redirection, String title, String place) throws Exception {
+		BasicDBObject qrInfos = new BasicDBObject();
+		qrInfos.put("type", type);
+		qrInfos.put("redirection", redirection);
+		qrInfos.put("title", title);
+		qrInfos.put("place", place);
+		
+		insertQr(qrInfos);
+	}
+	
+	// get the id of the current customer
+	public int getCustomerId() {
+		return 1;
+	}
+	
+	// add a qrCode to the database and add it to the customer's qrs
+	/*public void addQr(int customerId, String type, String redirection, String title, String place) throws Exception {
+		// check that the customer exists
+		DBCollection customers = db.getCollection("customers");
+		
+		BasicDBObject query  = new BasicDBObject();
+		query.put("id", customerId);
+		DBCursor data  = customers.find(query);
+		if (data.count() == 0)
+			throw new Exception("Unknown customer.");
+		
+		// everything is fine
+		try {
+			// let's add the qrcode to the qrcodes collection
+			DBCollection qrs = db.getCollection("qrcodes");
+			String qrId = String.valueOf(generateIdQRCode());
+			
+			BasicDBObject qrInfos = new BasicDBObject();
+			qrInfos.put("id", qrId);
+			qrInfos.put("type", type);
+			qrInfos.put("redirection", redirection);
+			qrInfos.put("creation", System.currentTimeMillis());
+			qrInfos.put("title", title);
+			qrInfos.put("place", place);
+			qrInfos.put("flashs", 0);
+			qrs.insert(qrInfos);
+			
+			// let's add the qr id to the customer's qrs
+			String custQrs = getElement(data, "qrs");
+			
+			if (custQrs.equals("[]"))
+				custQrs = "[" + qrId + "]";
+			else
+				custQrs = custQrs.substring(0, custQrs.length() - 1) + ", " + qrId + "]";
+			
+			BasicDBObject newCustDoc = new BasicDBObject().append("$set", new BasicDBObject().append("qrs", custQrs));
+ 
+			customers.update(new BasicDBObject().append("id", customerId), newCustDoc);
+		}
+		catch (Exception e) {
+			throw new Exception("Error when adding the qrcode : " + e);
+		}
+	}*/
 	
 	public String testPass() {
 		DBCollection coll = db.getCollection("customers");
@@ -190,12 +245,7 @@ public class MonDataBase {
 				String password = "test2";
 				password = sha1Encrypt(password);
 				
-				ObjectMapper mapper = new ObjectMapper();
-				mapper.configure(JsonParser.Feature.ALLOW_SINGLE_QUOTES, true);
-				
-			
-				JsonNode json = mapper.readValue(data.next().toString(), JsonNode.class);
-				String pass = json.findPath("password").getTextValue();
+				String pass = getElement(data, "password");
 				
 				if (pass.equals(password))
 					return "pass value ok";
@@ -216,11 +266,11 @@ public class MonDataBase {
                 doc.put("type", "url");
                 doc.put("data", url);
 		coll.insert(doc);
-        }
+    }
 
-	// Generation unique ID
+	// Generation unique QRID 
 	public int generateIdQRCode(){
-		DBCollection coll = db.getCollection("test");
+		DBCollection coll = db.getCollection("qrcodes");
 		BasicDBObject query  = new BasicDBObject();
 		BasicDBObject sorted  = new BasicDBObject();
 		query.put("id", 1); // selection all id of the collection
@@ -229,6 +279,22 @@ public class MonDataBase {
 		DBCursor idmax = coll.find(new BasicDBObject(), query).sort(sorted).limit(1);
 		return Integer.parseInt(getElement(idmax, "id")) + 1; // max id + 1 => unique id
 	}
+	
+	// generate a unique customer ID
+	public int generateCustomerId() throws Exception {
+		DBCollection coll = db.getCollection("customers");
+		BasicDBObject query  = new BasicDBObject();
+		BasicDBObject sorted  = new BasicDBObject();
+		query.put("id", 1); // selection all id of the collection
+		sorted.put("id",-1); // sort by "id" descending
+		// find all ids; sort its and get the max one
+		DBCursor idmax = coll.find(new BasicDBObject(), query).sort(sorted).limit(1);
+		
+		//throw new Exception (getIntElement(idmax, "id"));
+		
+		return getIntElement(idmax, "id") + 1; // max id + 1 => unique id
+	}
+
 
 	// Decode JSON in DBCursor and get the "key" element
 	public String getElement(DBCursor cursor, String key){
@@ -240,5 +306,13 @@ public class MonDataBase {
 		catch(Exception e) {
 			return "problem decode Json";
 		}
+	}
+	
+	// same for integer values
+	public int getIntElement(DBCursor cursor, String key) throws Exception {
+		mapper.configure(JsonParser.Feature.ALLOW_SINGLE_QUOTES, true);
+		
+		JsonNode json = mapper.readValue(cursor.next().toString(), JsonNode.class);
+		return json.findPath(key).getIntValue();
 	}
 }
