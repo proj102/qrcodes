@@ -53,7 +53,7 @@ public class Application extends Controller {
 		MonDataBase db = MonDataBase.getInstance();
 		
 		try {
-			db.addCustomer("plequen", "test2", "plequen00@gmail.com", "Plessis", "Quentin", "Telecom");
+			db.addCustomer("plequen2", "test2", "plequen00@gmail.com", "Plessis", "Quentin", "Telecom");
 		
 			return ok("Customer added successfully !");
 		}
@@ -67,7 +67,7 @@ public class Application extends Controller {
 		MonDataBase db = MonDataBase.getInstance();
 		
 		try {
-			db.addQr(10, "url", "http://google.com", "Titre", "lieu");
+			db.addQrFromForm("url", "http://google.com", "Titre", "lieu");
 		
 			return ok("Qrcode added successfully !");
 		}
