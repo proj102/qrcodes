@@ -67,9 +67,9 @@ public class Application extends Controller {
 		MonDataBase db = MonDataBase.getInstance();
 		
 		try {
-			db.addQrFromForm("url", "http://google.com", "Titre", "lieu");
+			String qrId = db.addQrFromForm("url", "http://google.com", "Titre", "lieu");
 		
-			return ok("Qrcode added successfully !");
+			return ok("Qrcode added successfully ! Id : " + qrId);
 		}
 		catch (Exception e) {
 			return badRequest(e.toString());
@@ -80,6 +80,10 @@ public class Application extends Controller {
 		MonDataBase db = MonDataBase.getInstance();
 		
 		return ok(db.testPass());
+	}
+
+	public static Result myQrTable() {
+		return ok(myQrTable.render());
 	}
 
 	//Get Url Form data
@@ -94,8 +98,13 @@ public class Application extends Controller {
 			return badRequest(index.render(urlForm));
 		else {
 			Url data = form.get();
-			db.insert(data.url);
-			return ok(qrGenerator.render(domain + "r/1209fe7"));
+			try {
+				String qrId = db.addQrFromForm("url", data.url, "titre", "lieu");
+				return ok(qrGenerator.render(domain + "r/" + qrId));
+			}
+			catch (Exception e) {
+				return badRequest("error when adding qr code to db : " + e);
+			}
 		}
 	}
 }

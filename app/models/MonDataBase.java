@@ -65,11 +65,11 @@ public class MonDataBase {
 
 	// Retrieve the url of the document whose id is equal to the argument id
 	public String getUrl( String id ) throws Exception {
-		DBCollection coll = db.getCollection("test");
+		DBCollection coll = db.getCollection("qrcodes");
 		BasicDBObject query  = new BasicDBObject();
 		query.put("id", id);
 		DBCursor data  = coll.find(query);
-		return getElement(data, "data");	
+		return getElement(data, "redirection");	
 	}
 	
 	public boolean isConnected() {
@@ -130,7 +130,8 @@ public class MonDataBase {
 	
 	// insert a qrcode in the database with the given json content
 	// to which is added significant fields such as the id of the qrcode
-	public void insertQr(BasicDBObject qrInfos) throws Exception {
+	// return the id of the qrcode
+	public String insertQr(BasicDBObject qrInfos) throws Exception {
 		int customerId = getCustomerId();
 		
 		// check that the customer exists
@@ -163,6 +164,8 @@ public class MonDataBase {
 			BasicDBObject newCustDoc = new BasicDBObject().append("$set", new BasicDBObject().append("qrs", custQrs));
  
 			customers.update(new BasicDBObject().append("id", customerId), newCustDoc);
+			
+			return qrId;
 		}
 		catch (Exception e) {
 			throw new Exception("Error when adding the qrcode : " + e);
@@ -170,14 +173,14 @@ public class MonDataBase {
 	}
 	
 	// add a Qr with the data given in the "generate a Qrcode" form
-	public void addQrFromForm(String type, String redirection, String title, String place) throws Exception {
+	public String addQrFromForm(String type, String redirection, String title, String place) throws Exception {
 		BasicDBObject qrInfos = new BasicDBObject();
 		qrInfos.put("type", type);
 		qrInfos.put("redirection", redirection);
 		qrInfos.put("title", title);
 		qrInfos.put("place", place);
 		
-		insertQr(qrInfos);
+		return insertQr(qrInfos);
 	}
 	
 	// get the id of the current customer
@@ -289,8 +292,6 @@ public class MonDataBase {
 		sorted.put("id",-1); // sort by "id" descending
 		// find all ids; sort its and get the max one
 		DBCursor idmax = coll.find(new BasicDBObject(), query).sort(sorted).limit(1);
-		
-		//throw new Exception (getIntElement(idmax, "id"));
 		
 		return getIntElement(idmax, "id") + 1; // max id + 1 => unique id
 	}
