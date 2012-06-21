@@ -23,10 +23,10 @@ GET	/sort						controllers.Application.testsort()
 GET		/addC							controllers.Application.addC()
 GET		/testP							controllers.Application.testP()
 
-<<<<<<< HEAD
+
 #Route to MyQrCodes
 GET     /myQrTable               controllers.Application.myQrTable()
-=======
+
 # Test adding qrcodes
 GET		/addQ							controllers.Application.addQ()
 
@@ -34,4 +34,4 @@ GET		/addQ							controllers.Application.addQ()
 GET     /signup                     controllers.SignUp.blank()
 GET     /users/fakeuser             controllers.SignUp.edit()
 POST    /signup                     controllers.SignUp.submit()
->>>>>>> 9ca58b425bb1022262bd8850a4ece37fcc300136
+
