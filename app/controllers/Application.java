@@ -42,19 +42,34 @@ public class Application extends Controller {
 		}
 	}
 
-	public static Result testinsert(String url) {	
+	// Test genération unique ID
+	public static Result testsort() {	
 		MonDataBase db = MonDataBase.getInstance();
-		db.insert(url);
-		return ok("Qr code ready");
+		int v = db.generateIdQRCode();
+		return ok(String.valueOf(v));
 	}
 	
 	public static Result addC() {
 		MonDataBase db = MonDataBase.getInstance();
 		
 		try {
-			db.addCustomer("plequen", "test2", "plequen00@gmail.com", "Plessis", "Quentin", "Telecom");
+			db.addCustomer("plequen2", "test2", "plequen00@gmail.com", "Plessis", "Quentin", "Telecom");
 		
 			return ok("Customer added successfully !");
+		}
+		catch (Exception e) {
+			return badRequest(e.toString());
+		}
+	}
+	
+	
+	public static Result addQ() {
+		MonDataBase db = MonDataBase.getInstance();
+		
+		try {
+			String qrId = db.addQrFromForm("url", "http://google.com", "Titre", "lieu");
+		
+			return ok("Qrcode added successfully ! Id : " + qrId);
 		}
 		catch (Exception e) {
 			return badRequest(e.toString());
@@ -83,8 +98,13 @@ public class Application extends Controller {
 			return badRequest(index.render(urlForm));
 		else {
 			Url data = form.get();
-			db.insert(data.url);
-			return ok(qrGenerator.render(domain + "r/1209fe7"));
+			try {
+				String qrId = db.addQrFromForm("url", data.url, "titre", "lieu");
+				return ok(qrGenerator.render(domain + "r/" + qrId));
+			}
+			catch (Exception e) {
+				return badRequest("error when adding qr code to db : " + e);
+			}
 		}
 	}
 }
