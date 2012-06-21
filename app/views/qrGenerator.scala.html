@@ -13,12 +13,26 @@
 <div class="span5">
 </div>
 <div class="span7">
+<div id="qrcodeCanvas" class="thumbnail"></div>
+<div id="qrcodeCanvas1" class="thumbnail"></div>
+<div id="qrcodeCanvas2" class="thumbnail"></div>
 
-<div id="qrcodeCanvas"></div>
 
 
+
+<script>jQuery('#qrcodeCanvas').qrcode({text	: "@url"});</script>
+<script>jQuery('#qrcodeCanvas1').qrcode({
+		
+		
+  				text	: "@url"
+		
+	});
+
+	
+		
+</script>
 <script>
-jQuery('#qrcodeCanvas').qrcode({
+jQuery('#qrcodeCanvas2').qrcode({
 		
 		
   				text	: "@url"

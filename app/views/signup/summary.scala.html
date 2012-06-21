@@ -1,0 +1,73 @@
+@(user: User)
+
+@main("Account created!") {
+
+	 @header()   
+
+	<div class="container">
+	  <h1>Welcom to the QR Team</h1>
+		<h2>Let's create a lot of QR codes!</h2>
+	 <div class="row">
+
+	  <div class="span6">   
+    
+	    <h2>Your account:</h2>
+	    
+	    <h6>Username</h6>
+	    
+	    <p>
+		@user.username
+	    </p>
+	    
+	    <h6>Email</h6>
+	    
+	    <p>
+		@user.email
+	    </p>
+	    
+	    <h6>Password</h6>
+	    
+	    <p>
+		@user.password
+	    </p>
+	    
+	    <h2>Additional informations:</h2>
+	    
+	    <h6>Country</h6>
+	    
+	    <p>
+		@user.profile.country
+	    </p>
+	    
+	    <h6>Address</h6>
+	    
+	    <p>
+		@if(user.profile.lastName == null || user.profile.lastName == "") {
+		    <em>Not specified</em>
+		} else {
+		    @user.profile.lastName
+		}
+	    </p>
+
+	    <p>
+		@if(user.profile.firstName == null || user.profile.firstName == "") {
+		    <em>Not specified</em>
+		} else {
+		    @user.profile.firstName
+		}
+	    </p>
+	    
+	    <h6>Age</h6>
+	    
+	    <p>
+		@if(user.profile.age == null) {
+		    <em>Not specified</em>
+		} else {
+		    @user.profile.age
+		}
+	    </p>
+	  </div>
+	 </div>
+	</div>  
+	    
+}

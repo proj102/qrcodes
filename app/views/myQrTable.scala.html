@@ -1,0 +1,36 @@
+
+
+@main("tests"){
+
+    @header()
+<div class="container-fluid">
+
+<div class="span4"></div>
+<div class="span8">
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Owner</th>
+      <th>link</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Mehdi's QR</td>
+      <td>Mehdi</td>
+      <td><a href="@(routes.Application.getUrl())?url=google.com">link</td>
+    </tr>
+    <tr>
+      <td>Mehdi's QR</td>
+      <td>Mehdi</td>
+      <td><a href="@(routes.Application.getUrl())?url=google.com">link</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
+</div>
+    
+}

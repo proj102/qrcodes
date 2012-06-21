@@ -18,5 +18,17 @@ GET		/r/:id						controllers.Application.redirection(id: String)
 
 # Test customers inscription in db
 GET		/addC							controllers.Application.addC()
-
 GET		/testP							controllers.Application.testP()
+
+
+#Route to MyQrCodes
+GET     /myQrTable               controllers.Application.myQrTable()
+
+# Test adding qrcodes
+GET		/addQ							controllers.Application.addQ()
+
+# Signup
+GET     /signup                     controllers.SignUp.blank()
+GET     /users/fakeuser             controllers.SignUp.edit()
+POST    /signup                     controllers.SignUp.submit()
+
