@@ -24,3 +24,6 @@ GET	/insert/:url						controllers.Application.testinsert(url: String)
 GET		/addC							controllers.Application.addC()
 
 GET		/testP							controllers.Application.testP()
+
+#Route to MyQrCodes
+GET     /myQrTable               controllers.Application.myQrTable()

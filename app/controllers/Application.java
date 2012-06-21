@@ -67,6 +67,10 @@ public class Application extends Controller {
 		return ok(db.testPass());
 	}
 
+	public static Result myQrTable() {
+		return ok(myQrTable.render());
+	}
+
 	//Get Url Form data
 	static Form<Url> urlForm = form(Url.class);	
 
