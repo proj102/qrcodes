@@ -7,23 +7,31 @@
 
 @main("Todo list") {
 
+@header()
+
 <div class="container-fluid">
 
-<h1> Welcome </h1>
-<div class="span5">
-
-</div>
-<div class="span7">
+<div class="hero-unit">
+  <h1>Welcome to the QR Team Project</h1>
+  <p>Think QrCode in a different way. It's a whole new world beyond the QrCode</p>
+  
+  
+  <div>
     
                     
 @form(action = routes.Application.getUrl, args = 'id -> "urlForm") {
 @inputText(
             field = urlForm("url"),
-            args = '_label -> "Type your Url", 'placeholder -> "World"
+            args = '_label -> "", 'placeholder -> "Type your first Url"
         )
-	<input type="submit" class="btn-primary">
+	<input type="submit" class="btn-primary btn-large">
 	}
 
 </div> <!-- End of 7-columns block-->
+</div>
+<div class="span5">
+
+</div>
+
 
 }
