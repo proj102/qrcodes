@@ -20,7 +20,7 @@ import com.mongodb.DBCursor;
 
 import play.data.*;
 import play.data.validation.Constraints.*;
-import java.util.*;
+import java.util.*
 
 
 
@@ -42,13 +42,6 @@ public class Application extends Controller {
 		}
 	}
 
-	// Test genération unique ID
-	public static Result testsort() {	
-		MonDataBase db = MonDataBase.getInstance();
-		int v = db.generateIdQRCode();
-		return ok(String.valueOf(v));
-	}
-	
 	public static Result addC() {
 		MonDataBase db = MonDataBase.getInstance();
 		
