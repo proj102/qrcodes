@@ -316,4 +316,16 @@ public class MonDataBase {
 		JsonNode json = mapper.readValue(cursor.next().toString(), JsonNode.class);
 		return json.findPath(key).getIntValue();
 	}
+
+	// check if key is unique in collection
+        public boolean isCreated(String key, Object value, String collection){
+		DBCollection coll = db.getCollection(collection);
+                BasicDBObject query = new BasicDBObject();
+                query.put(key, value.toString());
+		// if no object matching query in coll
+		// then json document doesn't exist
+                if (coll.findOne(query) == null)
+                        return false;
+                return true;
+        }
 }

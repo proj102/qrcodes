@@ -2,7 +2,7 @@ package models;
 
 import java.lang.Exception;
 
-import org.bson.BasicBSONObject;
+//import org.bson.BasicBSONObject;
 import com.mongodb.BasicDBObject;
 
 import java.io.BufferedReader;
@@ -14,11 +14,7 @@ import java.awt.List;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import play.libs.Json;
-import org.codehaus.jackson.JsonNode;
-import org.codehaus.jackson.node.ObjectNode;
-import org.codehaus.jackson.map.ObjectMapper;
-import org.codehaus.jackson.JsonParser;
+import java.util.UUID;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -29,9 +25,47 @@ public class Utils {
 	// map from the ihm form : db name => document columns title 
 	public HashMap<String, String> mapTitles;
 
+	private String separator;
+
 	public Utils(){
-		titles = new ArrayList<String>();
-		mapTitles = new HashMap<String, String>();
+		this.titles = new ArrayList<String>();
+		this.separator = ";";
+	}
+
+	public Utils(HashMap<String, String> mapTitles) {
+		this.titles = new ArrayList<String>();
+                this.separator = ";";
+		this.mapTitles = mapTitles;
+	}
+
+	// Parse CSV file and get back a table of JSON documents
+	// for each lines
+	// default => 	separator : ';'
+	//		string encapsulation : " "
+	public ArrayList<BasicDBObject> parseCSV(String file) throws IOException{
+		BufferedReader buff;
+		String line;
+		ArrayList<BasicDBObject> documents = new ArrayList<BasicDBObject>();
+		buff = new BufferedReader(new FileReader(file));
+		
+		while ((line = buff.readLine()).length() == 0);
+		setColumnsTitles(line); // First ligne => Columns titles
+
+		// for each line of data
+		while ((line = buff.readLine()) != null){
+			if (line.length() != 0)
+				setDocument(documents, line);
+		}
+		return documents;
+	}
+
+	public ArrayList<BasicDBObject> parseCSV(String file, String separator) throws IOException{
+		this.separator = separator;
+		return parseCSV(file);
+	}
+
+	public void setMapTitles(HashMap<String, String> mapTitles){
+		this.mapTitles = mapTitles;
 	}
 
 	// check if titles in document match titles wrote by user
@@ -39,45 +73,39 @@ public class Utils {
 		//to do
 	}
 
-	public void setDocument(ArrayList<BasicBSONObject> list, String line){
-		String s = StringUtils.remove(line, "\"");
-		String[] element = StringUtils.split(s, ";");
-		BasicBSONObject b = new BasicBSONObject();
+	// for one csv line => create a BasicBSONObject
+	// and add it in array list
+	// A BasicBSONObject is a used as JSON document
+	// and send to db as query
+	public void setDocument(ArrayList<BasicDBObject> list, String line){
+		String[] element = getStringTable(line);
+		BasicDBObject b = new BasicDBObject();
 		int i = 0;
+		// set the JSON document 
 		for (String title : titles){
-			b.put(mapTitles.get(title), element[i]);
+			//match betwin title in doc and title enter by the user
+			if (mapTitles.get(title) == null) // if no title for coll
+				b.put(generateColumnTitle(), element[i]);
+			else 
+				b.put(mapTitles.get(title), element[i]);
 			i++;
 		}
 		list.add(b);
 	}
 
-	public ArrayList<BasicBSONObject> parseCSV(String file) throws IOException{
-		BufferedReader buff;
-		String line;
-		ArrayList<BasicBSONObject> documents = new ArrayList<BasicBSONObject>();
-		buff = new BufferedReader(new FileReader(file)) ;
-		// First ligne => Columns titles
-		if ((line = buff.readLine())!= null)
-			setColumnsTitles(line);
-		while ((line = buff.readLine()) != null)
-			setDocument(documents, line);
-		return documents;
+	// Set columns titles and save in public array title
+	public void setColumnsTitles(String line){
+		String[] element = getStringTable(line);
+		for (String t : element)
+			titles.add(t);
 	}
 
-	public void setColumnsTitles(String line){
-                String s = StringUtils.remove(line, "\"");
-                String[] element = StringUtils.split(s, ";");
-		for (String t : element){
-			titles.add(t);
-		}
-		
-		mapTitles.put("Société", "societe"); 
-		mapTitles.put("Secteur", "secteur"); 
-		mapTitles.put("Poids indiciel", "poids"); 
-		mapTitles.put("Rang mondial", "rang");
-		mapTitles.put("Chiffre d'affaires", "ca");
-		mapTitles.put("Capitalisation boursière", "capital");
-		mapTitles.put("redirection", "redirection");
-		mapTitles.put("Résultat net", "net");
+	public String generateColumnTitle(){
+		return UUID.randomUUID().toString();	
+	}
+
+	public String[] getStringTable(String line){
+		String s = StringUtils.remove(line, "\"");
+		return StringUtils.split(s, separator);
 	}
 }
