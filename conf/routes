@@ -25,3 +25,8 @@ GET		/testP							controllers.Application.testP()
 
 # Test adding qrcodes
 GET		/addQ							controllers.Application.addQ()
+
+# Signup
+GET     /signup                     controllers.SignUp.blank()
+GET     /users/fakeuser             controllers.SignUp.edit()
+POST    /signup                     controllers.SignUp.submit()
