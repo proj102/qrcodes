@@ -61,6 +61,20 @@ public class Application extends Controller {
 		}
 	}
 	
+	
+	public static Result addQ() {
+		MonDataBase db = MonDataBase.getInstance();
+		
+		try {
+			db.addQr(10, "url", "http://google.com", "Titre", "lieu");
+		
+			return ok("Qrcode added successfully !");
+		}
+		catch (Exception e) {
+			return badRequest(e.toString());
+		}
+	}
+	
 	public static Result testP() {
 		MonDataBase db = MonDataBase.getInstance();
 		

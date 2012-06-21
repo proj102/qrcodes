@@ -136,8 +136,55 @@ public class MonDataBase {
 		customerInfos.put("firm", firm);
 		customerInfos.put("avatar", "");
 		customerInfos.put("qrs", "[]");
-		
 		coll.insert(customerInfos);
+	}
+	
+	// add a qrCode to the database and add it to the customer's qrs
+	public void addQr(int customerId, String type, String redirection, String title, String place) throws Exception {
+		// check that the customer exists
+		DBCollection customers = db.getCollection("customers");
+		
+		BasicDBObject query  = new BasicDBObject();
+		query.put("id", customerId);
+		DBCursor data  = customers.find(query);
+		if (data.count() == 0)
+			throw new Exception("Unknown customer.");
+		
+		// everything is fine : get the customer's data
+		ObjectMapper mapper = new ObjectMapper();
+		mapper.configure(JsonParser.Feature.ALLOW_SINGLE_QUOTES, true);
+		
+		try {
+			// let's add the qrcode to the qrcodes collection
+			DBCollection qrs = db.getCollection("qrcodes");
+			String qrId = "10";
+			
+			BasicDBObject qrInfos = new BasicDBObject();
+			qrInfos.put("id", qrId);
+			qrInfos.put("type", type);
+			qrInfos.put("redirection", redirection);
+			qrInfos.put("creation", System.currentTimeMillis());
+			qrInfos.put("title", title);
+			qrInfos.put("place", place);
+			qrInfos.put("flashs", 0);
+			qrs.insert(qrInfos);
+			
+			// let's add the qr id to the customer's qrs
+			JsonNode json = mapper.readValue(data.next().toString(), JsonNode.class);
+			String custQrs = json.findPath("qrs").getTextValue();
+			
+			if (custQrs.equals("[]"))
+				custQrs = "[" + qrId + "]";
+			else
+				custQrs = custQrs.substring(0, custQrs.length() - 1) + ", " + qrId + "]";
+			
+			BasicDBObject newCustDoc = new BasicDBObject().append("$set", new BasicDBObject().append("qrs", custQrs));
+ 
+			customers.update(new BasicDBObject().append("id", customerId), newCustDoc);
+		}
+		catch (Exception e) {
+			throw new Exception("Error when adding the qrcode : " + e);
+		}
 	}
 	
 	public String testPass() {

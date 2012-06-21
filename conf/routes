@@ -22,5 +22,7 @@ GET	/insert/:url						controllers.Application.testinsert(url: String)
 
 # Test customers inscription in db
 GET		/addC							controllers.Application.addC()
-
 GET		/testP							controllers.Application.testP()
+
+# Test adding qrcodes
+GET		/addQ							controllers.Application.addQ()
