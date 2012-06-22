@@ -1,5 +1,7 @@
 package controllers;
 
+import java.lang.Exception;
+
 import play.*;
 import play.mvc.*;
 import play.data.*;
@@ -28,7 +30,7 @@ public class SignUp extends Controller {
     public static Result edit() {
         User existingUser = new User(
             "fakeuser", "fake@gmail.com", "secret",
-            new User.Profile("France", "Durand", "Pierre" , 30)
+            new User.Profile("France", "Durand", "Pierre" , "Télécom ParisTech")
         );
         return ok(form.render(signupForm.fill(existingUser)));
     }
@@ -51,15 +53,15 @@ public class SignUp extends Controller {
             }
         }
         
-        // Check if the username is valid
-        /*
-	 * TODO: Check the username is not in the data base
+        // Check if the username is valid (not in the data base)
+	 if(!filledForm.hasErrors()) {
+            try {
+		MonDataBase.getInstance().addCustomer(filledForm.field("username").value(), filledForm.field("password").value(), filledForm.field("email").value(), filledForm.field("profile.lastName").valueOr(""), filledForm.field("profile.firstName").valueOr(""), filledForm.field("profile.firm").valueOr(""));
+	    } catch(Exception e) {
+	        filledForm.reject("username", "This username is already taken");
+            }        
+	  }
 
-	   if(!filledForm.hasErrors()) {
-            if(name in data base) {
-	          filledForm.reject("username", "This username is already taken");
-            }
-        }*/
         
         if(filledForm.hasErrors()) {
             return badRequest(form.render(filledForm));

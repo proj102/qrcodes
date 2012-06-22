@@ -38,16 +38,15 @@ public class User {
 
         public String firstName;
         
-        @Min(18) @Max(100)
-        public Integer age;
+        public String firm;
         
         public Profile() {}
         
-        public Profile(String country, String lastName, String firstName,  Integer age) {
+        public Profile(String country, String lastName, String firstName,  String firm) {
             this.country = country;
             this.lastName = lastName;
             this.firstName = firstName;
-            this.age = age;
+            this.firm = firm;
         }
         
     }

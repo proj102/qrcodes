@@ -6,6 +6,9 @@
   				<li class="active">
    			 <a href="#">Home</a>
   				</li>
+  				<li >
+   			 <a href="@routes.Application.overview()">Overview</a>
+  				</li>
   				<li><a href="#">Create a Qr Code</a></li>
   				<li class="dropdown"><a href="/myQrTable" class="dropdown-toggle" data-toggle="dropdown">My QrCodes<b class="caret"></b></a>
     					<ul class="dropdown-menu">  					
@@ -21,11 +24,25 @@
 			
 			</ul>
 			
-			<ul class="nav pull-right"><li	><a href="@routes.SignUp.blank()">Subscribe</a></li></ul>
-			<form class="navbar-form pull-right">
-  				<input type="text" class="span2" value="login">
-				<input type="password" class="span2" value="password">
-			</form>
+			<ul class="nav pull-right">
+			<li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown">Login<b class="caret"></b></a>
+				<ul class="dropdown-menu">  
+					<li>
+					
+
+							<form>
+		  						<input type="text" class="span2" value="login">
+								<input type="password" class="span2" value="password">
+								<input type="submit" class="btn primary" value="Login">
+							</form>
+							
+							
+
+					</li>					
+    			</ul>	
+    		</li>
+			<li><a href="@routes.SignUp.blank()">Subscribe</a></li></ul>
+			
 			
 		</div>
 	</div>
