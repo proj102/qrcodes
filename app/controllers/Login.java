@@ -7,6 +7,7 @@ import play.mvc.*;
 import play.data.*;
 
 import views.html.*;
+import views.html.signup.*;
 
 import models.*;
 
@@ -28,6 +29,13 @@ public class Login extends Controller {
 			response().setCookie("connected", String.valueOf(customerId), sessionDuration);
 			
 		return customerId;
+	}
+
+	public static Result isConnected() throws Exception{
+		if(getConnected()!=-1)	
+			return ok("connect");
+		else
+			return ok("no");
 	}
 	
 	public static int getConnected() throws Exception {
@@ -54,22 +62,22 @@ public class Login extends Controller {
 		if(!filledForm.hasErrors()) {
 			try {
 				int checker = connexion(filledForm.field("login").value(), filledForm.field("password").value());
-				if (checker == -1)
+				if (checker == -1){
 					filledForm.reject("login", "This login does not exist");
-				if (checker == -2)
+					return badRequest(index.render(Application.urlForm, filledForm));
+				} else if (checker == -2){
 					filledForm.reject("password", "The password does not match");
+					return badRequest(index.render(Application.urlForm, filledForm));
+				} else {
+					Client created = filledForm.get();
+					return redirect("http://localhost:9000");					
+				}
 			} catch(Exception e) {
 				return badRequest("problems"+e);
 			}        
 		}
+		return redirect("http://localhost:9000");
 
-        
-		if(filledForm.hasErrors()) {
-				return badRequest("probleme"+filledForm.getErrors().toString());
-		} else {
-			Client created = filledForm.get();
-			return redirect("http://localhost:9000");
-		}
 	}
   
 }

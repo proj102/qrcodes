@@ -85,7 +85,7 @@ public class Application extends Controller {
 		return ok(myQrTable.render(Login.loginForm));
 	}
 	public static Result overview() {
-		return ok(overview.render());
+		return ok(overview.render(Login.loginForm));
 	}
 	
 

@@ -26,7 +26,7 @@ public class Upload extends Controller {
      * Display a blank form.
      */ 
     public static Result blank() {
-        return ok(batchGeneratorCSV.render(uploadForm));
+        return ok(batchGeneratorCSV.render(uploadForm, Login.loginForm));
     }
   
     
@@ -48,11 +48,11 @@ public class Upload extends Controller {
     file.renameTo(new File(dir, file.getName()));
     
     if(filledForm.hasErrors()) {
-            return badRequest(batchGeneratorCSV.render(filledForm));
+            return badRequest(batchGeneratorCSV.render(filledForm, Login.loginForm));
         } else {
             CSVUpload created = filledForm.get();
             created.filepath = file.getAbsolutePath();
-            return ok(uploadSummary.render(created));
+            return ok(uploadSummary.render(created, Login.loginForm));
         }
   } else {
     flash("error", "Missing file");

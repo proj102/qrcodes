@@ -1,10 +1,10 @@
-@(uploadForm: Form[CSVUpload])
+@(uploadForm: Form[CSVUpload], loginForm: Form[Client])
 
 @import helper._
 
 @main("Qr Codes from CSV"){
 
-	@header()
+	@header(loginForm)
 <div class="container">
 <div class="row">
 <h1>Enter the names of your document's columns</h1>
