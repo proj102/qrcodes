@@ -78,6 +78,9 @@ public class Application extends Controller {
 	public static Result myQrTable() {
 		return ok(myQrTable.render());
 	}
+	public static Result overview() {
+		return ok(overview.render());
+	}
 
 	//Get Url Form data
 	static Form<Url> urlForm = form(Url.class);	
