@@ -36,9 +36,9 @@ public class MonDataBase {
 	  
 	private static MonDataBase instance;
 	
+	// Return the database if it has already been created
+	// and if not create a new one
 	public static MonDataBase getInstance() {
-		// Return the database if it has already been created
-		// and if not create a new one
 		if (instance == null)
 			instance = new MonDataBase();
 		return instance;
@@ -64,11 +64,12 @@ public class MonDataBase {
 	}
 
 	// Retrieve the url of the document whose id is equal to the argument id
-	public String getUrl( String id ) throws Exception {
+	public String getUrl(String id) throws Exception {
 		DBCollection coll = db.getCollection("qrcodes");
 		BasicDBObject query  = new BasicDBObject();
-		query.put("id", id);
+		query.put("id", Integer.parseInt(id));
 		DBCursor data  = coll.find(query);
+		
 		return getElement(data, "redirection");	
 	}
 	
@@ -90,16 +91,7 @@ public class MonDataBase {
 	// add a customer to the db after checking the validity of
 	// the informations given and after generating a unique ID
 	public void addCustomer(String login, String password, String mail, String name, String firstname, String firm) throws Exception {
-		if (login == null || login == "")
-			throw new Exception("No login.");
-		else if (password == null || password == "")
-			throw new Exception("No password.");
-		else if (mail == null || mail == "")
-			throw new Exception("No mail.");
-		
-		
-		// all requieted fields have been completed
-		// let's check their validity
+		// let's check the validity of their validity
 		DBCollection coll = db.getCollection("customers");
 		
 		BasicDBObject query  = new BasicDBObject();
@@ -131,7 +123,7 @@ public class MonDataBase {
 	// insert a qrcode in the database with the given json content
 	// to which is added significant fields such as the id of the qrcode
 	// return the id of the qrcode
-	public String insertQr(BasicDBObject qrInfos) throws Exception {
+	public int insertQr(BasicDBObject qrInfos) throws Exception {
 		int customerId = getCustomerId();
 		
 		// check that the customer exists
@@ -146,7 +138,9 @@ public class MonDataBase {
 		try {
 			// let's add the qrcode to the qrcodes collection
 			DBCollection qrs = db.getCollection("qrcodes");
-			String qrId = String.valueOf(generateIdQRCode());
+			int qrId = generateIdQRCode();
+			
+			//throw new Exception("qrId : " + qrId);
 			
 			qrInfos.put("id", qrId);
 			qrInfos.put("creation", System.currentTimeMillis());
@@ -173,7 +167,10 @@ public class MonDataBase {
 	}
 	
 	// add a Qr with the data given in the "generate a Qrcode" form
-	public String addQrFromForm(String type, String redirection, String title, String place) throws Exception {
+	public int addQrFromForm(String type, String redirection, String title, String place) throws Exception {
+		if (redirection == null || redirection == "")	
+			throw new Exception("No redirection.");
+		
 		BasicDBObject qrInfos = new BasicDBObject();
 		qrInfos.put("type", type);
 		qrInfos.put("redirection", redirection);
@@ -187,50 +184,6 @@ public class MonDataBase {
 	public int getCustomerId() {
 		return 1;
 	}
-	
-	// add a qrCode to the database and add it to the customer's qrs
-	/*public void addQr(int customerId, String type, String redirection, String title, String place) throws Exception {
-		// check that the customer exists
-		DBCollection customers = db.getCollection("customers");
-		
-		BasicDBObject query  = new BasicDBObject();
-		query.put("id", customerId);
-		DBCursor data  = customers.find(query);
-		if (data.count() == 0)
-			throw new Exception("Unknown customer.");
-		
-		// everything is fine
-		try {
-			// let's add the qrcode to the qrcodes collection
-			DBCollection qrs = db.getCollection("qrcodes");
-			String qrId = String.valueOf(generateIdQRCode());
-			
-			BasicDBObject qrInfos = new BasicDBObject();
-			qrInfos.put("id", qrId);
-			qrInfos.put("type", type);
-			qrInfos.put("redirection", redirection);
-			qrInfos.put("creation", System.currentTimeMillis());
-			qrInfos.put("title", title);
-			qrInfos.put("place", place);
-			qrInfos.put("flashs", 0);
-			qrs.insert(qrInfos);
-			
-			// let's add the qr id to the customer's qrs
-			String custQrs = getElement(data, "qrs");
-			
-			if (custQrs.equals("[]"))
-				custQrs = "[" + qrId + "]";
-			else
-				custQrs = custQrs.substring(0, custQrs.length() - 1) + ", " + qrId + "]";
-			
-			BasicDBObject newCustDoc = new BasicDBObject().append("$set", new BasicDBObject().append("qrs", custQrs));
- 
-			customers.update(new BasicDBObject().append("id", customerId), newCustDoc);
-		}
-		catch (Exception e) {
-			throw new Exception("Error when adding the qrcode : " + e);
-		}
-	}*/
 	
 	public String testPass() {
 		DBCollection coll = db.getCollection("customers");
@@ -260,27 +213,23 @@ public class MonDataBase {
 			}
 		}
 	}
-
-	// Insert redirection url in new JSON document
-	public void insert(String url){
-                DBCollection coll = db.getCollection("test");
-                BasicDBObject doc = new BasicDBObject();
-                doc.put("id", generateIdQRCode());
-                doc.put("type", "url");
-                doc.put("data", url);
-		coll.insert(doc);
-    }
-
+	
 	// Generation unique QRID 
-	public int generateIdQRCode(){
+	public int generateIdQRCode() throws Exception {
 		DBCollection coll = db.getCollection("qrcodes");
 		BasicDBObject query  = new BasicDBObject();
 		BasicDBObject sorted  = new BasicDBObject();
 		query.put("id", 1); // selection all id of the collection
 		sorted.put("id",-1); // sort by "id" descending
 		// find all ids; sort its and get the max one
-		DBCursor idmax = coll.find(new BasicDBObject(), query).sort(sorted).limit(1);
-		return Integer.parseInt(getElement(idmax, "id")) + 1; // max id + 1 => unique id
+		DBCursor searchMaxId = coll.find(new BasicDBObject(), query);
+		if (searchMaxId.size() == 0)
+			return 0;
+		else {
+			DBCursor idmax = searchMaxId.sort(sorted).limit(1);
+			//throw new Exception("qrid : " + getElement(idmax, "id"));
+			return getIntElement(idmax, "id") + 1; // max id + 1 => unique id
+		}
 	}
 	
 	// generate a unique customer ID
@@ -291,9 +240,13 @@ public class MonDataBase {
 		query.put("id", 1); // selection all id of the collection
 		sorted.put("id",-1); // sort by "id" descending
 		// find all ids; sort its and get the max one
-		DBCursor idmax = coll.find(new BasicDBObject(), query).sort(sorted).limit(1);
-		
-		return getIntElement(idmax, "id") + 1; // max id + 1 => unique id
+		DBCursor searchMaxId = coll.find(new BasicDBObject(), query);
+		if (searchMaxId.size() == 0)
+			return 0;
+		else {
+			DBCursor idmax = searchMaxId.sort(sorted).limit(1);
+			return getIntElement(idmax, "id") + 1; // max id + 1 => unique id
+		}
 	}
 
 
