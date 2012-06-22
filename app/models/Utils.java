@@ -18,6 +18,10 @@ import java.util.UUID;
 
 import org.apache.commons.lang3.StringUtils;
 
+import java.security.MessageDigest;
+import java.util.Formatter;
+import java.security.NoSuchAlgorithmException;
+
 public class Utils {
 
 	// list ordered of columns titles in the document (first line)
@@ -107,5 +111,17 @@ public class Utils {
 	public String[] getStringTable(String line){
 		String s = StringUtils.remove(line, "\"");
 		return StringUtils.split(s, separator);
+	}
+	
+	// encrypt the given string in SHA-1
+	public static String sha1Encrypt(String s) throws NoSuchAlgorithmException {
+		MessageDigest md = MessageDigest.getInstance("SHA-1");
+		byte[] hash = md.digest(s.getBytes());
+		
+		Formatter formatter = new Formatter();
+		for (byte b : hash)
+			formatter.format("%02x", b);
+		
+		return formatter.toString();
 	}
 }

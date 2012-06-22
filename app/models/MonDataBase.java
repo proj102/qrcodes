@@ -15,9 +15,6 @@ import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 import com.mongodb.DBCursor;
 
-import java.security.MessageDigest;
-import java.util.Formatter;
-import java.security.NoSuchAlgorithmException;
 
 // Class depicting a MongoDB database
 public class MonDataBase {
@@ -77,17 +74,6 @@ public class MonDataBase {
 		return authentification;
 	}
 	
-	public static String sha1Encrypt(String s) throws NoSuchAlgorithmException {
-		MessageDigest md = MessageDigest.getInstance("SHA-1");
-		byte[] hash = md.digest(s.getBytes());
-		
-		Formatter formatter = new Formatter();
-		for (byte b : hash)
-			formatter.format("%02x", b);
-		
-		return formatter.toString();
-	}
-	
 	// add a customer to the db after checking the validity of
 	// the informations given and after generating a unique ID
 	public void addCustomer(String login, String password, String mail, String name, String firstname, String firm) throws Exception {
@@ -101,7 +87,7 @@ public class MonDataBase {
 			throw new Exception("Login already used.");
 		
 		// crypt the password in SHA-1
-		password = sha1Encrypt(password);
+		password = Utils.sha1Encrypt(password);
 		
 		// add the customer
 		int customerId = generateCustomerId();
@@ -196,10 +182,8 @@ public class MonDataBase {
 			return "not found";
 		else {
 			try {
-				MessageDigest digest = MessageDigest.getInstance("SHA-1");
-				digest.reset();
 				String password = "test2";
-				password = sha1Encrypt(password);
+				password = Utils.sha1Encrypt(password);
 				
 				String pass = getElement(data, "password");
 				
