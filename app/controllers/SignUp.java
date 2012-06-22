@@ -30,7 +30,7 @@ public class SignUp extends Controller {
     public static Result edit() {
         User existingUser = new User(
             "fakeuser", "fake@gmail.com", "secret",
-            new User.Profile("France", "Durand", "Pierre" , 30)
+            new User.Profile("France", "Durand", "Pierre" , "Télécom ParisTech")
         );
         return ok(form.render(signupForm.fill(existingUser)));
     }

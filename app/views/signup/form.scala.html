@@ -57,20 +57,19 @@
 		        '_error -> signupForm("profile.country").error.map(_.withMessage("Please select your country"))
 		    )
 		    
-		    @textarea(
+		    @inputText(
 		        signupForm("profile.lastName"), 
 		        '_label -> "lastName"
 		    )
 		    
-		    @textarea(
+		    @inputText(
 		        signupForm("profile.firstName"), 
 		        '_label -> "firstName"
 		    )
 
 		    @inputText(
-		        signupForm("profile.age"), 
-		        '_label -> "Age", 'class -> "mini",
-		        '_showConstraints -> false
+		        signupForm("profile.firm"), 
+		        '_label -> "firm"
 		    )
 		      
 		</fieldset>
