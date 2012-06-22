@@ -99,7 +99,7 @@ public class Application extends Controller {
 	public static Result getUrl() {
 		MonDataBase db = MonDataBase.getInstance();
 		
-        	Form<Url> form = form(Url.class).bindFromRequest();
+        Form<Url> form = form(Url.class).bindFromRequest();
 		if(form.hasErrors())
 			return badRequest(index.render(urlForm));
 		else {

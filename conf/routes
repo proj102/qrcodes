@@ -6,10 +6,11 @@
 GET     /                           controllers.Application.index()
 
 # Map static resources from the /public folder to the /assets URL path
-GET     /assets/*file               controllers.Assets.at(path="/public", file)
+GET     /assets/*file               controllers.Assets.at(path="/public", file)	
 
-# Redirection and Map id with the bdd 
-GET	/r/:id			    controllers.Application.redirection(id: String)
+# Test customers inscription in db
+GET		/addC						controllers.Application.addC()
+GET		/testP						controllers.Application.testP()
 
 # get URL
 POST    /getUrl                     controllers.Application.getUrl()
@@ -33,14 +34,23 @@ GET     /overview                   controllers.Application.overview()
 # Test adding qrcodes
 GET	/addQ			    controllers.Application.addQ()
 
+
 # Signup
 GET     /signup                     controllers.SignUp.blank()
 GET     /users/fakeuser             controllers.SignUp.edit()
 POST    /signup                     controllers.SignUp.submit()
 
+<<<<<<< HEAD
 # Upload
 #Route to page generating QR Codes through CSV Files
 GET     /upload                    controllers.Upload.blank()
 POST    /upload                     controllers.Upload.submit()
+=======
+
+# Login tests
+GET		/login/:login/:pass			controllers.Login.login(login: String, pass: String)
+GET		/logout						controllers.Login.logout()
+>>>>>>> fd60b66d978544030a47e5ec6bb21d2d7dc36af2
 
 GET	/test/:key				controllers.Application.test(key: String)
+
