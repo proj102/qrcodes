@@ -22,6 +22,12 @@ import com.mongodb.BasicDBObject;
 import play.data.*;
 import play.data.validation.Constraints.*;
 import java.util.*;
+import java.io.File;
+import play.mvc.Http.MultipartFormData.*;
+import play.mvc.Http.MultipartFormData;
+
+
+
 
 public class Application extends Controller {
 	private static String domain = "http://qrteam.herokuapp.com/"; 
@@ -74,15 +80,20 @@ public class Application extends Controller {
 		return ok(db.testPass());
 	}
 
+	//redirection to Web pages of the website
 	public static Result myQrTable() {
 		return ok(myQrTable.render(Login.loginForm));
 	}
 	public static Result overview() {
 		return ok(overview.render());
 	}
+	
+
 
 	//Get Url Form data
-	static Form<Url> urlForm = form(Url.class);	
+	static Form<Url> urlForm = form(Url.class);
+	
+
 
 	// generate QRcode from url
 	public static Result getUrl() {

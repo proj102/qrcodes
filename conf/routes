@@ -24,8 +24,12 @@ GET	/testP			    controllers.Application.testP()
 #Route to MyQrCodes
 GET     /myQrTable                  controllers.Application.myQrTable()
 
+
+
 #Route to MyQrCodes
 GET     /overview                   controllers.Application.overview()
+
+
 
 # Test adding qrcodes
 GET	/addQ			    controllers.Application.addQ()
@@ -36,9 +40,17 @@ GET     /signup                     controllers.SignUp.blank()
 GET     /users/fakeuser             controllers.SignUp.edit()
 POST    /signup                     controllers.SignUp.submit()
 
+
 # Login
 POST	/login			    controllers.Login.submit()
 GET	/login			    controllers.Login.blank()
+
+# Upload
+#Route to page generating QR Codes through CSV Files
+GET     /upload                    controllers.Upload.blank()
+POST    /upload                     controllers.Upload.submit()
+
+
 
 GET	/test/:key				controllers.Application.test(key: String)
 

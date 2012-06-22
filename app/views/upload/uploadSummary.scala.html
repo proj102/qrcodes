@@ -1,0 +1,18 @@
+@(csvUpload : CSVUpload)
+
+@main("File Uploaded") {
+
+	 @header()   
+
+	<div class="container">
+	  <h1>File Uploaded !</h1>
+	 <div class="row">
+  
+  <p>@csvUpload.urlRedirection</p>
+  <p>@csvUpload.filepath</p>
+    
+	    
+	 </div>
+	</div>  
+	    
+}
