@@ -56,7 +56,7 @@ public class SignUp extends Controller {
         // Check if the username is valid (not in the data base)
 	 if(!filledForm.hasErrors()) {
             try {
-		MonDataBase.getInstance().addCustomer(filledForm.field("username").value(), filledForm.field("password").value(), filledForm.field("email").value(), filledForm.field("profile.lastName").value(), filledForm.field("profile.firstName").value(), "");
+		MonDataBase.getInstance().addCustomer(filledForm.field("username").value(), filledForm.field("password").value(), filledForm.field("email").value(), filledForm.field("profile.lastName").valueOr(""), filledForm.field("profile.firstName").valueOr(""), filledForm.field("profile.firm").valueOr(""));
 	    } catch(Exception e) {
 	        filledForm.reject("username", "This username is already taken");
             }        
