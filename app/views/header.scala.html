@@ -1,48 +1,50 @@
+@(loginForm: Form[Client])
 <div class="navbar">
 	<div class="navbar-inner">
 		<div class="container">
 		<a class="brand" href="@routes.Application.index()">QR Team Project</a>
 			<ul class="nav">
   				<li class="active">
-   			 <a href="#">Home</a>
+   			 		<a href="#">Home</a>
   				</li>
   				<li >
-   			 <a href="@routes.Application.overview()">Overview</a>
+   			 		<a href="@routes.Application.overview()">Overview</a>
   				</li>
-  				<li><a href="#">Create a Qr Code</a></li>
-  				<li class="dropdown"><a href="/myQrTable" class="dropdown-toggle" data-toggle="dropdown">My QrCodes<b class="caret"></b></a>
+  				<li>
+					<a href="#">Create a Qr Code</a>
+				</li>
+  				<li class="dropdown">
+					<a href="/myQrTable" class="dropdown-toggle" data-toggle="dropdown">My QrCodes<b class="caret"></b></a>
     					<ul class="dropdown-menu">  					
     					</ul>		
   				</li>
-  				<li><a href="#">Contact</a></li>
-  				
-			
-				
-			<li><form class="navbar-search pull-left">
-  				<input type="text" class="search-query span2" placeholder="Search">
-			</form></li>
-			
+  				<li>
+					<a href="#">Contact</a>
+				</li>
+				<li>
+					<form class="navbar-search pull-left">
+	  				<input type="text" class="search-query span2" placeholder="Search">
+					</form>
+				</li>
 			</ul>
 			
 			<ul class="nav pull-right">
-			<li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown">Login<b class="caret"></b></a>
-				<ul class="dropdown-menu">  
-					<li>
-					
-
-							<form>
+				<li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown">Login<b class="caret"></b></a>
+					<ul class="dropdown-menu">  
+						<li>
+							@login(loginForm)
+							<!--<form>
 		  						<input type="text" class="span2" value="login">
 								<input type="password" class="span2" value="password">
 								<input type="submit" class="btn primary" value="Login">
-							</form>
-							
-							
-
-					</li>					
-    			</ul>	
-    		</li>
-			<li><a href="@routes.SignUp.blank()">Subscribe</a></li></ul>
-			
+							</form>-->
+						</li>					
+	    				</ul>	
+	    			</li>
+				<li>
+					<a href="@routes.SignUp.blank()">Subscribe</a>
+				</li>
+			</ul>
 			
 		</div>
 	</div>

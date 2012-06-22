@@ -1,4 +1,4 @@
-@(urlForm: Form[models.Url])
+@(urlForm: Form[models.Url], loginForm: Form[Client])
 
 @import helper._
 @import helper.twitterBootstrap._
@@ -7,7 +7,7 @@
 
 @main("QR Team") {
 
-@header()
+@header(loginForm)
 
 <div class="container">
 	<div class="hero-unit">

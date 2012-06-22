@@ -1,4 +1,4 @@
-@(signupForm: Form[User])
+@(signupForm: Form[User], loginForm: Form[Client])
 
 @import helper._
 @import helper.twitterBootstrap._
@@ -8,7 +8,7 @@
 }
 
 @main("Sign up!") {
-    @header()   
+    @header(loginForm)   
     @helper.form(action = routes.SignUp.submit) {
 	<div class="container">
 	  <h1>Thanks for signing up to QRteam</h1>

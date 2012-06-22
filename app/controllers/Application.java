@@ -33,7 +33,7 @@ public class Application extends Controller {
 	private static String domain = "http://qrteam.herokuapp.com/"; 
  
 	public static Result index() {
-		return ok(views.html.index.render(urlForm));
+		return ok(views.html.index.render(urlForm, Login.loginForm));
 	}
 
 	public static Result redirection( String id ) {
@@ -82,7 +82,7 @@ public class Application extends Controller {
 
 	//redirection to Web pages of the website
 	public static Result myQrTable() {
-		return ok(myQrTable.render());
+		return ok(myQrTable.render(Login.loginForm));
 	}
 	public static Result overview() {
 		return ok(overview.render());
@@ -101,12 +101,12 @@ public class Application extends Controller {
 		
         Form<Url> form = form(Url.class).bindFromRequest();
 		if(form.hasErrors())
-			return badRequest(index.render(urlForm));
+			return badRequest(index.render(urlForm, Login.loginForm));
 		else {
 			Url data = form.get();
 			try {
 				int qrId = db.addQrFromForm("url", data.url, "titre", "lieu");
-				return ok(qrGenerator.render(domain + "r/" + qrId));
+				return ok(qrGenerator.render(domain + "r/" + qrId, Login.loginForm));
 			}
 			catch (Exception e) {
 				return badRequest("error when adding qr code to db : " + e);

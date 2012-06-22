@@ -21,7 +21,7 @@ public class SignUp extends Controller {
      * Display a blank form.
      */ 
     public static Result blank() {
-        return ok(form.render(signupForm));
+        return ok(form.render(signupForm, Login.loginForm));
     }
   
     /**
@@ -32,7 +32,7 @@ public class SignUp extends Controller {
             "fakeuser", "fake@gmail.com", "secret",
             new User.Profile("France", "Durand", "Pierre" , "Télécom ParisTech")
         );
-        return ok(form.render(signupForm.fill(existingUser)));
+        return ok(form.render(signupForm.fill(existingUser), Login.loginForm));
     }
   
     /**
@@ -64,10 +64,10 @@ public class SignUp extends Controller {
 
         
         if(filledForm.hasErrors()) {
-            return badRequest(form.render(filledForm));
+            return badRequest(form.render(filledForm, Login.loginForm));
         } else {
             User created = filledForm.get();
-            return ok(summary.render(created));
+            return ok(summary.render(created, Login.loginForm));
         }
     }
   
