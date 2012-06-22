@@ -1,8 +1,8 @@
-@(url: String)
+@(url: String, loginForm: Form[Client])
 
 @main("Here is the result:") {
 
-    @header()
+    @header(loginForm)
         
 <div class="container-fluid">
 

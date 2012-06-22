@@ -36,10 +36,9 @@ GET     /signup                     controllers.SignUp.blank()
 GET     /users/fakeuser             controllers.SignUp.edit()
 POST    /signup                     controllers.SignUp.submit()
 
-
-# Login tests
-GET		/login/:login/:pass			controllers.Login.login(login: String, pass: String)
-GET		/logout						controllers.Login.logout()
+# Login
+POST	/login			    controllers.Login.submit()
+GET	/login			    controllers.Login.blank()
 
 GET	/test/:key				controllers.Application.test(key: String)
 

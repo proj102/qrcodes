@@ -1,4 +1,4 @@
-@(signupForm: Form[User])
+@(loginForm: Form[Client])
 
 @import helper._
 @import helper.twitterBootstrap._
@@ -9,14 +9,13 @@
 		    <legend>Account informations</legend>
 		    
 		    @inputText(
-		        signupForm("login"), 
+		        loginForm("login"), 
 		        '_label -> "Login", 
-		        '_help -> "Please choose a valid username.",
-		        '_error -> signupForm.globalError
+		        '_help -> "Please choose a valid username."
 		    )
 		    
 		    @inputPassword(
-		        signupForm("password"), 
+		        loginForm("password"), 
 		        '_label -> "Password",
 		        '_help -> "A password must be at least 6 characters. "
 		    )
@@ -25,8 +24,6 @@
 		
 		<div class="actions">
 		    <input type="submit" class="btn primary" value="Log In">
-		    <a href="@routes.Application.index" class="btn">Cancel</a>
 		</div>
-    }
     
 }

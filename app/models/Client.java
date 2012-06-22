@@ -16,7 +16,7 @@ public class Client {
 
     public Client() {}
     
-    public User(String login, String password) {
+    public Client(String login, String password) {
         this.login = login;
         this.password = password;
     }
