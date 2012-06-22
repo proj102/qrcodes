@@ -7,6 +7,7 @@ import play.mvc.*;
 import play.data.*;
 
 import views.html.signup.*;
+import views.html.*;
 
 import models.*;
 
@@ -16,8 +17,9 @@ import play.mvc.Http.Cookie;
 public class Login extends Controller {
     
 	public static int sessionDuration = 3600*24*30;
+	final static Form<Client> loginForm = form(Client.class);
 	
-    public static Result login(String login, String password) {
+    	public static Result login(String login, String password) {
 		
 		MonDataBase db = MonDataBase.getInstance();
 		
@@ -39,13 +41,38 @@ public class Login extends Controller {
 		if (cookie != null)
 			return Integer.parseInt(cookie.value());
 			
-		throw new Exception("not connected.");
+		return -1;
 	}
 	
 	public static Result logout() {
 		response().discardCookies("connected");
 		
 		return ok("You are now deconnected");
+	}
+
+	public static Result submit() {
+		Form<Client> filledForm = signupForm.bindFromRequest();
+
+		//Check in the database if login exist and if it matches with the password
+		if(!filledForm.hasErrors()) {
+			try {
+				int checker = login(filledForm.field("login").value(), filledForm.field("password"));
+				if (checker == -1)
+					filledForm.reject("login", "This login does not exist");
+				if (checker == -2)
+					filledForm.reject("password", "The password does not match");
+			} catch(Exception e) {
+				return badRequest(form.render(filledForm));
+			}        
+		}
+
+        
+		if(filledForm.hasErrors()) {
+			return badRequest(form.render(filledForm));
+		} else {
+			Client created = filledForm.get();
+			return ok(index.render("You're logged!"));
+		}
 	}
   
 }
