@@ -24,6 +24,9 @@ GET		/testP							controllers.Application.testP()
 #Route to MyQrCodes
 GET     /myQrTable               controllers.Application.myQrTable()
 
+#Route to MyQrCodes
+GET     /overview            controllers.Application.overview()
+
 # Test adding qrcodes
 GET		/addQ							controllers.Application.addQ()
 
