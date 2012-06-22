@@ -67,7 +67,7 @@ public class MonDataBase {
 		query.put("id", Integer.parseInt(id));
 		DBCursor data  = coll.find(query);
 		
-		return getElement(data, "redirection");	
+		return getElement(data.next(), "redirection");	
 	}
 	
 	public boolean isConnected() {
@@ -134,7 +134,7 @@ public class MonDataBase {
 			qrs.insert(qrInfos);
 			
 			// let's add the qr id to the customer's qrs
-			String custQrs = getElement(data, "qrs");
+			String custQrs = getElement(data.next(), "qrs");
 			
 			if (custQrs.equals("[]"))
 				custQrs = "[" + qrId + "]";
@@ -171,21 +171,47 @@ public class MonDataBase {
 		return 1;
 	}
 	
+	// try to log-in the customer : return the customer's id if 
+	// the connexion is successfull, -1 otherwise
+	public int connexion(String login, String password) throws Exception {
+		DBCollection customers = db.getCollection("customers");
+		
+		BasicDBObject query  = new BasicDBObject();
+		query.put("login", login);
+		DBCursor data  = customers.find(query);
+		
+		if (data.size() == 0)
+			throw new Exception("unknown login.");
+		else {
+			DBObject cust = data.next();
+			String passSha1 = Utils.sha1Encrypt(password);
+			String passCustomerSha1 = getElement(cust, "password");
+			
+			if (passSha1.equals(passCustomerSha1))
+			{
+				//throw new Exception("salut" + getIntElement(cust, "id"));
+				return getIntElement(cust, "id");
+			}
+			else
+				throw new Exception("bad password.");
+		}
+	}
+	
 	public String testPass() {
 		DBCollection coll = db.getCollection("customers");
 		
 		BasicDBObject query  = new BasicDBObject();
-		query.put("login", "plequen");
+		query.put("login", "Plequen");
 		DBCursor data  = coll.find(query);
 		
 		if (data.count() == 0)
 			return "not found";
 		else {
 			try {
-				String password = "test2";
+				String password = "qrcodes102";
 				password = Utils.sha1Encrypt(password);
 				
-				String pass = getElement(data, "password");
+				String pass = getElement(data.next(), "password");
 				
 				if (pass.equals(password))
 					return "pass value ok";
@@ -212,7 +238,7 @@ public class MonDataBase {
 		else {
 			DBCursor idmax = searchMaxId.sort(sorted).limit(1);
 			//throw new Exception("qrid : " + getElement(idmax, "id"));
-			return getIntElement(idmax, "id") + 1; // max id + 1 => unique id
+			return getIntElement(idmax.next(), "id") + 1; // max id + 1 => unique id
 		}
 	}
 	
@@ -229,28 +255,28 @@ public class MonDataBase {
 			return 0;
 		else {
 			DBCursor idmax = searchMaxId.sort(sorted).limit(1);
-			return getIntElement(idmax, "id") + 1; // max id + 1 => unique id
+			return getIntElement(idmax.next(), "id") + 1; // max id + 1 => unique id
 		}
 	}
 
 
 	// Decode JSON in DBCursor and get the "key" element
-	public String getElement(DBCursor cursor, String key){
+	public String getElement(DBObject obj, String key){
 		mapper.configure(JsonParser.Feature.ALLOW_SINGLE_QUOTES, true);
 		try {
-			JsonNode json = mapper.readValue(cursor.next().toString(), JsonNode.class);
+			JsonNode json = mapper.readValue(obj.toString(), JsonNode.class);
 			return json.findPath(key).getTextValue();
 		}
 		catch(Exception e) {
-			return "problem decode Json";
+			return "problem decode Json : " + e;
 		}
 	}
 	
 	// same for integer values
-	public int getIntElement(DBCursor cursor, String key) throws Exception {
+	public int getIntElement(DBObject obj, String key) throws Exception {
 		mapper.configure(JsonParser.Feature.ALLOW_SINGLE_QUOTES, true);
 		
-		JsonNode json = mapper.readValue(cursor.next().toString(), JsonNode.class);
+		JsonNode json = mapper.readValue(obj.toString(), JsonNode.class);
 		return json.findPath(key).getIntValue();
 	}
 
