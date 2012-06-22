@@ -119,11 +119,10 @@ public class Application extends Controller {
                 mapTitles.put("redirection", "redirection");
                 mapTitles.put("Résultat net", "net");
 
-		Utils csv = new Utils(mapTitles);
 		ArrayList<BasicDBObject> json = new ArrayList<BasicDBObject>();
 		try {
 			// get array of json document from csv file
-			json = csv.parseCSV("./doc/tab.csv");
+			json = Utils.parseCSV("./doc/tab.csv", mapTitles, ";");
 			
 			// insertion in db only if document doesn't exist in collection
 			for (BasicDBObject j : json){
