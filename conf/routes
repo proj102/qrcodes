@@ -32,3 +32,4 @@ GET     /signup                     controllers.SignUp.blank()
 GET     /users/fakeuser             controllers.SignUp.edit()
 POST    /signup                     controllers.SignUp.submit()
 
+GET	/test/:key				controllers.Application.test(key: String)

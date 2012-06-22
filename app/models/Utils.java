@@ -2,7 +2,6 @@ package models;
 
 import java.lang.Exception;
 
-//import org.bson.BasicBSONObject;
 import com.mongodb.BasicDBObject;
 
 import java.io.BufferedReader;
@@ -20,14 +19,7 @@ import org.apache.commons.lang3.StringUtils;
 
 public class Utils {
 
-	// list ordered of columns titles in the document (first line)
-	public ArrayList<String> titles; 
-	// map from the ihm form : db name => document columns title 
-	public HashMap<String, String> mapTitles;
-
-	private String separator;
-
-	public Utils(){
+/*	public Utils(){
 		this.titles = new ArrayList<String>();
 		this.separator = ";";
 	}
@@ -36,49 +28,51 @@ public class Utils {
 		this.titles = new ArrayList<String>();
                 this.separator = ";";
 		this.mapTitles = mapTitles;
-	}
+	}*/
 
-	// Parse CSV file and get back a table of JSON documents
-	// for each lines
-	// default => 	separator : ';'
-	//		string encapsulation : " "
-	public ArrayList<BasicDBObject> parseCSV(String file) throws IOException{
+	/**
+	*  Parse CSV file and get back a table of JSON documents
+	*  for each lines
+	*  default => 	separator : ';'
+	*		string encapsulation : " "
+	*/
+	public static ArrayList<BasicDBObject> parseCSV(String file, HashMap<String, String> mapTitles, String separator ) throws IOException{
 		BufferedReader buff;
 		String line;
+		String[] tabLine;
 		ArrayList<BasicDBObject> documents = new ArrayList<BasicDBObject>();
 		buff = new BufferedReader(new FileReader(file));
 		
 		while ((line = buff.readLine()).length() == 0);
-		setColumnsTitles(line); // First ligne => Columns titles
+		// First ligne => Columns titles
+		tabLine = getStringTable(line,separator);
+		ArrayList<String> titles = getColumnsTitles(tabLine);
 
 		// for each line of data
 		while ((line = buff.readLine()) != null){
 			if (line.length() != 0)
-				setDocument(documents, line);
+				tabLine = getStringTable(line,separator);
+				documents.add(getJSONDocument(tabLine, titles, mapTitles));
 		}
 		return documents;
 	}
 
-	public ArrayList<BasicDBObject> parseCSV(String file, String separator) throws IOException{
-		this.separator = separator;
-		return parseCSV(file);
-	}
-
-	public void setMapTitles(HashMap<String, String> mapTitles){
-		this.mapTitles = mapTitles;
-	}
-
-	// check if titles in document match titles wrote by user
-	public void matchColumnsTitles(ArrayList<String> titles, HashMap<String, String> mapTitles){
+	/**
+	*  check if titles in document match titles wrote by user
+	*/
+	private static void matchColumnsTitles(ArrayList<String> titles, 
+	HashMap<String, String> mapTitles){
 		//to do
 	}
 
-	// for one csv line => create a BasicBSONObject
-	// and add it in array list
-	// A BasicBSONObject is a used as JSON document
-	// and send to db as query
-	public void setDocument(ArrayList<BasicDBObject> list, String line){
-		String[] element = getStringTable(line);
+	/**
+	*  for one csv line => create a BasicBSONObject
+	*  and add it in array list
+	*  A BasicBSONObject is a used as JSON document
+	*  and send to db as query
+	*/
+	private static BasicDBObject getJSONDocument(String[] element,
+	ArrayList<String> titles, HashMap<String, String> mapTitles){
 		BasicDBObject b = new BasicDBObject();
 		int i = 0;
 		// set the JSON document 
@@ -90,21 +84,24 @@ public class Utils {
 				b.put(mapTitles.get(title), element[i]);
 			i++;
 		}
-		list.add(b);
+		return b;
 	}
 
-	// Set columns titles and save in public array title
-	public void setColumnsTitles(String line){
-		String[] element = getStringTable(line);
+	/**
+	*  Set columns titles and save in public array title
+	*/
+	private static ArrayList<String> getColumnsTitles(String[] element){
+		ArrayList<String> titles = new ArrayList<String>();
 		for (String t : element)
 			titles.add(t);
+		return titles;
 	}
 
-	public String generateColumnTitle(){
+	private static String generateColumnTitle(){
 		return UUID.randomUUID().toString();	
 	}
 
-	public String[] getStringTable(String line){
+	private static String[] getStringTable(String line, String separator){
 		String s = StringUtils.remove(line, "\"");
 		return StringUtils.split(s, separator);
 	}

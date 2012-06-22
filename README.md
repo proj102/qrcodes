@@ -1,4 +1,9 @@
-qrcodes
+Générateur de qrcodes
 =======
 
-Proj102 project on QR codes
+Projet réalisé dans le cadre du module Proj102 à Télécom ParisTech
+
+Description: 
+
+
+
