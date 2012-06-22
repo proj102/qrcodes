@@ -41,26 +41,22 @@ GET     /users/fakeuser             controllers.SignUp.edit()
 POST    /signup                     controllers.SignUp.submit()
 
 
-<<<<<<< HEAD
-=======
+
 # Login
 POST	/login			    controllers.Login.submit()
 GET	/login			    controllers.Login.blank()
 
->>>>>>> 1a77b43947449c353e8acebb1e540ef6b7c3e102
+
 # Upload
 #Route to page generating QR Codes through CSV Files
 GET     /upload                    controllers.Upload.blank()
 POST    /upload                     controllers.Upload.submit()
-<<<<<<< HEAD
 
 
 # Login tests
 GET		/login/:login/:pass			controllers.Login.login(login: String, pass: String)
 GET		/logout						controllers.Login.logout()
-=======
 
->>>>>>> 1a77b43947449c353e8acebb1e540ef6b7c3e102
 
 
 GET	/test/:key				controllers.Application.test(key: String)
