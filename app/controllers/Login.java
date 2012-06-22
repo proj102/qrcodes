@@ -17,20 +17,15 @@ public class Login extends Controller {
     
 	public static int sessionDuration = 3600*24*30;
 	
-    public static Result login(String login, String password) {
-		
+     public static int connexion(String login, String password) throws Exception {
 		MonDataBase db = MonDataBase.getInstance();
 		
-		try {
-			int customerId = db.connexion(login, password);
+		int customerId = db.connexion(login, password);
 			
+		if (customerId >= 0)
 			response().setCookie("connected", String.valueOf(customerId), sessionDuration);
 			
-			return ok("You are now logged !");
-		}
-		catch (Exception e) {
-			return badRequest("Error when logging : " + e);
-		}
+		return customerId;
 	}
 	
 	public static int getConnected() throws Exception {
@@ -39,13 +34,11 @@ public class Login extends Controller {
 		if (cookie != null)
 			return Integer.parseInt(cookie.value());
 			
-		throw new Exception("not connected.");
+		return -1;
 	}
 	
-	public static Result logout() {
+	public static void deconnexion() {
 		response().discardCookies("connected");
-		
-		return ok("You are now deconnected");
 	}
   
 }

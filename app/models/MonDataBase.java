@@ -15,6 +15,8 @@ import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 import com.mongodb.DBCursor;
 
+import controllers.Login;
+
 
 // Class depicting a MongoDB database
 public class MonDataBase {
@@ -110,7 +112,11 @@ public class MonDataBase {
 	// to which is added significant fields such as the id of the qrcode
 	// return the id of the qrcode
 	public int insertQr(BasicDBObject qrInfos) throws Exception {
-		int customerId = getCustomerId();
+		// get the id of the customer currently connected
+		int customerId = Login.getConnected();
+		
+		if (customerId == -1)
+			throw new Exception("Not connected.");
 		
 		// check that the customer exists
 		DBCollection customers = db.getCollection("customers");
@@ -166,11 +172,6 @@ public class MonDataBase {
 		return insertQr(qrInfos);
 	}
 	
-	// get the id of the current customer
-	public int getCustomerId() {
-		return 1;
-	}
-	
 	// try to log-in the customer : return the customer's id if 
 	// the connexion is successfull, -1 otherwise
 	public int connexion(String login, String password) throws Exception {
@@ -181,19 +182,16 @@ public class MonDataBase {
 		DBCursor data  = customers.find(query);
 		
 		if (data.size() == 0)
-			throw new Exception("unknown login.");
+			return -1;
 		else {
 			DBObject cust = data.next();
 			String passSha1 = Utils.sha1Encrypt(password);
 			String passCustomerSha1 = getElement(cust, "password");
 			
 			if (passSha1.equals(passCustomerSha1))
-			{
-				//throw new Exception("salut" + getIntElement(cust, "id"));
 				return getIntElement(cust, "id");
-			}
 			else
-				throw new Exception("bad password.");
+				return -2;
 		}
 	}
 	
