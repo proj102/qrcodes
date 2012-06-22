@@ -54,10 +54,6 @@ GET     /upload                    controllers.Upload.blank()
 POST    /upload                     controllers.Upload.submit()
 
 
-# Login tests
-GET		/login/:login/:pass			controllers.Login.login(login: String, pass: String)
-GET		/logout						controllers.Login.logout()
-
 
 
 GET	/test/:key				controllers.Application.test(key: String)
