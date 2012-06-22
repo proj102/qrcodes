@@ -6,29 +6,30 @@
 GET     /                           controllers.Application.index()
 
 # Map static resources from the /public folder to the /assets URL path
-GET     /assets/*file               controllers.Assets.at(path="/public", file)
-
-# Redirection and Map id with the bdd 
-GET	/r/:id							controllers.Application.redirection(id: String)
-
-# get URL
-GET     /getUrl                  	controllers.Application.getUrl()
-
-GET		/r/:id						controllers.Application.redirection(id: String)
+GET     /assets/*file               controllers.Assets.at(path="/public", file)	
 
 # Test customers inscription in db
 GET		/addC						controllers.Application.addC()
 GET		/testP						controllers.Application.testP()
 
+# get URL
+POST    /getUrl                     controllers.Application.getUrl()
+GET	/r/:id			    controllers.Application.redirection(id: String)
+
+# Test customers inscription in db
+GET	/addC			    controllers.Application.addC()
+GET	/testP			    controllers.Application.testP()
+
 
 #Route to MyQrCodes
-GET     /myQrTable               	controllers.Application.myQrTable()
+GET     /myQrTable                  controllers.Application.myQrTable()
 
 #Route to MyQrCodes
-GET     /overview            		controllers.Application.overview()
+GET     /overview                   controllers.Application.overview()
 
 # Test adding qrcodes
-GET		/addQ						controllers.Application.addQ()
+GET	/addQ			    controllers.Application.addQ()
+
 
 # Signup
 GET     /signup                     controllers.SignUp.blank()
@@ -39,4 +40,6 @@ POST    /signup                     controllers.SignUp.submit()
 # Login tests
 GET		/login/:login/:pass			controllers.Login.login(login: String, pass: String)
 GET		/logout						controllers.Login.logout()
+
+GET	/test/:key				controllers.Application.test(key: String)
 

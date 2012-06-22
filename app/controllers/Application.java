@@ -17,12 +17,11 @@ import com.mongodb.Mongo;
 import com.mongodb.DB;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBCursor;
+import com.mongodb.BasicDBObject;
 
 import play.data.*;
 import play.data.validation.Constraints.*;
 import java.util.*;
-
-
 
 public class Application extends Controller {
 	private static String domain = "http://qrteam.herokuapp.com/"; 
@@ -101,6 +100,39 @@ public class Application extends Controller {
 			catch (Exception e) {
 				return badRequest("error when adding qr code to db : " + e);
 			}
+		}
+	}
+
+	// Test methode
+	// insertion of all elements from a csv document and save in db
+	public static Result test(String key){
+		MonDataBase db = MonDataBase.getInstance();
+
+		// this variable will be send from the view
+		HashMap<String, String> mapTitles = new HashMap<String, String>();
+		mapTitles.put("Société", "societe");
+                mapTitles.put("Secteur", "secteur");
+                mapTitles.put("Poids indiciel", "poids");
+                mapTitles.put("Rang mondial", "rang");
+                mapTitles.put("Chiffre d'affaires", "ca");
+                mapTitles.put("Capitalisation boursière", "capital");
+                mapTitles.put("redirection", "redirection");
+                mapTitles.put("Résultat net", "net");
+
+		ArrayList<BasicDBObject> json = new ArrayList<BasicDBObject>();
+		try {
+			// get array of json document from csv file
+			json = Utils.parseCSV("./doc/tab.csv", mapTitles, ";");
+			
+			// insertion in db only if document doesn't exist in collection
+			for (BasicDBObject j : json){
+				if ( !db.isCreated(key, j.get(key), "qrcodes") ) 
+					db.insertQr(j);
+			}
+			return ok ("insertion csv fini");
+		}
+		catch (Exception e){
+			return badRequest("Error" + e);
 		}
 	}
 }
