@@ -10,7 +10,6 @@ import org.codehaus.jackson.node.ObjectNode;
 import views.html.*;
 import models.*;
 
-
 import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 import com.mongodb.Mongo;
@@ -27,13 +26,11 @@ import play.mvc.Http.MultipartFormData.*;
 import play.mvc.Http.MultipartFormData;
 
 
-
-
 public class Application extends Controller {
 	public final static String domain = "http://qrteam.herokuapp.com/"; 
  
 	public static Result index() {
-		return ok(views.html.index.render(urlForm, Login.loginForm));
+		return ok(index.render(urlForm, Login.loginForm, InfoDisplay.NONE, null));
 	}
 
 	// Manage the redirection
@@ -44,7 +41,7 @@ public class Application extends Controller {
 			return redirect(db.getUrl(id));
 		}
 		catch (Exception e) {
-			return badRequest(e.toString());
+			return badRequest(index.render(urlForm, Login.loginForm, InfoDisplay.ERROR, "Redirection failed. Reason : " + e));
 		}
 	}
 
@@ -56,7 +53,7 @@ public class Application extends Controller {
 			return ok(myQrTable.render(Login.loginForm, db.getCustomersQrs()));
 		}
 		catch (Exception e) {
-			return badRequest("Impossible to get the Qrcodes : " + e);
+			return badRequest(index.render(urlForm, Login.loginForm, InfoDisplay.ERROR, "Impossible to get the Qrcodes. " + e));
 		}
 	}
 	
@@ -73,15 +70,15 @@ public class Application extends Controller {
 		
         Form<Url> form = form(Url.class).bindFromRequest();
 		if(form.hasErrors())
-			return badRequest(index.render(urlForm, Login.loginForm));
+			return badRequest(index.render(urlForm, Login.loginForm, 0, null));
 		else {
 			Url data = form.get();
 			try {
 				int qrId = db.addQrFromForm("url", data.url, "titre", "lieu");
-				return ok(qrGenerator.render(domain + "r/" + qrId, data.url, Login.loginForm));
+				return ok(qrGenerator.render(domain + "r/" + qrId, Login.loginForm, InfoDisplay.SUCCESS, "You have successfully created a QrCode that redirects to " + data.url + " ."));
 			}
 			catch (Exception e) {
-				return badRequest("error when adding qr code to db : " + e);
+				return badRequest(index.render(urlForm, Login.loginForm, InfoDisplay.ERROR, "The QrCode could not be generated. " + e));
 			}
 		}
 	}

@@ -1,49 +1,18 @@
-@(url: String, redirection: String, loginForm: Form[Client])
+@(url: String, loginForm: Form[Client], infosType: Int, infosContent: String)
 
 @main("Here is the result:") {
 
     @header(loginForm)
-        
-<div class="container-fluid">
-
-<div class="alert alert-success">
-	<p>You have created a QrCode which will now redirect to @redirection </p>
-</div>
-<!--Create a 5-column block in Bootstrap grid-->
-<div class="span5">
-</div>
-<div class="span7">
-<div id="qrcodeCanvas" class="thumbnail"></div>
-<div id="qrcodeCanvas1" class="thumbnail"></div>
-<div id="qrcodeCanvas2" class="thumbnail"></div>
-
-
-
-
-<script>jQuery('#qrcodeCanvas').qrcode({text	: "@url"});</script>
-<script>jQuery('#qrcodeCanvas1').qrcode({
-		
-		
-  				text	: "@url"
-		
-	});
-
 	
+	<div class="container-fluid">
+		@informations(infosType, infosContent)
+		<!--Create a 5-column block in Bootstrap grid-->
+		<div class="span5">
+		</div>
+		<div class="span7">
+			<div id="qrcodeCanvas" class="thumbnail"></div>
+			<script>jQuery('#qrcodeCanvas').qrcode({text: "@url"});</script>
+		</div>
+	</div>
 		
-</script>
-<script>
-jQuery('#qrcodeCanvas2').qrcode({
-		
-		
-  				text	: "@url"
-		
-	});
-
-	
-		
-</script>
-
-</div><!-- end of .span7 -->
-</div>
-    
 }

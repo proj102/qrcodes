@@ -1,0 +1,19 @@
+@(infosType: Int, infosContent: String)
+
+@if(infosType == 1) {
+	<div class="alert alert-success">
+		<p>@infosContent</p>
+	</div>
+}else {
+	@if(infosType == 2) {
+		<div class="alert alert-error">
+			<p>@infosContent</p>
+		</div>
+	}else {
+		@if(infosType == 3) {
+			<div class="alert alert-info">
+				<p>@infosContent</p>
+			</div>
+		}
+	}
+}

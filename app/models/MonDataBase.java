@@ -73,7 +73,11 @@ public class MonDataBase {
 		DBCollection coll = db.getCollection("qrcodes");
 		BasicDBObject query  = new BasicDBObject();
 		query.put("id", id);
-		DBCursor data  = coll.find(query);
+		DBCursor data = coll.find(query);
+		
+		if (data.size() == 0)
+			throw new QrCodeException("QrCode does not exist.");
+		
 		DBObject currentQr = data.next();
 		
 		// if no exceptions have been thrown, we can return the redirection url
@@ -83,7 +87,7 @@ public class MonDataBase {
 		BasicDBObject newQrDoc = new BasicDBObject().append("$set", new BasicDBObject().append("flashs", newNumber));
 		coll.update(new BasicDBObject().append("id", id), newQrDoc);
 		
-		return getElement(currentQr, "redirection");	
+		return getElement(currentQr, "redirection");
 	}
 	
 	// testMethod
@@ -131,15 +135,12 @@ public class MonDataBase {
 		int customerId = Login.getConnected();
 		
 		if (customerId == -1)
-			throw new Exception("Not connected.");
+			throw new CustomerException("You must be connected.");
 		
-		// check that the customer exists
 		DBCollection customers = db.getCollection("customers");
 		BasicDBObject query  = new BasicDBObject();
 		query.put("id", customerId);
 		DBCursor data  = customers.find(query);
-		if (data.count() == 0)
-			throw new Exception("Unknown customer.");
 			
 		// everything is fine
 		try {
@@ -167,14 +168,14 @@ public class MonDataBase {
 			return qrId;
 		}
 		catch (Exception e) {
-			throw new Exception("Error when adding the qrcode : " + e);
+			throw new Exception(e.toString());
 		}
 	}
 	
 	// add a Qr with the data given in the "generate a Qrcode" form
 	public int addQrFromForm(String type, String redirection, String title, String place) throws Exception {
 		if (redirection == null || redirection == "")	
-			throw new Exception("No redirection.");
+			throw new CustomerException("You must specify a redirection url.");
 		
 		BasicDBObject qrInfos = new BasicDBObject();
 		qrInfos.put("type", type);
@@ -226,7 +227,7 @@ public class MonDataBase {
 		int customerId = Login.getConnected();
 		
 		if (customerId == -1)
-			throw new Exception("Not connected.");
+			throw new CustomerException("You must be connected.");
 			
 		
 		DBCollection customers = db.getCollection("customers");

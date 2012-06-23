@@ -1,4 +1,4 @@
-@(urlForm: Form[models.Url], loginForm: Form[Client])
+@(urlForm: Form[models.Url], loginForm: Form[Client], infosType: Int, infosContent: String)
 
 @import helper._
 @import helper.twitterBootstrap._
@@ -10,6 +10,7 @@
 @header(loginForm)
 
 <div class="container">
+	@informations(infosType, infosContent)
 	<div class="hero-unit">
 		<p><h1>QR Team Project</h1></p>
 		<p>Think QrCode in a different way. It's a whole new world beyond the QrCode</p>
