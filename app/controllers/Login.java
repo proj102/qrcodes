@@ -19,11 +19,11 @@ public class Login extends Controller {
 	public static int sessionDuration = 3600*24*30;
 	static Form<Client> loginForm = form(Client.class);
 	
-	public static int connexion(String login, String password) throws Exception {
+	public static int connection(String login, String password) throws Exception {
 
 		MonDataBase db = MonDataBase.getInstance();
 		
-		int customerId = db.connexion(login, password);
+		int customerId = db.connection(login, password);
 			
 		if (customerId >= 0)
 			response().setCookie("connected", String.valueOf(customerId), sessionDuration);
@@ -51,8 +51,10 @@ public class Login extends Controller {
 		return -1;
 	}
 	
-	public static void deconnexion() {
+	public static Result logout() {
 		response().discardCookies("connected");
+		
+		return redirect(routes.Application.index());
 	}
 
 	public static Result blank() {
@@ -65,7 +67,7 @@ public class Login extends Controller {
 		//Check in the database if login exist and if it matches with the password
 		if(!filledForm.hasErrors()) {
 			try {
-				int checker = connexion(filledForm.field("login").value(), filledForm.field("password").value());
+				int checker = connection(filledForm.field("login").value(), filledForm.field("password").value());
 				if (checker == -1){
 					filledForm.reject("login", "This login does not exist");
 					return badRequest(index.render(Application.urlForm, filledForm));

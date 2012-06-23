@@ -49,7 +49,7 @@ public class MonDataBase {
 		return instance;
 	}
 	
-	// connexion to the database
+	// connection to the database
 	public MonDataBase() {
 		address = "ds033767.mongolab.com";
 		port = 33767;
@@ -180,8 +180,8 @@ public class MonDataBase {
 	}
 	
 	// try to log-in the customer : return the customer's id if 
-	// the connexion is successfull, -1 otherwise
-	public int connexion(String login, String password) throws Exception {
+	// the connection is successfull, -1 otherwise
+	public int connection(String login, String password) throws Exception {
 		DBCollection customers = db.getCollection("customers");
 		
 		BasicDBObject query  = new BasicDBObject();

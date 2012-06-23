@@ -49,6 +49,7 @@ POST	/myQrTable			controllers.QrTable.submit()
 POST	/login				controllers.Login.submit()
 GET		/login				controllers.Login.blank()
 GET		/co			   		controllers.Login.isConnected()
+POST	/logout				controllers.Login.logout()
 
 
 # Upload
