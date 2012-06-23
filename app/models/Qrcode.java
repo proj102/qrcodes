@@ -1,5 +1,7 @@
 package models;
 
+import controllers.*;
+
 // depicts a Qrcode
 public class Qrcode {
 
@@ -50,8 +52,12 @@ public class Qrcode {
 		return place;
 	}
 	
-	public long getCreationDate() {
-		return creationDate;
+	public String getCreationDate() {
+		return Utils.dateFromTimestamp(creationDate, "dd/MM/yyyy");
+	}
+	
+	public String getUrl() {
+		return Application.domain + "r/" + id;
 	}
 	
 	public int getFlashs() {

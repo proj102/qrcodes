@@ -14,6 +14,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import java.util.UUID;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -120,5 +122,10 @@ public class Utils {
 			formatter.format("%02x", b);
 		
 		return formatter.toString();
+	}
+	
+	// convert a timestamp to the given format
+	public static String dateFromTimestamp(long timestamp, String format) {
+		return new SimpleDateFormat(format).format(new Timestamp(timestamp));
 	}
 }

@@ -30,7 +30,7 @@ import play.mvc.Http.MultipartFormData;
 
 
 public class Application extends Controller {
-	private static String domain = "http://qrteam.herokuapp.com/"; 
+	public final static String domain = "http://qrteam.herokuapp.com/"; 
  
 	public static Result index() {
 		return ok(views.html.index.render(urlForm, Login.loginForm));

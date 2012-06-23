@@ -1,0 +1,39 @@
+@(qr: Qrcode, loginForm: Form[Client])
+
+@import helper._
+@import helper.twitterBootstrap._
+
+@main("View my QrCode") {
+
+    @header(loginForm)
+
+	<div class="container">
+		<div class="hero-unit">
+			<h2>My QrCode</h2>
+			<div id="qrcodeCanvas" class="thumbnail"></div>
+			<strong>Title</strong> : @qr.getTitle()<br/>
+			<strong>Place</strong> : @qr.getPlace()<br/>
+			<strong>Redirection</strong> : @qr.getRedirection()<br/>
+			<strong>Creation date</strong> : @qr.getCreationDate()<br/>
+			<strong>Number of flashs</strong> : @qr.getFlashs()<br/>
+		</div>
+		<script>jQuery('#qrcodeCanvas').qrcode({text : "@qr.getUrl()"});</script>
+		
+		<div class="hero-unit">
+			<h2>Modify my QrCode</h2>
+			@form(action = routes.MyQr.submit) {
+				@inputText(
+					loginForm("redirection"),
+					'_label -> "Url of redirection",
+					'_help -> "",
+					'_error -> "Please choose a valid redirection url."
+				)
+				
+				<input type="submit" class="btn-primary btn-large" value="Modify" />
+			}
+		</div>
+
+		<div class="span5">
+		</div>
+	</div>
+}

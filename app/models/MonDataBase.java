@@ -147,8 +147,6 @@ public class MonDataBase {
 			DBCollection qrs = db.getCollection("qrcodes");
 			int qrId = generateIdQRCode();
 			
-			//throw new Exception("qrId : " + qrId);
-			
 			qrInfos.put("id", qrId);
 			qrInfos.put("creation", System.currentTimeMillis());
 			qrInfos.put("flashs", 0);
@@ -210,34 +208,6 @@ public class MonDataBase {
 		}
 	}
 	
-	// test method
-	public String testPass() {
-		DBCollection coll = db.getCollection("customers");
-		
-		BasicDBObject query  = new BasicDBObject();
-		query.put("login", "Plequen");
-		DBCursor data  = coll.find(query);
-		
-		if (data.count() == 0)
-			return "not found";
-		else {
-			try {
-				String password = "qrcodes102";
-				password = Utils.sha1Encrypt(password);
-				
-				String pass = getElement(data.next(), "password");
-				
-				if (pass.equals(password))
-					return "pass value ok";
-				else
-					return "pass value not ok";
-			}
-			catch (Exception e) {
-				return "pass not ok : " + e;
-			}
-		}
-	}
-	
 	// check that the given customer still exists
 	public int custExists(int id) {
 		DBCollection customers = db.getCollection("customers");
@@ -292,6 +262,42 @@ public class MonDataBase {
 		}
 		
 		return ret;
+	}
+	
+	public Qrcode getQrCode(int id) throws Exception {
+		int customerId = Login.getConnected();
+		
+		if (customerId == -1)
+			throw new Exception("Not connected.");
+		
+		DBCollection customers = db.getCollection("customers");
+		BasicDBObject query  = new BasicDBObject();
+		query.put("id", customerId);
+		DBCursor customer = customers.find(query);
+		
+		String custQrs = getElement(customer.next(), "qrs");
+		
+		// throw an exception if the qrCode does not belong to the customer
+		if (custQrs.indexOf(String.valueOf(id)) == -1)
+			throw new Exception("Qr not found.");
+	
+		DBCollection collQrs = db.getCollection("qrcodes");
+		query = new BasicDBObject();
+		query.put("id", id);
+		DBObject currentQr = collQrs.find(query).next();
+		
+		mapper.configure(JsonParser.Feature.ALLOW_SINGLE_QUOTES, true);
+		JsonNode json = mapper.readValue(currentQr.toString(), JsonNode.class);
+		
+		return new Qrcode(
+			id,
+			json.findPath("redirection").getTextValue(),
+			json.findPath("type").getTextValue(),
+			json.findPath("title").getTextValue(),
+			json.findPath("place").getTextValue(),
+			json.findPath("creation").getLongValue(),
+			json.findPath("flashs").getIntValue()
+		);
 	}
 	
 	// Generation unique QRID 
