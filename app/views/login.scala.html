@@ -12,14 +12,14 @@
 		        loginForm("login"), 
 		        '_label -> "Login", 
 				'_help -> "",
-		        '_error -> "Please choose a valid username."
+		        '_error -> loginForm.globalError
 		    )
 		    
 		    @inputPassword(
 		        loginForm("password"), 
 				'_label -> "Password",
 				'_help -> "",
-		        '_error -> "A password must be at least 6 characters. "
+		        '_error -> loginForm.globalError
 		    )
 		    
 		</fieldset>

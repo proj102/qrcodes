@@ -24,14 +24,15 @@ public class QrTable extends Controller {
 		MonDataBase db = MonDataBase.getInstance();
 		
 		try {
-			return ok(myQrTable.render(Login.loginForm, db.getCustomersQrs()));
+			return ok(myQrTable.render(Login.loginForm, db.getCustomersQrs(), InfoDisplay.NONE, null));
 		}
 		catch (Exception e) {
-			return badRequest("Impossible to get the Qrcodes : " + e);
+			return badRequest(myQrTable.render(Login.loginForm, null, InfoDisplay.ERROR, "Impossible to get your Qrcodes." + e));
 		}
     }
-  
-    /**
+	
+
+	/**
      * Display a form pre-filled with an existing account.
      */
     /*public static Result edit() {

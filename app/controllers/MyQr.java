@@ -23,10 +23,15 @@ public class MyQr extends Controller {
 		try {
 			Qrcode qr = db.getQrCode(id);
 			
-			return ok(myQr.render(qr, Login.loginForm));
+			return ok(myQr.render(qr, Login.loginForm, InfoDisplay.NONE, null));
 		}
 		catch (Exception e) {
-			return ok(e.toString());
+			try {
+				return ok(myQrTable.render(Login.loginForm, db.getCustomersQrs(), InfoDisplay.ERROR, "Cannot view this QrCode. " + e));
+			}
+			catch (Exception f) {
+				return badRequest(myQrTable.render(Login.loginForm, new ArrayList<Qrcode>(), InfoDisplay.ERROR, "Impossible to get your Qrcodes." + f));
+			}
 		}
 	}
 	

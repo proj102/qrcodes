@@ -17,6 +17,7 @@ import play.mvc.Http.Cookie;
 public class Login extends Controller {
     
 	public static int sessionDuration = 3600*24*30;
+	
 	static Form<Client> loginForm = form(Client.class);
 	
 	public static int connection(String login, String password) throws Exception {
@@ -31,6 +32,7 @@ public class Login extends Controller {
 		return customerId;
 	}
 
+	// test method
 	public static Result isConnected() throws Exception{
 		if(getConnected()!=-1)	
 			return ok("connect");
@@ -54,7 +56,7 @@ public class Login extends Controller {
 	public static Result logout() {
 		response().discardCookies("connected");
 		
-		return redirect(routes.Application.index());
+		return ok(index.render(Application.urlForm, Login.loginForm, InfoDisplay.INFO, "You are now logged out."));
 	}
 
 	public static Result blank() {
@@ -63,29 +65,30 @@ public class Login extends Controller {
 
 	public static Result submit() {
 		Form<Client> filledForm = loginForm.bindFromRequest();
-
+		
 		//Check in the database if login exist and if it matches with the password
 		if(!filledForm.hasErrors()) {
 			try {
 				int checker = connection(filledForm.field("login").value(), filledForm.field("password").value());
-				if (checker == -1){
-					filledForm.reject("login", "This login does not exist");
-					return badRequest(index.render(Application.urlForm, filledForm));
-				} else if (checker == -2){
-					filledForm.reject("password", "The password does not match");
-					return badRequest(index.render(Application.urlForm, filledForm));
-				} else {
-					Client created = filledForm.get();
-					return redirect("http://localhost:9000");					
-				}
-			} catch(Exception e) {
-				return badRequest("problems"+e);
-			}        
+				
+				Client created = filledForm.get();
+				return ok(index.render(Application.urlForm, filledForm, InfoDisplay.SUCCESS, "You are now connected."));					
+			}
+			catch (LoginException e) {
+				filledForm.reject("login", "This login does not exist");
+				return badRequest(index.render(Application.urlForm, filledForm, InfoDisplay.ERROR, "Error when logging in. This login does not exist."));
+			}
+			catch (PasswordException e) {
+				filledForm.reject("password", "The password does not match");
+				return badRequest(index.render(Application.urlForm, filledForm, InfoDisplay.ERROR, "Error when logging in. The password does not match."));
+			}
+			catch(Exception e) {
+				return badRequest(index.render(Application.urlForm, filledForm, InfoDisplay.ERROR, "Error when logging in. " + e));
+			}
 		}
-		return redirect("http://localhost:9000");
-
+		
+		return badRequest(index.render(Application.urlForm, filledForm, InfoDisplay.ERROR, "Error when logging in. Please fill correctly all the fields."));
 	}
-  
 }
 
 

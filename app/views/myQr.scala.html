@@ -1,4 +1,4 @@
-@(qr: Qrcode, loginForm: Form[Client])
+@(qr: Qrcode, loginForm: Form[Client], infosType: Int, infosContent: String)
 
 @import helper._
 @import helper.twitterBootstrap._
@@ -8,6 +8,7 @@
     @header(loginForm)
 
 	<div class="container">
+		@informations(infosType, infosContent)
 		<div class="hero-unit">
 			<h2>My QrCode</h2>
 			<div id="qrcodeCanvas" class="thumbnail"></div>

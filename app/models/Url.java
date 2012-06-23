@@ -7,6 +7,7 @@ import play.data.validation.Constraints.*;
 
 
 public class Url {
-        @Required public String url;
+		@Required 
+		public String url;
         
-    }
+}

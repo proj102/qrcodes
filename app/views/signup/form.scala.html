@@ -1,4 +1,4 @@
-@(signupForm: Form[User], loginForm: Form[Client])
+@(signupForm: Form[User], loginForm: Form[Client], infosType: Int, infosContent: String)
 
 @import helper._
 @import helper.twitterBootstrap._
@@ -11,6 +11,7 @@
     @header(loginForm)   
     @helper.form(action = routes.SignUp.submit) {
 	<div class="container">
+		@informations(infosType, infosContent)
 	  <h1>Thanks for signing up to QRteam</h1>
 	 <div class="row">
 

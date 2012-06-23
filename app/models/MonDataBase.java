@@ -105,7 +105,7 @@ public class MonDataBase {
 		query.put("login", login);
 		DBCursor data  = coll.find(query);
 		if (data.count() != 0)
-			throw new Exception("Login already used.");
+			throw new LoginException("Login already used.");
 		
 		// crypt the password in SHA-1
 		password = Utils.sha1Encrypt(password);
@@ -196,7 +196,7 @@ public class MonDataBase {
 		DBCursor data  = customers.find(query);
 		
 		if (data.size() == 0)
-			return -1;
+			throw new LoginException();
 		else {
 			DBObject cust = data.next();
 			String passSha1 = Utils.sha1Encrypt(password);
@@ -205,7 +205,7 @@ public class MonDataBase {
 			if (passSha1.equals(passCustomerSha1))
 				return getIntElement(cust, "id");
 			else
-				return -2;
+				throw new PasswordException();
 		}
 	}
 	
@@ -269,7 +269,7 @@ public class MonDataBase {
 		int customerId = Login.getConnected();
 		
 		if (customerId == -1)
-			throw new Exception("Not connected.");
+			throw new CustomerException("You are not connected.");
 		
 		DBCollection customers = db.getCollection("customers");
 		BasicDBObject query  = new BasicDBObject();
@@ -280,7 +280,7 @@ public class MonDataBase {
 		
 		// throw an exception if the qrCode does not belong to the customer
 		if (custQrs.indexOf(String.valueOf(id)) == -1)
-			throw new Exception("Qr not found.");
+			throw new QrCodeException("This QrCode does not exist.");
 	
 		DBCollection collQrs = db.getCollection("qrcodes");
 		query = new BasicDBObject();

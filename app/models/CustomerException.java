@@ -3,7 +3,7 @@ package models;
 import java.lang.Exception;
 
 public class CustomerException extends Exception {
-	private String message;
+	protected String message;
 	
 	public CustomerException() {
 		message = "CustomerException.";

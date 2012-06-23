@@ -50,7 +50,7 @@ public class Application extends Controller {
 		MonDataBase db = MonDataBase.getInstance();
 		
 		try {
-			return ok(myQrTable.render(Login.loginForm, db.getCustomersQrs()));
+			return ok(myQrTable.render(Login.loginForm, db.getCustomersQrs(), InfoDisplay.NONE, null));
 		}
 		catch (Exception e) {
 			return badRequest(index.render(urlForm, Login.loginForm, InfoDisplay.ERROR, "Impossible to get the Qrcodes. " + e));
