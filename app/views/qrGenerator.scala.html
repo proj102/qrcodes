@@ -1,4 +1,4 @@
-@(url: String, loginForm: Form[Client])
+@(url: String, redirection: String, loginForm: Form[Client])
 
 @main("Here is the result:") {
 
@@ -7,7 +7,7 @@
 <div class="container-fluid">
 
 <div class="alert alert-success">
-	<p>You have created a QrCode which will now redirect to @url </p>
+	<p>You have created a QrCode which will now redirect to @redirection </p>
 </div>
 <!--Create a 5-column block in Bootstrap grid-->
 <div class="span5">

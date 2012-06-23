@@ -69,13 +69,21 @@ public class MonDataBase {
 	}
 
 	// Retrieve the url of the document whose id is equal to the argument id
-	public String getUrl(String id) throws Exception {
+	public String getUrl(int id) throws Exception {
 		DBCollection coll = db.getCollection("qrcodes");
 		BasicDBObject query  = new BasicDBObject();
-		query.put("id", Integer.parseInt(id));
+		query.put("id", id);
 		DBCursor data  = coll.find(query);
+		DBObject currentQr = data.next();
 		
-		return getElement(data.next(), "redirection");	
+		// if no exceptions have been thrown, we can return the redirection url
+		// and increment the number of flashs for this qrCode
+		
+		int newNumber = getIntElement(currentQr, "flashs") + 1;
+		BasicDBObject newQrDoc = new BasicDBObject().append("$set", new BasicDBObject().append("flashs", newNumber));
+		coll.update(new BasicDBObject().append("id", id), newQrDoc);
+		
+		return getElement(currentQr, "redirection");	
 	}
 	
 	// testMethod

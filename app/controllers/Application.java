@@ -36,7 +36,8 @@ public class Application extends Controller {
 		return ok(views.html.index.render(urlForm, Login.loginForm));
 	}
 
-	public static Result redirection( String id ) {
+	// Manage the redirection
+	public static Result redirection(int id) {
 		MonDataBase db = MonDataBase.getInstance();
 
 		try {
@@ -47,40 +48,7 @@ public class Application extends Controller {
 		}
 	}
 
-	public static Result addC() {
-		MonDataBase db = MonDataBase.getInstance();
-		
-		try {
-			db.addCustomer("plequen2", "test2", "plequen00@gmail.com", "Plessis", "Quentin", "Telecom");
-		
-			return ok("Customer added successfully !");
-		}
-		catch (Exception e) {
-			return badRequest(e.toString());
-		}
-	}
-	
-	
-	public static Result addQ() {
-		MonDataBase db = MonDataBase.getInstance();
-		
-		try {
-			int qrId = db.addQrFromForm("url", "http://google.com", "Titre", "lieu");
-		
-			return ok("Qrcode added successfully ! Id : " + qrId);
-		}
-		catch (Exception e) {
-			return badRequest(e.toString());
-		}
-	}
-	
-	public static Result testP() {
-		MonDataBase db = MonDataBase.getInstance();
-		
-		return ok(db.testPass());
-	}
-
-	//redirection to Web pages of the website
+	// visualisation of the qrcodes of the customer
 	public static Result myQrTable() {
 		MonDataBase db = MonDataBase.getInstance();
 		
@@ -91,16 +59,13 @@ public class Application extends Controller {
 			return badRequest("Impossible to get the Qrcodes : " + e);
 		}
 	}
+	
 	public static Result overview() {
 		return ok(overview.render(Login.loginForm));
 	}
-	
-
 
 	//Get Url Form data
 	static Form<Url> urlForm = form(Url.class);
-	
-
 
 	// generate QRcode from url
 	public static Result getUrl() {
@@ -113,7 +78,7 @@ public class Application extends Controller {
 			Url data = form.get();
 			try {
 				int qrId = db.addQrFromForm("url", data.url, "titre", "lieu");
-				return ok(qrGenerator.render(domain + "r/" + qrId, Login.loginForm));
+				return ok(qrGenerator.render(domain + "r/" + qrId, data.url, Login.loginForm));
 			}
 			catch (Exception e) {
 				return badRequest("error when adding qr code to db : " + e);

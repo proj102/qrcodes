@@ -8,31 +8,18 @@ GET     /                 	controllers.Application.index()
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file    	controllers.Assets.at(path="/public", file)	
 
-# Test customers inscription in db
-GET		/addC				controllers.Application.addC()
-GET		/testP				controllers.Application.testP()
 
-# get URL
+# Manage the redirection
 POST    /getUrl         	controllers.Application.getUrl()
-GET		/r/:id			    controllers.Application.redirection(id: String)
-
-# Test customers inscription in db
-GET		/addC			   	controllers.Application.addC()
-GET		/testP			   	controllers.Application.testP()
+GET		/r/:id			    controllers.Application.redirection(id: Int)
 
 
 #Route to MyQrCodes
 GET     /myQrTable         	controllers.Application.myQrTable()
 
 
-
 #Route to MyQrCodes
 GET     /overview          	controllers.Application.overview()
-
-
-
-# Test adding qrcodes
-GET		/addQ			   	controllers.Application.addQ()
 
 
 # Signup
@@ -40,24 +27,21 @@ GET     /signup            	controllers.SignUp.blank()
 GET     /users/fakeuser    	controllers.SignUp.edit()
 POST    /signup         	controllers.SignUp.submit()
 
+# Login
+GET		/login				controllers.Login.blank()
+POST	/login				controllers.Login.submit()
+POST	/logout				controllers.Login.logout()
+GET		/co			   		controllers.Login.isConnected()
+
 #Qr table
 GET		/myQrTable			controllers.QrTable.blank()
 POST	/myQrTable			controllers.QrTable.submit()
-
-
-# Login
-POST	/login				controllers.Login.submit()
-GET		/login				controllers.Login.blank()
-GET		/co			   		controllers.Login.isConnected()
-POST	/logout				controllers.Login.logout()
 
 
 # Upload
 #Route to page generating QR Codes through CSV Files
 GET     /upload				controllers.Upload.blank()
 POST    /upload				controllers.Upload.submit()
-
-
 
 
 GET		/test/:key			controllers.Application.test(key: String)
