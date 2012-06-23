@@ -39,10 +39,14 @@ public class Login extends Controller {
 	}
 	
 	public static int getConnected() throws Exception {
+		MonDataBase db = MonDataBase.getInstance();
 		Http.Cookie cookie = request().cookies().get("connected");
 		
-		if (cookie != null)
-			return Integer.parseInt(cookie.value());
+		if (cookie != null) {
+			int custId = Integer.parseInt(cookie.value());
+			
+			return db.custExists(custId);
+		}
 			
 		return -1;
 	}

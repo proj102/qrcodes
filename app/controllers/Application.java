@@ -82,7 +82,14 @@ public class Application extends Controller {
 
 	//redirection to Web pages of the website
 	public static Result myQrTable() {
-		return ok(myQrTable.render(Login.loginForm));
+		MonDataBase db = MonDataBase.getInstance();
+		
+		try {
+			return ok(myQrTable.render(Login.loginForm, db.getCustomersQrs()));
+		}
+		catch (Exception e) {
+			return badRequest("Impossible to get the Qrcodes : " + e);
+		}
 	}
 	public static Result overview() {
 		return ok(overview.render(Login.loginForm));

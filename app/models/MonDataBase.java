@@ -1,13 +1,19 @@
 package models;
 
 import java.lang.Exception;
+import java.util.*;
 
+// To process strings
+import org.apache.commons.lang3.StringUtils;
+
+// For Json processing
 import play.libs.Json;
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.node.ObjectNode;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.JsonParser;
 
+// For MongoDB operations
 import com.mongodb.Mongo;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
@@ -72,6 +78,7 @@ public class MonDataBase {
 		return getElement(data.next(), "redirection");	
 	}
 	
+	// testMethod
 	public boolean isConnected() {
 		return authentification;
 	}
@@ -145,7 +152,7 @@ public class MonDataBase {
 			if (custQrs.equals("[]"))
 				custQrs = "[" + qrId + "]";
 			else
-				custQrs = custQrs.substring(0, custQrs.length() - 1) + ", " + qrId + "]";
+				custQrs = custQrs.substring(0, custQrs.length() - 1) + "," + qrId + "]";
 			
 			BasicDBObject newCustDoc = new BasicDBObject().append("$set", new BasicDBObject().append("qrs", custQrs));
  
@@ -195,6 +202,7 @@ public class MonDataBase {
 		}
 	}
 	
+	// test method
 	public String testPass() {
 		DBCollection coll = db.getCollection("customers");
 		
@@ -220,6 +228,62 @@ public class MonDataBase {
 				return "pass not ok : " + e;
 			}
 		}
+	}
+	
+	// check that the given customer still exists
+	public int custExists(int id) {
+		DBCollection customers = db.getCollection("customers");
+		BasicDBObject query  = new BasicDBObject();
+		query.put("id", id);
+		DBCursor customer = customers.find(query);
+		
+		if (customer.size() == 0)
+			return -1;
+		
+		return id;
+	}
+	
+	// get all the qrcodes of the customer, parse them and return them in an ArrayList
+	public ArrayList<Qrcode> getCustomersQrs() throws Exception {
+		int customerId = Login.getConnected();
+		
+		if (customerId == -1)
+			throw new Exception("Not connected.");
+			
+		
+		DBCollection customers = db.getCollection("customers");
+		BasicDBObject query  = new BasicDBObject();
+		query.put("id", customerId);
+		DBCursor customer = customers.find(query);
+		
+		String custQrs = getElement(customer.next(), "qrs");
+		custQrs = custQrs.substring(1, custQrs.length()-1);
+		String[] qrsIds = StringUtils.split(custQrs, ",");
+		
+		ArrayList<Qrcode> ret = new ArrayList<Qrcode>();
+		DBCollection collQrs = db.getCollection("qrcodes");
+		for (int i = 0 ; i < qrsIds.length ; i++) {
+			int qrId = Integer.parseInt(qrsIds[i]);
+			
+			query = new BasicDBObject();
+			query.put("id", qrId);
+			DBObject currentQr = collQrs.find(query).next();
+			
+			mapper.configure(JsonParser.Feature.ALLOW_SINGLE_QUOTES, true);
+			JsonNode json = mapper.readValue(currentQr.toString(), JsonNode.class);
+			
+			ret.add(new Qrcode(
+				qrId,
+				json.findPath("redirection").getTextValue(),
+				json.findPath("type").getTextValue(),
+				json.findPath("title").getTextValue(),
+				json.findPath("place").getTextValue(),
+				json.findPath("creation").getLongValue(),
+				json.findPath("flashs").getIntValue()
+			));
+		}
+		
+		return ret;
 	}
 	
 	// Generation unique QRID 

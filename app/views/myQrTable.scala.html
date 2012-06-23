@@ -1,4 +1,7 @@
-@(loginForm: Form[Client])
+@(loginForm: Form[Client], qrs:List[Qrcode])
+
+@import helper._
+@import helper.twitterBootstrap._
 
 @main("my Qr Codes"){
 @header(loginForm)
@@ -6,30 +9,41 @@
 	<div class="row">
 		<div class="span4"></div>
 		<div class="span8">
-		<table class="table table-striped">
-		<thead>
-			<tr>
-				<th>Name</th>
-				<th>Owner</th>
-				<th>link</th>
-			</tr>
-		</thead>
-		<tbody>
-			<tr>
-				<td>Mehdi's QR</td>
-				<td>Mehdi</td>
-				<td><a href="@(routes.Application.getUrl())?url=google.com">link</td>
-			</tr>
-			<tr>
-				<td>Mehdi's QR</td>
-				<td>Mehdi</td>
-				<td><a href="@(routes.Application.getUrl())?url=google.com">link</td>
-			</tr>
-		</tbody>
-		</table>
+			@form(action = routes.QrTable.submit) {
+				<table class="table table-striped">
+					<thead>
+						<tr>
+							<th></th>
+							<th>Title</th>
+							<th>Place</th>
+							<th>Redirection</th>
+							<th>Date of creation</th>
+							<th>Flashs number</th>
+							<th>Modify</th>
+						</tr>
+					</thead>
+					<tbody>
+						@for(qrcode <- qrs) {
+							<tr>
+								<td><input type="checkbox" id="checkqr_@qrcode.getId()" /></td>
+								<td>@qrcode.getTitle()</td>
+								<td>@qrcode.getPlace()</td>
+								<td><a href="@qrcode.getRedirection()">@qrcode.getRedirection()</a></td>
+								<td>@qrcode.getCreationDate()</td>
+								<td>@qrcode.getFlashs()</td>
+								<td><input type="button" id="modifyqr_@qrcode.getId()" value="Modify" /></td>
+							</tr>
+						}
+						<!--<tr>
+							<td></td>
+							<td>Mehdi's QR</td>
+							<td>Mehdi</td>
+							<td><a href="@(routes.Application.getUrl())?url=google.com">link</td>
+						</tr>-->
+					</tbody>
+				</table>
+			}
 		</div>
-	
-	
 	</div>
 </div>
     
