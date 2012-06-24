@@ -13,11 +13,6 @@ GET			/assets/*file		controllers.Assets.at(path="/public", file)
 POST    /getUrl         	controllers.Application.getUrl()
 GET		/r/:id			    controllers.Application.redirection(id: Int)
 
-
-#Route to MyQrCodes
-GET     /myQrTable         	controllers.Application.myQrTable()
-
-
 #Route to MyQrCodes
 GET     /overview          	controllers.Application.overview()
 

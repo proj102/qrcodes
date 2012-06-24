@@ -1,6 +1,7 @@
 package controllers;
 
 import java.lang.Exception;
+import java.util.*;
 
 import play.*;
 import play.mvc.*;
@@ -27,7 +28,7 @@ public class QrTable extends Controller {
 			return ok(myQrTable.render(Login.loginForm, db.getCustomersQrs(), InfoDisplay.NONE, null));
 		}
 		catch (Exception e) {
-			return badRequest(myQrTable.render(Login.loginForm, null, InfoDisplay.ERROR, "Impossible to get your Qrcodes." + e));
+			return badRequest(myQrTable.render(Login.loginForm, new ArrayList<Qrcode>(), InfoDisplay.ERROR, "Impossible to get your Qrcodes." + e));
 		}
     }
 	
