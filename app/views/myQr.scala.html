@@ -21,15 +21,30 @@
 		<script>jQuery('#qrcodeCanvas').qrcode({text : "@qr.getUrl()"});</script>
 		
 		<div class="hero-unit">
+
 			<h2>To modify my QrCode</h2>
 			@form(action = routes.MyQr.submit) {
+				<input type="hidden" name="id" value="@qr.getId()" />
 				@inputText(
 					loginForm("redirection"),
 					'_label -> "Url of redirection",
 					'_help -> "",
 					'_error -> "Please choose a valid redirection url."
 				)
-				
+
+				@inputText(
+					loginForm("title"),
+					'_label -> "Qr code's Title",
+					'_help -> "",
+					'_error -> "Please choose a valid title."
+				)
+
+				@inputText(
+					loginForm("place"),
+					'_label -> "Where is your Qr code",
+					'_help -> "",
+					'_error -> "Please choose a valid place."
+				)
 				<input type="submit" class="btn-primary btn-large" value="Modify" />
 			}
 		</div>
