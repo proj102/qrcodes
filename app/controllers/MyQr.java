@@ -46,37 +46,37 @@ public class MyQr extends Controller {
 		MonDataBase MongoDB = MonDataBase.getInstance();
 		HashMap<String, String> hmap = new HashMap<String, String>();
 		
-/*		
-		if(!filledForm.field("redirection").isEmpty() || !filledForm.field("title").isEmpty() || !filledForm.field("place").isEmpty(){
-			hmap.put("id",filledForm.field("id").value());
-			// Insert the redirection field if not empty
-			if(!filledForm.field("redirection").isEmpty()) {
-				hmap.put("redirection", filledForm.field("redirection").value());
-			}
+		try{
+			if(!filledForm.field("redirection").value().isEmpty() || !filledForm.field("title").value().isEmpty() || !filledForm.field("place").value().isEmpty()){
+				hmap.put("id",filledForm.field("id").value());
+				// Insert the redirection field if not empty
+				if(!filledForm.field("redirection").value().isEmpty()) {
+					hmap.put("redirection", filledForm.field("redirection").value());
+				}
 
-			// Insert the title field if not empty
-			if(!filledForm.field("title").isEmpty()) {
-				hmap.put("title", filledForm.field("title").value());
-			}
+				// Insert the title field if not empty
+				if(!filledForm.field("title").value().isEmpty()) {
+					hmap.put("title", filledForm.field("title").value());
+				}
 
-			// Insert the place field if not empty
-			if(!filledForm.field("place").isEmpty()) {
-				hmap.put("place", filledForm.field("place").value());
-			}
+				// Insert the place field if not empty
+				if(!filledForm.field("place").value().isEmpty()) {
+					hmap.put("place", filledForm.field("place").value());
+				}
 
 		
-			MongoDB.updateQrcode(hmap);
-			Qrcode qr = MongoDB.getQrCode(filledForm.field("id").value());
-		
-			return ok(myQr.render(qr, Login.loginForm, InfoDisplay.SUCCESS, "Your changes have been uploaded"));
-		}else{
-			return ok(myQr.render(qr, Login.loginForm, InfoDisplay.ERROR, "No changes detected"));
+				MongoDB.updateQRCode(hmap);
+				Qrcode qr = MongoDB.getQrCode(filledForm.field("id").value());
+				return ok(myQr.render(qr, Login.loginForm, InfoDisplay.SUCCESS, "Your changes have been uploaded"));
+			} else {
+				Qrcode qr = MongoDB.getQrCode(filledForm.field("id").value());
+				return ok(myQr.render(qr, Login.loginForm, InfoDisplay.ERROR, "No changes detected"));
+			}
+		}catch(Exception e){
+			return badRequest("not implemented");
 		}
-		
-	}	*/	
+	}	/*	
 		return badRequest("not implemented");
 	}
-	
+	*/
 }
-
-
