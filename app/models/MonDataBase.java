@@ -20,6 +20,7 @@ import com.mongodb.DBCollection;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 import com.mongodb.DBCursor;
+import org.bson.types.ObjectId;
 
 import controllers.Login;
 
@@ -69,10 +70,10 @@ public class MonDataBase {
 	}
 
 	// Retrieve the url of the document whose id is equal to the argument id
-	public String getUrl(int id) throws Exception {
+	public String getUrl(String id) throws Exception {
 		DBCollection coll = db.getCollection("qrcodes");
 		BasicDBObject query  = new BasicDBObject();
-		query.put("id", id);
+		query.put("_id", new ObjectId(id));
 		DBCursor data = coll.find(query);
 		
 		if (data.size() == 0)
@@ -85,7 +86,7 @@ public class MonDataBase {
 		
 		int newNumber = getIntElement(currentQr, "flashs") + 1;
 		BasicDBObject newQrDoc = new BasicDBObject().append("$set", new BasicDBObject().append("flashs", newNumber));
-		coll.update(new BasicDBObject().append("id", id), newQrDoc);
+		coll.update(new BasicDBObject().append("_id", new ObjectId(id)), newQrDoc);
 		
 		return getElement(currentQr, "redirection");
 	}
@@ -130,7 +131,7 @@ public class MonDataBase {
 	// insert a qrcode in the database with the given json content
 	// to which is added significant fields such as the id of the qrcode
 	// return the id of the qrcode
-	public int insertQr(BasicDBObject qrInfos) throws Exception {
+	public String insertQr(BasicDBObject qrInfos) throws Exception {
 		// get the id of the customer currently connected
 		int customerId = Login.getConnected();
 		
@@ -146,13 +147,15 @@ public class MonDataBase {
 		try {
 			// let's add the qrcode to the qrcodes collection
 			DBCollection qrs = db.getCollection("qrcodes");
-			int qrId = generateIdQRCode();
+			//int qrId = generateIdQRCode();
 			
-			qrInfos.put("id", qrId);
+			//qrInfos.put("id", qrId);
 			qrInfos.put("creation", System.currentTimeMillis());
 			qrInfos.put("flashs", 0);
 			qrInfos.put("active", 1); // active = 1 => qrcode active
 			qrs.insert(qrInfos);
+			// get the id the the qrcode we just created
+			String qrId = qrInfos.get("_id").toString();
 			
 			// let's add the qr id to the customer's qrs
 			String custQrs = getElement(data.next(), "qrs");
@@ -174,7 +177,7 @@ public class MonDataBase {
 	}
 	
 	// add a Qr with the data given in the "generate a Qrcode" form
-	public int addQrFromForm(String type, String redirection, String title, String place) throws Exception {
+	public String addQrFromForm(String type, String redirection, String title, String place) throws Exception {
 		if (redirection == null || redirection == "")	
 			throw new CustomerException("You must specify a redirection url.");
 		
@@ -243,11 +246,11 @@ public class MonDataBase {
 		ArrayList<Qrcode> ret = new ArrayList<Qrcode>();
 		DBCollection collQrs = db.getCollection("qrcodes");
 		for (int i = 0 ; i < qrsIds.length ; i++) {
-			int qrId = Integer.parseInt(qrsIds[i]);
-			
+			//int qrId = Integer.parseInt(qrsIds[i]);
+			String qrId = qrsIds[i];
 			query = new BasicDBObject();
-			query.put("id", qrId);
-			DBObject currentQr = collQrs.find(query).next();
+			query.put("_id", new ObjectId(qrId));
+			DBObject currentQr = collQrs.findOne(query);
 			
 			mapper.configure(JsonParser.Feature.ALLOW_SINGLE_QUOTES, true);
 			JsonNode json = mapper.readValue(currentQr.toString(), JsonNode.class);
@@ -266,7 +269,7 @@ public class MonDataBase {
 		return ret;
 	}
 	
-	public Qrcode getQrCode(int id) throws Exception {
+	public Qrcode getQrCode(String id) throws Exception {
 		int customerId = Login.getConnected();
 		
 		if (customerId == -1)
@@ -285,8 +288,8 @@ public class MonDataBase {
 	
 		DBCollection collQrs = db.getCollection("qrcodes");
 		query = new BasicDBObject();
-		query.put("id", id);
-		DBObject currentQr = collQrs.find(query).next();
+		query.put("_id", new ObjectId(id));
+		DBObject currentQr = collQrs.findOne(query);
 		
 		mapper.configure(JsonParser.Feature.ALLOW_SINGLE_QUOTES, true);
 		JsonNode json = mapper.readValue(currentQr.toString(), JsonNode.class);
@@ -303,7 +306,7 @@ public class MonDataBase {
 	}
 	
 	// Generation unique QRID 
-	public int generateIdQRCode() throws Exception {
+	/*public int generateIdQRCode() throws Exception {
 		DBCollection coll = db.getCollection("qrcodes");
 		BasicDBObject query  = new BasicDBObject();
 		BasicDBObject sorted  = new BasicDBObject();
@@ -318,7 +321,7 @@ public class MonDataBase {
 			//throw new Exception("qrid : " + getElement(idmax, "id"));
 			return getIntElement(idmax.next(), "id") + 1; // max id + 1 => unique id
 		}
-	}
+	}*/
 	
 	// generate a unique customer ID
 	public int generateCustomerId() throws Exception {

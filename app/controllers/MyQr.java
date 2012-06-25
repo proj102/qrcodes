@@ -17,7 +17,7 @@ import play.mvc.Http.MultipartFormData;
 
 public class MyQr extends Controller {
 	
-	public static Result viewQr(int id) {
+	public static Result viewQr(String id) {
 		MonDataBase db = MonDataBase.getInstance();
 		
 		try {
