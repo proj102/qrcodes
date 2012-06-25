@@ -33,7 +33,7 @@
 			
 			<ul class="nav pull-right">
 				<li class="dropdown">
-					@if(Login.getConnected() == -1) {
+					@if(Login.getConnected() == null) {
 						<a href="#" class="dropdown-toggle" data-toggle="dropdown">Login<b class="caret"></b></a>
 						<ul class="dropdown-menu">  
 							<li>

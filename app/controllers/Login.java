@@ -20,37 +20,37 @@ public class Login extends Controller {
 	
 	static Form<Client> loginForm = form(Client.class);
 	
-	public static int connection(String login, String password) throws Exception {
+	public static String connection(String login, String password) throws Exception {
 
 		MonDataBase db = MonDataBase.getInstance();
 		
-		int customerId = db.connection(login, password);
+		String customerId = db.connection(login, password);
 			
-		if (customerId >= 0)
-			response().setCookie("connected", String.valueOf(customerId), sessionDuration);
+		if (customerId != null)
+			response().setCookie("connected", customerId, sessionDuration);
 			
 		return customerId;
 	}
 
 	// test method
 	public static Result isConnected() throws Exception{
-		if(getConnected()!=-1)	
+		if(getConnected()!=null)	
 			return ok("connect");
 		else
 			return ok("no");
 	}
 	
-	public static int getConnected() throws Exception {
+	public static String getConnected() throws Exception {
 		MonDataBase db = MonDataBase.getInstance();
 		Http.Cookie cookie = request().cookies().get("connected");
 		
 		if (cookie != null) {
-			int custId = Integer.parseInt(cookie.value());
+			String custId = cookie.value();
 			
 			return db.custExists(custId);
 		}
 			
-		return -1;
+		return null;
 	}
 	
 	public static Result logout() {
@@ -69,7 +69,7 @@ public class Login extends Controller {
 		//Check in the database if login exist and if it matches with the password
 		if(!filledForm.hasErrors()) {
 			try {
-				int checker = connection(filledForm.field("login").value(), filledForm.field("password").value());
+				String checker = connection(filledForm.field("login").value(), filledForm.field("password").value());
 				
 				Client created = filledForm.get();
 				return ok(index.render(Application.urlForm, filledForm, InfoDisplay.SUCCESS, "You are now connected."));					
