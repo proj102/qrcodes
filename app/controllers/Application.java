@@ -60,6 +60,10 @@ public class Application extends Controller {
 	public static Result overview() {
 		return ok(overview.render(Login.loginForm));
 	}
+	
+	public static Result createQr() {
+		return ok(createQr.render(Login.loginForm));
+	}
 
 	//Get Url Form data
 	static Form<Url> urlForm = form(Url.class);
