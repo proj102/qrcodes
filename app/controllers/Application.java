@@ -34,7 +34,7 @@ public class Application extends Controller {
 	}
 
 	// Manage the redirection
-	public static Result redirection(int id) {
+	public static Result redirection(String id) {
 		MonDataBase db = MonDataBase.getInstance();
 
 		try {
@@ -74,7 +74,7 @@ public class Application extends Controller {
 		else {
 			Url data = form.get();
 			try {
-				int qrId = db.addQrFromForm("url", data.url, "titre", "lieu");
+				String qrId = db.addQrFromForm("url", data.url, "titre", "lieu");
 				return ok(qrGenerator.render(domain + "r/" + qrId, Login.loginForm, InfoDisplay.SUCCESS, "You have successfully created a QrCode that redirects to " + data.url + " ."));
 			}
 			catch (Exception e) {

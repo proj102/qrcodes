@@ -11,7 +11,7 @@ GET			/assets/*file		controllers.Assets.at(path="/public", file)
 
 # Manage the redirection
 POST    /getUrl         	controllers.Application.getUrl()
-GET		/r/:id			    controllers.Application.redirection(id: Int)
+GET		/r/:id			    controllers.Application.redirection(id: String)
 
 #Route to MyQrCodes
 GET     /overview          	controllers.Application.overview()
@@ -33,7 +33,7 @@ GET		/myQrTable			controllers.QrTable.blank()
 POST	/myQrTable			controllers.QrTable.submit()
 
 # My Qr
-GET		/myQr/:id			controllers.MyQr.viewQr(id: Int)
+GET		/myQr/:id			controllers.MyQr.viewQr(id: String)
 POST	/myQr				controllers.MyQr.submit()
 
 

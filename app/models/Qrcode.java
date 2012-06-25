@@ -5,7 +5,7 @@ import controllers.*;
 // depicts a Qrcode
 public class Qrcode {
 
-	private int id;
+	private String id;
 	private String redirection;
 	private String type;
 	private String title;
@@ -17,12 +17,12 @@ public class Qrcode {
 	public Qrcode() {
 	}
 	
-	public Qrcode(int id, String redirection) {
+	public Qrcode(String id, String redirection) {
 		this.id = id;
 		this.redirection = redirection;
 	}
 	
-	public Qrcode(int id, String redirection, String type, String title, String place, long creationDate, int flashs) {
+	public Qrcode(String id, String redirection, String type, String title, String place, long creationDate, int flashs) {
 		this.id = id;
 		this.redirection = redirection;
 		this.type = type;
@@ -32,7 +32,7 @@ public class Qrcode {
 		this.flashs = flashs;
 	}
 	
-	public int getId() {
+	public String getId() {
 		return id;
 	}
 	
