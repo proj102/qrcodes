@@ -44,7 +44,7 @@ public class MyQr extends Controller {
  **/		
 		Form<Qrcode> filledForm = qrForm.bindFromRequest();
 		MonDataBase MongoDB = MonDataBase.getInstance();
-		Hashmap<String, String> hmap = new HashMap<String, String>();
+		HashMap<String, String> hmap = new HashMap<String, String>();
 		
 /*		
 		if(!filledForm.field("redirection").isEmpty() || !filledForm.field("title").isEmpty() || !filledForm.field("place").isEmpty(){
