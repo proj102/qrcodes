@@ -9,5 +9,8 @@ import play.data.validation.Constraints.*;
 public class Url {
 		@Required 
 		public String url;
+		
+		public String place;
+		public String title;
         
 }

@@ -21,6 +21,7 @@ import com.mongodb.BasicDBObject;
 import play.data.*;
 import play.data.validation.Constraints.*;
 import java.util.*;
+import java.util.regex.Pattern;
 import java.io.File;
 import play.mvc.Http.MultipartFormData.*;
 import play.mvc.Http.MultipartFormData;
@@ -62,7 +63,7 @@ public class Application extends Controller {
 	}
 	
 	public static Result createQr() {
-		return ok(createQr.render(Login.loginForm, InfoDisplay.NONE, null,urlForm));
+		return ok(createQr.render(Login.loginForm, urlForm, InfoDisplay.NONE, null));
 	}
 
 	//Get Url Form data
@@ -74,16 +75,26 @@ public class Application extends Controller {
 		
         Form<Url> form = form(Url.class).bindFromRequest();
 		if(form.hasErrors())
-			return badRequest(index.render(urlForm, Login.loginForm, 0, null));
+			return badRequest(createQr.render(Login.loginForm, urlForm, InfoDisplay.ERROR, "The QrCode could not be generated. Please fill correctly all the requieted fields."));
 		else {
 			Url data = form.get();
-			try {
-				String qrId = db.addQrFromForm("url", data.url, "titre", "lieu");
-				return ok(qrGenerator.render(domain + "r/" + qrId, Login.loginForm, InfoDisplay.SUCCESS, "You have successfully created a QrCode that redirects to " + data.url + " ."));
+			String url = data.url;
+			
+			if (!url.startsWith("http://") && !url.startsWith("https://") && !url.startsWith("file://") && !url.startsWith("ftp://"))
+				url = "http://" + url;
+			
+			String regex = "^(https?|ftp|file)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]";
+			if (Pattern.matches(regex, url)) {
+				try {
+					String qrId = db.addQrFromForm("url", url, data.title, data.place);
+					return ok(qrGenerator.render(domain + "r/" + qrId, Login.loginForm, InfoDisplay.SUCCESS, "You have successfully created a QrCode that redirects to " + url + " ."));
+				}
+				catch (Exception e) {
+					return badRequest(createQr.render(Login.loginForm, urlForm, InfoDisplay.ERROR, "The QrCode could not be generated. " + e));
+				}
 			}
-			catch (Exception e) {
-				return badRequest(index.render(urlForm, Login.loginForm, InfoDisplay.ERROR, "The QrCode could not be generated. " + e));
-			}
+			else
+				return badRequest(createQr.render(Login.loginForm, urlForm, InfoDisplay.ERROR, "The QrCode could not be generated. The redirection url must be a valid url."));
 		}
 	}
 
