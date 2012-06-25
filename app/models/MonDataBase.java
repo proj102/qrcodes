@@ -21,6 +21,7 @@ import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 import com.mongodb.DBCursor;
 import org.bson.types.ObjectId;
+import com.mongodb.MongoException;
 
 import controllers.Login;
 
@@ -373,16 +374,19 @@ public class MonDataBase {
                 return true;
         }
 
-	public void removeQRCode(String id){
+	// remove qrcode : set active field to '0'
+	public void removeQRCode(String id) throws MongoException {
 		DBCollection coll = db.getCollection("qrcodes");
 		BasicDBObject query = new BasicDBObject();
 		BasicDBObject update = new BasicDBObject();
 		query.put("_id", new ObjectId(id));
 		update.put("$set",new BasicDBObject("active", 0));
+
 		coll.update(query, update);
 	}
 
-	public void removeQRCode(String[] id){
-		
+	public void removeQRCode(String[] id) throws MongoException {
+		for (String i: id)
+			removeQRCode(i);	
 	}
 }
