@@ -211,6 +211,32 @@ public class MonDataBase {
 		}
 	}
 	
+	// connection with email (OpenId with google)
+	public String connection(String email) throws Exception {
+		DBCollection customers = db.getCollection("customers");
+		
+		BasicDBObject query  = new BasicDBObject();
+		query.put("mail", email);
+		DBCursor data  = customers.find(query);
+		
+		if (data.size() == 0)
+			throw new CustomerException("You google address does not match your email.");
+		else {
+			DBObject cust = data.next();
+			
+			return cust.get("_id").toString();
+		}
+	}
+	
+	public String getLogin(String customerId) {
+		DBCollection customers = db.getCollection("customers");
+		BasicDBObject query  = new BasicDBObject();
+		query.put("_id", new ObjectId(customerId));
+		DBObject data  = customers.findOne(query);
+		
+		return getElement(data, "login");
+	}
+	
 	// check that the given customer still exists
 	public String custExists(String id) {
 		DBCollection customers = db.getCollection("customers");
