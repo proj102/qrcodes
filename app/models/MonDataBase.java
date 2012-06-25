@@ -151,6 +151,7 @@ public class MonDataBase {
 			qrInfos.put("id", qrId);
 			qrInfos.put("creation", System.currentTimeMillis());
 			qrInfos.put("flashs", 0);
+			qrInfos.put("active", 1); // active = 1 => qrcode active
 			qrs.insert(qrInfos);
 			
 			// let's add the qr id to the customer's qrs
@@ -357,7 +358,7 @@ public class MonDataBase {
 		return json.findPath(key).getIntValue();
 	}
 
-	// check if key is unique in collection
+	// check if value ok the key already in collection
         public boolean isCreated(String key, Object value, String collection){
 		DBCollection coll = db.getCollection(collection);
                 BasicDBObject query = new BasicDBObject();
@@ -368,4 +369,17 @@ public class MonDataBase {
                         return false;
                 return true;
         }
+
+	public void removeQRCode(String id){
+		DBCollection coll = db.getCollection("qrcodes");
+		BasicDBObject query = new BasicDBObject();
+		BasicDBObject update = new BasicDBObject();
+		query.put("_id", new ObjectId(id));
+		update.put("$set",new BasicDBObject("active", 0));
+		coll.update(query, update);
+	}
+
+	public void removeQRCode(String[] id){
+		
+	}
 }
