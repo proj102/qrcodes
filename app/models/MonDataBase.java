@@ -389,4 +389,15 @@ public class MonDataBase {
 		for (String i: id)
 			removeQRCode(i);	
 	}
+
+	public void updateQRCode(HashMap<String, String> map){
+                DBCollection coll = db.getCollection("qrcodes");
+		BasicDBObject query = new BasicDBObject();
+		BasicDBObject update = new BasicDBObject();
+		query.put("_id", new ObjectId(map.get("id")));
+		for (Map.Entry<String, String> qr : map.entrySet()){
+			update.put("$set",new BasicDBObject(qr.getKey(),qr.getValue()));
+			coll.update(query, update);
+		}
+	}
 }
