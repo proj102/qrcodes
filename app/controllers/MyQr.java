@@ -19,7 +19,7 @@ public class MyQr extends Controller {
 
 	static Form<Qrcode> qrForm = form(Qrcode.class);
 	
-	public static Result viewQr(int id) {
+	public static Result viewQr(String id) {
 		MonDataBase db = MonDataBase.getInstance();
 		
 		try {

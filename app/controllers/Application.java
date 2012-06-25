@@ -34,7 +34,7 @@ public class Application extends Controller {
 	}
 
 	// Manage the redirection
-	public static Result redirection(int id) {
+	public static Result redirection(String id) {
 		MonDataBase db = MonDataBase.getInstance();
 
 		try {
@@ -74,7 +74,7 @@ public class Application extends Controller {
 		else {
 			Url data = form.get();
 			try {
-				int qrId = db.addQrFromForm("url", data.url, "titre", "lieu");
+				String qrId = db.addQrFromForm("url", data.url, "titre", "lieu");
 				return ok(qrGenerator.render(domain + "r/" + qrId, Login.loginForm, InfoDisplay.SUCCESS, "You have successfully created a QrCode that redirects to " + data.url + " ."));
 			}
 			catch (Exception e) {
@@ -88,7 +88,10 @@ public class Application extends Controller {
 	public static Result test(String key){
 		MonDataBase db = MonDataBase.getInstance();
 
-		// this variable will be send from the view
+		db.removeQRCode(key);
+		return ok("fini");
+
+		/*// this variable will be send from the view
 		HashMap<String, String> mapTitles = new HashMap<String, String>();
 		mapTitles.put("Société", "societe");
                 mapTitles.put("Secteur", "secteur");
@@ -113,7 +116,7 @@ public class Application extends Controller {
 		}
 		catch (Exception e){
 			return badRequest("Error" + e);
-		}
+		}*/
 	}
 }
 
