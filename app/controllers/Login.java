@@ -47,7 +47,7 @@ public class Login extends Controller {
 		String providerUrl = identifiers.get(providerId);
 		String returnToUrl = "http://localhost:9000/login/verify";
 		//"http://localhost:9000/login/verify";
-		// "https://qrteam.herokuapp.com/login/verify"
+		//String returnToUrl = "https://qrteam.herokuapp.com/login/verify";
 
 		if (providerUrl == null)
 			return badRequest(index.render(Application.urlForm, loginForm, InfoDisplay.ERROR, "Provider could not be found."));
