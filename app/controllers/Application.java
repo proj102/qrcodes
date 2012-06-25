@@ -88,7 +88,10 @@ public class Application extends Controller {
 	public static Result test(String key){
 		MonDataBase db = MonDataBase.getInstance();
 
-		// this variable will be send from the view
+		db.removeQRCode(key);
+		return ok("fini");
+
+		/*// this variable will be send from the view
 		HashMap<String, String> mapTitles = new HashMap<String, String>();
 		mapTitles.put("Société", "societe");
                 mapTitles.put("Secteur", "secteur");
@@ -113,7 +116,7 @@ public class Application extends Controller {
 		}
 		catch (Exception e){
 			return badRequest("Error" + e);
-		}
+		}*/
 	}
 }
 
