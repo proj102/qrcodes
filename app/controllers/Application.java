@@ -62,7 +62,7 @@ public class Application extends Controller {
 	}
 	
 	public static Result createQr() {
-		return ok(createQr.render(Login.loginForm));
+		return ok(createQr.render(Login.loginForm, InfoDisplay.NONE, null,urlForm));
 	}
 
 	//Get Url Form data
