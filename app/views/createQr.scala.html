@@ -1,4 +1,4 @@
-@(loginForm: Form[Client], infosType: Int, infosContent: String, urlForm: Form[models.Url])
+@(loginForm: Form[Client], urlForm: Form[models.Url], infosType: Int, infosContent: String)
 
 
 @import helper._
@@ -14,12 +14,21 @@
 			<p>Think QrCode in a different way. It's a whole new world beyond the QrCode</p>
 			<div>       
 				@form(action = routes.Application.getUrl, args = 'id -> "urlForm") {
-				@inputText(
-					    field = urlForm("url"),
-					    args = '_label -> "", 'placeholder -> "Type your first Url"
+					@inputText(
+							field = urlForm("url"),
+							args = '_label -> "Redirection url", 'placeholder -> "Type your first Url"
+						)
+					<br/>
+					@inputText(
+						field = urlForm("title"),
+						args = '_label -> "Title"
+					)
+					@inputText(
+						field = urlForm("place"),
+						args = '_label -> "Place"
 					)
 					<input type="submit" class="btn-primary btn-large">
-					}
+				}
 		
 			</div> 
 		</div>

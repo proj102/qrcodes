@@ -148,9 +148,7 @@ public class MonDataBase {
 		try {
 			// let's add the qrcode to the qrcodes collection
 			DBCollection qrs = db.getCollection("qrcodes");
-			//int qrId = generateIdQRCode();
 			
-			//qrInfos.put("id", qrId);
 			qrInfos.put("creation", System.currentTimeMillis());
 			qrInfos.put("flashs", 0);
 			qrInfos.put("active", 1); // active = 1 => qrcode active
@@ -167,7 +165,6 @@ public class MonDataBase {
 				custQrs = custQrs.substring(0, custQrs.length() - 1) + "," + qrId + "]";
 			
 			BasicDBObject newCustDoc = new BasicDBObject().append("$set", new BasicDBObject().append("qrs", custQrs));
- 
 			customers.update(new BasicDBObject().append("_id", new ObjectId(customerId)), newCustDoc);
 			
 			return qrId;
@@ -214,6 +211,32 @@ public class MonDataBase {
 		}
 	}
 	
+	// connection with email (OpenId with google)
+	public String connection(String email) throws Exception {
+		DBCollection customers = db.getCollection("customers");
+		
+		BasicDBObject query  = new BasicDBObject();
+		query.put("mail", email);
+		DBCursor data  = customers.find(query);
+		
+		if (data.size() == 0)
+			throw new CustomerException("You google address does not match your email.");
+		else {
+			DBObject cust = data.next();
+			
+			return cust.get("_id").toString();
+		}
+	}
+	
+	public String getLogin(String customerId) {
+		DBCollection customers = db.getCollection("customers");
+		BasicDBObject query  = new BasicDBObject();
+		query.put("_id", new ObjectId(customerId));
+		DBObject data  = customers.findOne(query);
+		
+		return getElement(data, "login");
+	}
+	
 	// check that the given customer still exists
 	public String custExists(String id) {
 		DBCollection customers = db.getCollection("customers");
@@ -247,7 +270,6 @@ public class MonDataBase {
 		ArrayList<Qrcode> ret = new ArrayList<Qrcode>();
 		DBCollection collQrs = db.getCollection("qrcodes");
 		for (int i = 0 ; i < qrsIds.length ; i++) {
-			//int qrId = Integer.parseInt(qrsIds[i]);
 			String qrId = qrsIds[i];
 			query = new BasicDBObject();
 			query.put("_id", new ObjectId(qrId));
@@ -256,15 +278,17 @@ public class MonDataBase {
 			mapper.configure(JsonParser.Feature.ALLOW_SINGLE_QUOTES, true);
 			JsonNode json = mapper.readValue(currentQr.toString(), JsonNode.class);
 			
-			ret.add(new Qrcode(
-				qrId,
-				json.findPath("redirection").getTextValue(),
-				json.findPath("type").getTextValue(),
-				json.findPath("title").getTextValue(),
-				json.findPath("place").getTextValue(),
-				json.findPath("creation").getLongValue(),
-				json.findPath("flashs").getIntValue()
-			));
+			if (json.findPath("active").getIntValue() == 1) {
+				ret.add(new Qrcode(
+					qrId,
+					json.findPath("redirection").getTextValue(),
+					json.findPath("type").getTextValue(),
+					json.findPath("title").getTextValue(),
+					json.findPath("place").getTextValue(),
+					json.findPath("creation").getLongValue(),
+					json.findPath("flashs").getIntValue()
+				));
+			}
 		}
 		
 		return ret;
@@ -305,42 +329,6 @@ public class MonDataBase {
 			json.findPath("flashs").getIntValue()
 		);
 	}
-	
-	// Generation unique QRID 
-	/*public int generateIdQRCode() throws Exception {
-		DBCollection coll = db.getCollection("qrcodes");
-		BasicDBObject query  = new BasicDBObject();
-		BasicDBObject sorted  = new BasicDBObject();
-		query.put("id", 1); // selection all id of the collection
-		sorted.put("id",-1); // sort by "id" descending
-		// find all ids; sort its and get the max one
-		DBCursor searchMaxId = coll.find(new BasicDBObject(), query);
-		if (searchMaxId.size() == 0)
-			return 0;
-		else {
-			DBCursor idmax = searchMaxId.sort(sorted).limit(1);
-			//throw new Exception("qrid : " + getElement(idmax, "id"));
-			return getIntElement(idmax.next(), "id") + 1; // max id + 1 => unique id
-		}
-	}*/
-	
-	// generate a unique customer ID
-	/*public int generateCustomerId() throws Exception {
-		DBCollection coll = db.getCollection("customers");
-		BasicDBObject query  = new BasicDBObject();
-		BasicDBObject sorted  = new BasicDBObject();
-		query.put("id", 1); // selection all id of the collection
-		sorted.put("id",-1); // sort by "id" descending
-		// find all ids; sort its and get the max one
-		DBCursor searchMaxId = coll.find(new BasicDBObject(), query);
-		if (searchMaxId.size() == 0)
-			return 0;
-		else {
-			DBCursor idmax = searchMaxId.sort(sorted).limit(1);
-			return getIntElement(idmax.next(), "id") + 1; // max id + 1 => unique id
-		}
-	}*/
-
 
 	// Decode JSON in DBCursor and get the "key" element
 	public String getElement(DBObject obj, String key){
@@ -391,7 +379,7 @@ public class MonDataBase {
 	}
 
 	public void updateQRCode(HashMap<String, String> map){
-                DBCollection coll = db.getCollection("qrcodes");
+		DBCollection coll = db.getCollection("qrcodes");
 		BasicDBObject query = new BasicDBObject();
 		BasicDBObject update = new BasicDBObject();
 		query.put("_id", new ObjectId(map.get("id")));
