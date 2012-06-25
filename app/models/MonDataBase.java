@@ -112,10 +112,7 @@ public class MonDataBase {
 		password = Utils.sha1Encrypt(password);
 		
 		// add the customer
-		int customerId = generateCustomerId();
-		
 		BasicDBObject customerInfos = new BasicDBObject();
-		customerInfos.put("id", customerId);
 		customerInfos.put("login", login);
 		customerInfos.put("password", password);
 		customerInfos.put("mail", mail);
@@ -126,6 +123,9 @@ public class MonDataBase {
 		customerInfos.put("avatar", "");
 		customerInfos.put("qrs", "[]");
 		coll.insert(customerInfos);
+		
+		// get the id of the customer
+		//String customerId = CustomerInfos.get("_id").toString();;
 	}
 	
 	// insert a qrcode in the database with the given json content
@@ -133,15 +133,15 @@ public class MonDataBase {
 	// return the id of the qrcode
 	public String insertQr(BasicDBObject qrInfos) throws Exception {
 		// get the id of the customer currently connected
-		int customerId = Login.getConnected();
+		String customerId = Login.getConnected();
 		
-		if (customerId == -1)
+		if (customerId == null)
 			throw new CustomerException("You must be connected.");
 		
 		DBCollection customers = db.getCollection("customers");
 		BasicDBObject query  = new BasicDBObject();
-		query.put("id", customerId);
-		DBCursor data  = customers.find(query);
+		query.put("_id", new ObjectId(customerId));
+		DBObject data  = customers.findOne(query);
 			
 		// everything is fine
 		try {
@@ -159,7 +159,7 @@ public class MonDataBase {
 			String qrId = qrInfos.get("_id").toString();
 			
 			// let's add the qr id to the customer's qrs
-			String custQrs = getElement(data.next(), "qrs");
+			String custQrs = getElement(data, "qrs");
 			
 			if (custQrs.equals("[]"))
 				custQrs = "[" + qrId + "]";
@@ -168,7 +168,7 @@ public class MonDataBase {
 			
 			BasicDBObject newCustDoc = new BasicDBObject().append("$set", new BasicDBObject().append("qrs", custQrs));
  
-			customers.update(new BasicDBObject().append("id", customerId), newCustDoc);
+			customers.update(new BasicDBObject().append("_id", new ObjectId(customerId)), newCustDoc);
 			
 			return qrId;
 		}
@@ -193,7 +193,7 @@ public class MonDataBase {
 	
 	// try to log-in the customer : return the customer's id if 
 	// the connection is successfull, -1 otherwise
-	public int connection(String login, String password) throws Exception {
+	public String connection(String login, String password) throws Exception {
 		DBCollection customers = db.getCollection("customers");
 		
 		BasicDBObject query  = new BasicDBObject();
@@ -208,36 +208,36 @@ public class MonDataBase {
 			String passCustomerSha1 = getElement(cust, "password");
 			
 			if (passSha1.equals(passCustomerSha1))
-				return getIntElement(cust, "id");
+				return cust.get("_id").toString();
 			else
 				throw new PasswordException();
 		}
 	}
 	
 	// check that the given customer still exists
-	public int custExists(int id) {
+	public String custExists(String id) {
 		DBCollection customers = db.getCollection("customers");
 		BasicDBObject query  = new BasicDBObject();
-		query.put("id", id);
+		query.put("_id", new ObjectId(id));
 		DBCursor customer = customers.find(query);
 		
 		if (customer.size() == 0)
-			return -1;
+			return null;
 		
 		return id;
 	}
 	
 	// get all the qrcodes of the customer, parse them and return them in an ArrayList
 	public ArrayList<Qrcode> getCustomersQrs() throws Exception {
-		int customerId = Login.getConnected();
+		String customerId = Login.getConnected();
 		
-		if (customerId == -1)
+		if (customerId == null)
 			throw new CustomerException("You must be connected.");
 			
-		
 		DBCollection customers = db.getCollection("customers");
 		BasicDBObject query  = new BasicDBObject();
-		query.put("id", customerId);
+		query.put("_id", new ObjectId(customerId));
+		query.put("_id", new ObjectId(customerId));
 		DBCursor customer = customers.find(query);
 		
 		String custQrs = getElement(customer.next(), "qrs");
@@ -271,20 +271,20 @@ public class MonDataBase {
 	}
 	
 	public Qrcode getQrCode(String id) throws Exception {
-		int customerId = Login.getConnected();
+		String customerId = Login.getConnected();
 		
-		if (customerId == -1)
+		if (customerId == null)
 			throw new CustomerException("You are not connected.");
 		
 		DBCollection customers = db.getCollection("customers");
 		BasicDBObject query  = new BasicDBObject();
-		query.put("id", customerId);
+		query.put("_id", new ObjectId(customerId));
 		DBCursor customer = customers.find(query);
 		
 		String custQrs = getElement(customer.next(), "qrs");
 		
 		// throw an exception if the qrCode does not belong to the customer
-		if (custQrs.indexOf(String.valueOf(id)) == -1)
+		if (custQrs.indexOf(id) == -1)
 			throw new QrCodeException("This QrCode does not exist.");
 	
 		DBCollection collQrs = db.getCollection("qrcodes");
@@ -325,7 +325,7 @@ public class MonDataBase {
 	}*/
 	
 	// generate a unique customer ID
-	public int generateCustomerId() throws Exception {
+	/*public int generateCustomerId() throws Exception {
 		DBCollection coll = db.getCollection("customers");
 		BasicDBObject query  = new BasicDBObject();
 		BasicDBObject sorted  = new BasicDBObject();
@@ -339,7 +339,7 @@ public class MonDataBase {
 			DBCursor idmax = searchMaxId.sort(sorted).limit(1);
 			return getIntElement(idmax.next(), "id") + 1; // max id + 1 => unique id
 		}
-	}
+	}*/
 
 
 	// Decode JSON in DBCursor and get the "key" element
