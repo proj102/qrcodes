@@ -67,10 +67,10 @@ public class MyQr extends Controller {
 		
 				MongoDB.updateQRCode(hmap);
 				Qrcode qr = MongoDB.getQrCode(filledForm.field("id").value());
-				return ok(myQr.render(qr, Login.loginForm, InfoDisplay.SUCCESS, "Your changes have been uploaded"));
+				return ok(myQr.render(qr, Login.loginForm, InfoDisplay.SUCCESS, "Your changes have been updated."));
 			} else {
 				Qrcode qr = MongoDB.getQrCode(filledForm.field("id").value());
-				return ok(myQr.render(qr, Login.loginForm, InfoDisplay.ERROR, "No changes detected"));
+				return ok(myQr.render(qr, Login.loginForm, InfoDisplay.ERROR, "Please fill at least one field."));
 			}
 		}catch(Exception e){
 			return badRequest("not implemented");
