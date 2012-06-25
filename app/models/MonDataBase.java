@@ -252,15 +252,17 @@ public class MonDataBase {
 			mapper.configure(JsonParser.Feature.ALLOW_SINGLE_QUOTES, true);
 			JsonNode json = mapper.readValue(currentQr.toString(), JsonNode.class);
 			
-			ret.add(new Qrcode(
-				qrId,
-				json.findPath("redirection").getTextValue(),
-				json.findPath("type").getTextValue(),
-				json.findPath("title").getTextValue(),
-				json.findPath("place").getTextValue(),
-				json.findPath("creation").getLongValue(),
-				json.findPath("flashs").getIntValue()
-			));
+			if (json.findPath("active").getIntValue() == 1) {
+				ret.add(new Qrcode(
+					qrId,
+					json.findPath("redirection").getTextValue(),
+					json.findPath("type").getTextValue(),
+					json.findPath("title").getTextValue(),
+					json.findPath("place").getTextValue(),
+					json.findPath("creation").getLongValue(),
+					json.findPath("flashs").getIntValue()
+				));
+			}
 		}
 		
 		return ret;
