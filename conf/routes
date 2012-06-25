@@ -34,6 +34,8 @@ GET		/co			   		controllers.Login.isConnected()
 # Qr table
 GET		/myQrTable			controllers.QrTable.blank()
 POST	/myQrTable			controllers.QrTable.submit()
+GET	/myQrTable/remove/:id			controllers.MyQr.removeQr(id: String)
+
 
 # My Qr
 GET		/myQr/:id			controllers.MyQr.viewQr(id: String)

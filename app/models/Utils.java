@@ -25,17 +25,6 @@ import java.security.NoSuchAlgorithmException;
 
 public class Utils {
 
-/*	public Utils(){
-		this.titles = new ArrayList<String>();
-		this.separator = ";";
-	}
-
-	public Utils(HashMap<String, String> mapTitles) {
-		this.titles = new ArrayList<String>();
-                this.separator = ";";
-		this.mapTitles = mapTitles;
-	}*/
-
 	/**
 	*  Parse CSV file and get back a table of JSON documents
 	*  for each lines

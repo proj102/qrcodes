@@ -26,7 +26,7 @@ public class Upload extends Controller {
      * Display a blank form.
      */ 
     public static Result blank() {
-        return ok(batchGeneratorCSV.render(uploadForm, Login.loginForm));
+        return ok(batchGeneratorCSV.render(uploadForm, Login.loginForm, InfoDisplay.NONE, null));
     }
   
     
@@ -34,7 +34,7 @@ public class Upload extends Controller {
     /**
      * Handle the form submission.
      */
-    public static Result submit() {
+	public static Result submit() {
     Form<CSVUpload> filledForm = uploadForm.bindFromRequest();
         
   MultipartFormData body = request().body().asMultipartFormData();
@@ -48,7 +48,7 @@ public class Upload extends Controller {
     file.renameTo(new File(dir, file.getName()));
     
     if(filledForm.hasErrors()) {
-            return badRequest(batchGeneratorCSV.render(filledForm, Login.loginForm));
+            return badRequest(batchGeneratorCSV.render(filledForm, Login.loginForm, InfoDisplay.ERROR, "Please fill correctly the fields"));
         } else {
             CSVUpload created = filledForm.get();
             created.filepath = file.getAbsolutePath();
