@@ -1,0 +1,27 @@
+@(loginForm: Form[Client], infosType: Int, infosContent: String, urlForm: Form[models.Url])
+
+
+@import helper._
+@import helper.twitterBootstrap._
+
+@main("Create QrCodes") {
+	
+	@header(loginForm)
+	
+	<div class="container">
+		@informations(infosType, infosContent)
+		<div class="hero-unit">
+			<p>Think QrCode in a different way. It's a whole new world beyond the QrCode</p>
+			<div>       
+				@form(action = routes.Application.getUrl, args = 'id -> "urlForm") {
+				@inputText(
+					    field = urlForm("url"),
+					    args = '_label -> "", 'placeholder -> "Type your first Url"
+					)
+					<input type="submit" class="btn-primary btn-large">
+					}
+		
+			</div> 
+		</div>
+	</div>
+}
