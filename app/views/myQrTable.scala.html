@@ -13,6 +13,7 @@
 			<div class="span4"></div>
 			<div class="span8">
 				@form(action = routes.QrTable.submit) {
+					@if((qrs != null)&&(qrs.length>0)){
 					<table class="table table-striped">
 						<thead>
 							<tr>
@@ -23,7 +24,7 @@
 								<th>Creation date</th>
 								<th>Flashs</th>
 								<th>Modify</th>
-							</tr>
+							</tr>	
 						</thead>
 						<tbody>
 							@for(qrcode <- qrs) {
@@ -40,6 +41,11 @@
 							}
 						</tbody>
 					</table>
+					}
+					@if((qrs!=null)&&(qrs.size()==0)){
+						<p>You have no Qrcode. Go create one!</p>
+						<a href="@routes.Application.createQr()" >create Qr code</a>
+					}
 				}
 			</div>
 		</div>
