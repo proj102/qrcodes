@@ -50,13 +50,13 @@ public class Upload extends Controller {
 			file.renameTo(new File(dir, file.getName()));
 	
 			if(filledForm.hasErrors()) {
-			    return badRequest(batchGeneratorCSV.render(filledForm, Login.loginForm, InfoDisplay.ERROR, "Please fill correctly the fields"));
+			    return badRequest(batchGeneratorCSV.render(Login.getCustSession(), filledForm, InfoDisplay.ERROR, "Please fill correctly the fields"));
 			} else {
 				CSVUpload created = filledForm.get();
 			 	created.filepath = file.getAbsolutePath();
 				try {
 					parseAndLoad(created.filepath);
-					return ok(uploadSummary.render(created, Login.loginForm));
+					return ok(uploadSummary.render(Login.getCustSession(),created));
 				}catch(Exception e){
 					return badRequest("Problème dans upload!! " + created.filepath + "\n Erreur: " + e.getMessage());
 				}
