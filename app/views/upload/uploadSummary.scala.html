@@ -10,6 +10,14 @@
   
   <p>@csvUpload.urlRedirection</p>
   <p>@csvUpload.filepath</p>
+  <ul>
+  @for(t <- csvUpload.additionalTitles.get(0).getTitles()){
+	<li>field : @t.getTitle()</li>  
+  
+  }
+  </ul>
+  <p>@csvUpload.additionalTitles.get(0).getTitles().get(0).getTitle()
+</p>
     
 	    
 	 </div>

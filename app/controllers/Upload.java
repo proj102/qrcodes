@@ -12,6 +12,7 @@ import models.*;
 import java.io.File;
 import play.mvc.Http.MultipartFormData.*;
 import play.mvc.Http.MultipartFormData;
+import java.util.ArrayList;
 
 import models.*;
 
@@ -26,6 +27,7 @@ public class Upload extends Controller {
      * Display a blank form.
      */ 
     public static Result blank() {
+ 	 
         return ok(batchGeneratorCSV.render(uploadForm, Login.loginForm));
     }
   
@@ -47,8 +49,10 @@ public class Upload extends Controller {
     File dir = new File("./tmp");
     file.renameTo(new File(dir, file.getName()));
     
+   
+    
     if(filledForm.hasErrors()) {
-            return badRequest(batchGeneratorCSV.render(filledForm, Login.loginForm));
+            return badRequest(batchGeneratorCSV.render(filledForm, Login.loginForm/*, new ArrayList<String>() */));
         } else {
             CSVUpload created = filledForm.get();
             created.filepath = file.getAbsolutePath();
@@ -62,5 +66,19 @@ public class Upload extends Controller {
         
         
     }
+     public static Result addField() {
+     	Form<CSVUpload> filledForm = uploadForm.bindFromRequest();
+    	
+    	if(filledForm.hasErrors()) {
+            return badRequest(batchGeneratorCSV.render(filledForm, Login.loginForm/*, new ArrayList<String>() */));
+        } else {
+            CSVUpload created = filledForm.get();
+            ArrayList<String> fieldsTitlesList = created.getAdditionalFieldsTitles();
+    			fieldsTitlesList.add("TitleTest");
+    			
+    			
+            return ok(batchGeneratorCSV.render(uploadForm, Login.loginForm/*, fieldsTitlesList*/));
+        }
+ }
   
 }

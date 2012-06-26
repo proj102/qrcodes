@@ -4981,3 +4981,8 @@ a.badge:hover {
 .invisible {
   visibility: hidden;
 }
+
+/*-----------Css needed for Adding fields-------------*/
+.phone_template{
+display:none;
+}
