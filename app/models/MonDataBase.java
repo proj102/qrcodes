@@ -289,6 +289,15 @@ public class MonDataBase {
 		return ret;
 	}
 	
+	public DBObject getInfoCustomer(String customerId) {
+		DBCollection customers = db.getCollection("customers");
+		BasicDBObject query  = new BasicDBObject();
+		query.put("_id", new ObjectId(customerId));
+		DBCursor customer = customers.find(query);
+		
+		return customer.next();
+	}
+	
 	public Qrcode getQrCode(String id) throws Exception {
 		String customerId = Login.getConnected();
 		

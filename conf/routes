@@ -22,13 +22,14 @@ GET     /createQr         	controllers.Application.createQr()
 
 # Login
 GET		/logout				controllers.Login.logout()
-GET		/login/auth			controllers.Login.auth()
+GET		/login/auth/google		controllers.Login.auth1()
+GET		/login/auth/facebook	controllers.Login.auth2()
 GET		/login/verify		controllers.Login.verify()
 
 # Qr table
 GET		/myQrTable			controllers.QrTable.blank()
 POST	/myQrTable			controllers.QrTable.submit()
-GET	/myQrTable/remove/:id			controllers.MyQr.removeQr(id: String)
+GET	/myQrTable/remove/:id	controllers.MyQr.removeQr(id: String)
 
 
 # My Qr
