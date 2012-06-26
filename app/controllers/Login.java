@@ -39,7 +39,8 @@ public class Login extends Controller {
 	public static Result auth() {
 		String providerId = "google";
 		String providerUrl = identifiers.get(providerId);
-		String returnToUrl = "http://localhost:9000/login/verify";
+		//String returnToUrl = "http://localhost:9000/login/verify";
+		String returnToUrl = Application.domain + "/login/verify";
 		
 		if (providerUrl == null)
 			return badRequest(index.render(getCustSession(), InfoDisplay.ERROR, "Provider could not be found."));
