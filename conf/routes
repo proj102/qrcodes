@@ -28,7 +28,7 @@ POST    /signup         	controllers.SignUp.submit()
 # Login
 GET		/login				controllers.Login.blank()
 POST	/login				controllers.Login.submit()
-POST	/logout				controllers.Login.logout()
+GET		/logout				controllers.Login.logout()
 GET		/co			   		controllers.Login.isConnected()
 GET		/login/auth			controllers.Login.auth()
 GET		/login/verify		controllers.Login.verify()

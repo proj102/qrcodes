@@ -31,7 +31,7 @@ public class Application extends Controller {
 	public final static String domain = "http://qrteam.herokuapp.com/"; 
  
 	public static Result index() {
-		return ok(index.render(urlForm, Login.loginForm, InfoDisplay.NONE, null));
+		return ok(index.render(Login.loginForm, InfoDisplay.NONE, null));
 	}
 
 	// Manage the redirection
@@ -42,7 +42,7 @@ public class Application extends Controller {
 			return redirect(db.getUrl(id));
 		}
 		catch (Exception e) {
-			return badRequest(index.render(urlForm, Login.loginForm, InfoDisplay.ERROR, "Redirection failed. Reason : " + e));
+			return badRequest(index.render(Login.loginForm, InfoDisplay.ERROR, "Redirection failed. Reason : " + e));
 		}
 	}
 
@@ -54,7 +54,7 @@ public class Application extends Controller {
 			return ok(myQrTable.render(Login.loginForm, db.getCustomersQrs(), InfoDisplay.NONE, null));
 		}
 		catch (Exception e) {
-			return badRequest(index.render(urlForm, Login.loginForm, InfoDisplay.ERROR, "Impossible to get the Qrcodes. " + e));
+			return badRequest(index.render(Login.loginForm, InfoDisplay.ERROR, "Impossible to get the Qrcodes. " + e));
 		}
 	}
 	
