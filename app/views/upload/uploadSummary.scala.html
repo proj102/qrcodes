@@ -1,8 +1,8 @@
-@(csvUpload : CSVUpload, loginForm: Form[Client])
+@(custSession: CustomerSession, csvUpload : CSVUpload)
 
 @main("File Uploaded") {
 
-	 @header(loginForm)   
+	 @header(custSession)   
 
 	<div class="container">
 	  <h1>File Uploaded !</h1>

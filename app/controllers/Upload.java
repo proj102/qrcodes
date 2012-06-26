@@ -28,10 +28,8 @@ public class Upload extends Controller {
      * Display a blank form.
      */ 
     public static Result blank() {
- 	 
         //return ok(batchGeneratorCSV.render(uploadForm, Login.loginForm));
-        return ok(batchGeneratorCSV.render(uploadForm, Login.loginForm, InfoDisplay.NONE, null));
-
+        return ok(batchGeneratorCSV.render(Login.getCustSession(), uploadForm, InfoDisplay.NONE, null));
     }
   
     
@@ -80,5 +78,4 @@ public class Upload extends Controller {
 				db.insertQr(j);
 		}
 	}
-	
 }

@@ -1,50 +1,50 @@
-@(loginForm: Form[Client], qrs:List[Qrcode]	, infosType: Int, infosContent: String)
+@(custSession: CustomerSession, qrs:List[Qrcode], infosType: Int, infosContent: String)
 
 @import helper._
 @import helper.twitterBootstrap._
 
 @main("my Qr Codes") {
 	
-	@header(loginForm)
+	@header(custSession)
 	
 	<div class="container">
 		@informations(infosType, infosContent)
 		<div class="row">
 			<div class="span4"></div>
 			<div class="span8">
-				@form(action = routes.QrTable.submit) {
-					@if((qrs != null)&&(qrs.length>0)){
-					<table class="table table-striped">
-						<thead>
-							<tr>
-								<th></th>
-								<th>Title</th>
-								<th>Place</th>
-								<th>Redirection</th>
-								<th>Creation date</th>
-								<th>Flashs</th>
-								<th>Modify</th>
-							</tr>	
-						</thead>
-						<tbody>
-							@for(qrcode <- qrs) {
+				@if(qrs != null && qrs.size() > 0) {
+					@form(action = routes.QrTable.submit) {
+						<table class="table table-striped">
+							<thead>
 								<tr>
-									<td><input type="checkbox" id="checkqr_@qrcode.getId()" /></td>
-									<td>@qrcode.getTitle()</td>
-									<td>@qrcode.getPlace()</td>
-									<td><a href="@qrcode.getRedirection()">@qrcode.getRedirection()</a></td>
-									<td>@qrcode.getCreationDate()</td>
-									<td>@qrcode.getFlashs()</td>
-									<td><a href="@routes.MyQr.viewQr(qrcode.getId())">Modify</a></td>
-									<td><a href="@routes.MyQr.removeQr(qrcode.getId())">Delete</a></td>
+									<th></th>
+									<th>Title</th>
+									<th>Place</th>
+									<th>Redirection</th>
+									<th>Creation date</th>
+									<th>Flashs</th>
+									<th>Modify</th>
 								</tr>
-							}
-						</tbody>
-					</table>
+							</thead>
+							<tbody>
+								@for(qrcode <- qrs) {
+									<tr>
+										<td><input type="checkbox" id="checkqr_@qrcode.getId()" /></td>
+										<td>@qrcode.getTitle()</td>
+										<td>@qrcode.getPlace()</td>
+										<td><a href="@qrcode.getRedirection()">@qrcode.getRedirection()</a></td>
+										<td>@qrcode.getCreationDate()</td>
+										<td>@qrcode.getFlashs()</td>
+										<td><a href="@routes.MyQr.viewQr(qrcode.getId())">Modify</a></td>
+										<td><a href="@routes.MyQr.removeQr(qrcode.getId())">Delete</a></td>
+									</tr>
+								}
+							</tbody>
+						</table>
 					}
-					@if((qrs!=null)&&(qrs.size()==0)){
-						<p>You have no Qrcode. Go create one!</p>
-						<a href="@routes.Application.createQr()" >create Qr code</a>
+				}else {
+					@if(qrs != null) {
+						<p>You don't have any QrCodes yet ! <a href="@routes.Application.createQr">Go create one now !</a></p>
 					}
 				}
 			</div>

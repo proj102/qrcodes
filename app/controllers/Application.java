@@ -31,7 +31,7 @@ public class Application extends Controller {
 	public final static String domain = "http://qrteam.herokuapp.com/"; 
  
 	public static Result index() {
-		return ok(index.render(Login.loginForm, InfoDisplay.NONE, null));
+		return ok(index.render(Login.getCustSession(), InfoDisplay.NONE, null));
 	}
 
 	// Manage the redirection
@@ -42,7 +42,7 @@ public class Application extends Controller {
 			return redirect(db.getUrl(id));
 		}
 		catch (Exception e) {
-			return badRequest(index.render(Login.loginForm, InfoDisplay.ERROR, "Redirection failed. Reason : " + e));
+			return badRequest(index.render(Login.getCustSession(), InfoDisplay.ERROR, "Redirection failed. Reason : " + e));
 		}
 	}
 
@@ -51,19 +51,23 @@ public class Application extends Controller {
 		MonDataBase db = MonDataBase.getInstance();
 		
 		try {
-			return ok(myQrTable.render(Login.loginForm, db.getCustomersQrs(), InfoDisplay.NONE, null));
+			return ok(myQrTable.render(Login.getCustSession(), db.getCustomersQrs(), InfoDisplay.NONE, null));
 		}
 		catch (Exception e) {
-			return badRequest(index.render(Login.loginForm, InfoDisplay.ERROR, "Impossible to get the Qrcodes. " + e));
+			return badRequest(index.render(Login.getCustSession(), InfoDisplay.ERROR, "Impossible to get the Qrcodes. " + e));
 		}
 	}
 	
 	public static Result overview() {
-		return ok(overview.render(Login.loginForm));
+		return ok(overview.render(Login.getCustSession(), InfoDisplay.NONE, null));
+	}
+	
+	public static Result contact() {
+		return ok(contact.render(Login.getCustSession(), InfoDisplay.NONE, null));
 	}
 	
 	public static Result createQr() {
-		return ok(createQr.render(Login.loginForm, urlForm, InfoDisplay.NONE, null));
+		return ok(createQr.render(Login.getCustSession(), urlForm, InfoDisplay.NONE, null));
 	}
 
 	//Get Url Form data
@@ -75,7 +79,7 @@ public class Application extends Controller {
 		
         Form<Url> form = form(Url.class).bindFromRequest();
 		if(form.hasErrors())
-			return badRequest(createQr.render(Login.loginForm, urlForm, InfoDisplay.ERROR, "The QrCode could not be generated. Please fill correctly all the requieted fields."));
+			return badRequest(createQr.render(Login.getCustSession(), urlForm, InfoDisplay.ERROR, "The QrCode could not be generated. Please fill correctly all the requieted fields."));
 		else {
 			Url data = form.get();
 			String url = data.url;
@@ -87,14 +91,14 @@ public class Application extends Controller {
 			if (Pattern.matches(regex, url)) {
 				try {
 					String qrId = db.addQrFromForm("url", url, data.title, data.place);
-					return ok(qrGenerator.render(domain + "r/" + qrId, Login.loginForm, InfoDisplay.SUCCESS, "You have successfully created a QrCode that redirects to " + url + " ."));
+					return ok(qrGenerator.render(Login.getCustSession(), domain + "r/" + qrId, InfoDisplay.SUCCESS, "You have successfully created a QrCode that redirects to " + url + " ."));
 				}
 				catch (Exception e) {
-					return badRequest(createQr.render(Login.loginForm, urlForm, InfoDisplay.ERROR, "The QrCode could not be generated. " + e));
+					return badRequest(createQr.render(Login.getCustSession(), urlForm, InfoDisplay.ERROR, "The QrCode could not be generated. " + e));
 				}
 			}
 			else
-				return badRequest(createQr.render(Login.loginForm, urlForm, InfoDisplay.ERROR, "The QrCode could not be generated. The redirection url must be a valid url."));
+				return badRequest(createQr.render(Login.getCustSession(), urlForm, InfoDisplay.ERROR, "The QrCode could not be generated. The redirection url must be a valid url."));
 		}
 	}
 
