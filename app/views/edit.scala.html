@@ -8,16 +8,25 @@
 	<div class="container">
 		@informations(infosType, infosContent)
 		<div class="hero-unit">
-			<div class="row">
-				<div class="span5">
-					@if(custSession.getAvatar().size==0){
-						<img src="@routes.Assets.at("images/Profile.png")" alt="avatar" height="30%" width="100%" style="margin-bottom:10px;"/>
-					} else {
-						<img src="@routes.Assets.at("custSession.getAvatar()")" alt="avatar" height="30%" width="100%" style="margin-bottom:10px;"/>
-					}
-				</div>
-				<div class="span5">
-					<p>@(custSession.getLogin())</p>
+			<h2 style="text-align: center; margin: 20px;">My Profile</h2>
+				<div class="row">
+					<div class="span5">
+						@if(custSession.getAvatar().size==0){
+							<img src="@routes.Assets.at("images/Profile.png")" alt="avatar" style="margin-bottom:10px;"/>
+						} else {
+							<img src="@custSession.getAvatar()" alt="avatar" style="margin-bottom:10px;"/>
+						}
+					</div>
+					<div class="span5">
+						<ul>
+							<p><span style="text-decoration: underline">Login</span>: @(custSession.getLogin())</p>
+							<p><span style="text-decoration: underline">Last Name</span>: @(custSession.getLastName())</p>
+							<p><span style="text-decoration: underline">First Name</span>: @(custSession.getFirstName())</p>
+						</ul>
+					</div>
+				<div class="span12">
+					<h2>Edit My Profile</h2>
+					
 				</div>
 			</div>
 		</div>

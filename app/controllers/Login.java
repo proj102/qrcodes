@@ -190,7 +190,7 @@ public class Login extends Controller {
 	public static Result edit() {
 		CustomerSession custSession = getCustSession();
 		custSession.getInfo();
-		return ok(edit.render(null, InfoDisplay.INFO, "You are now logged out."));
+		return ok(edit.render(custSession, InfoDisplay.NONE, null));
 	}
 }
 
