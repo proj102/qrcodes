@@ -15,6 +15,8 @@ GET		/r/:id			    controllers.Application.redirection(id: String)
 
 #Route to Overview
 GET     /overview          	controllers.Application.overview()
+#Route to Contac
+GET     /contact         	controllers.Application.contact()
 
 #Route to Create QrCodes
 GET     /createQr         	controllers.Application.createQr()
@@ -23,13 +25,14 @@ GET     /createQr         	controllers.Application.createQr()
 # Login
 GET		/edit				controllers.Login.edit()
 GET		/logout				controllers.Login.logout()
-GET		/login/auth			controllers.Login.auth()
+GET		/login/auth/google		controllers.Login.auth1()
+GET		/login/auth/facebook	controllers.Login.auth2()
 GET		/login/verify		controllers.Login.verify()
 
 # Qr table
 GET		/myQrTable			controllers.QrTable.blank()
 POST	/myQrTable			controllers.QrTable.submit()
-GET	/myQrTable/remove/:id			controllers.MyQr.removeQr(id: String)
+GET	/myQrTable/remove/:id	controllers.MyQr.removeQr(id: String)
 
 
 # My Qr

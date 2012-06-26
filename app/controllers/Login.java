@@ -28,19 +28,38 @@ import play.libs.OpenID.UserInfo;
 public class Login extends Controller {
     
 	public static int sessionDuration = 3600*24*30;
+	public static String returnToUrl = "http://localhost:9000/login/verify";
+	//public static String returnToUrl = Application.domain+ "/login/verify";
 	
 	@SuppressWarnings("serial")
 	public static final Map<String, String> identifiers = new HashMap<String, String>() {
 		{
 			put("google", "https://www.google.com/accounts/o8/id");
+			put("facebook", "http://facebook-openid.appspot.com/");
 		}
 	};
 	
-	public static Result auth() {
+	public static Result auth1() {
 		String providerId = "google";
 		String providerUrl = identifiers.get(providerId);
-		//String returnToUrl = "http://localhost:9000/login/verify";
-		String returnToUrl = Application.domain + "/login/verify";
+		
+		if (providerUrl == null)
+			return badRequest(index.render(getCustSession(), InfoDisplay.ERROR, "Provider could not be found."));
+			
+		// set the information to get
+		Map<String, String> attributes = new HashMap<String, String>();
+		attributes.put("Email", "http://schema.openid.net/contact/email");
+		attributes.put("FirstName", "http://schema.openid.net/namePerson/first");
+		attributes.put("LastName", "http://schema.openid.net/namePerson/last");
+		
+		// ask to openid the information
+		Promise<String> redirectUrl = OpenID.redirectURL(providerUrl, returnToUrl, attributes);
+		return redirect(redirectUrl.get());
+	}
+	
+	public static Result auth2() {
+		String providerId = "facebook";
+		String providerUrl = identifiers.get(providerId);
 		
 		if (providerUrl == null)
 			return badRequest(index.render(getCustSession(), InfoDisplay.ERROR, "Provider could not be found."));
