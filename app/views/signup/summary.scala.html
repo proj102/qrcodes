@@ -1,8 +1,8 @@
-@(user: User, loginForm: Form[Client], infosType: Int, infosContent: String)
+@(custSession: CustomerSession, user: User, loginForm: Form[Client], infosType: Int, infosContent: String)
 
 @main("Account created!") {
 
-	@header(loginForm)   
+	@header(loginForm, custSession)   
 
 	<div class="container">
 		@informations(infosType, infosContent)

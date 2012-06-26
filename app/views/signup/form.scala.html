@@ -1,4 +1,4 @@
-@(signupForm: Form[User], loginForm: Form[Client], infosType: Int, infosContent: String)
+@(custSession: CustomerSession, signupForm: Form[User], loginForm: Form[Client], infosType: Int, infosContent: String)
 
 @import helper._
 @import helper.twitterBootstrap._
@@ -8,7 +8,7 @@
 }
 
 @main("Sign up!") {
-    @header(loginForm)   
+    @header(loginForm, custSession)   
     @helper.form(action = routes.SignUp.submit) {
 	<div class="container">
 		@informations(infosType, infosContent)

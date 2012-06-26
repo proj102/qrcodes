@@ -1,11 +1,11 @@
-@(loginForm: Form[Client], qrs:List[Qrcode], infosType: Int, infosContent: String)
+@(custSession: CustomerSession, loginForm: Form[Client], qrs:List[Qrcode], infosType: Int, infosContent: String)
 
 @import helper._
 @import helper.twitterBootstrap._
 
 @main("my Qr Codes") {
 	
-	@header(loginForm)
+	@header(loginForm, custSession)
 	
 	<div class="container">
 		@informations(infosType, infosContent)

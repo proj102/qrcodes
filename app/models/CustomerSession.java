@@ -23,4 +23,8 @@ public class CustomerSession {
 	public boolean getJustLogged() {
 		return justLogged;
 	}
+	
+	public String getId() {
+		return id;
+	}
 }

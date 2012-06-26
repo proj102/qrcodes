@@ -21,7 +21,7 @@ public class SignUp extends Controller {
 	* Display a blank form.
 	*/ 
 	public static Result blank() {
-		return ok(form.render(signupForm, Login.loginForm, InfoDisplay.NONE, null));
+		return ok(form.render(Login.getCustSession(), signupForm, Login.loginForm, InfoDisplay.NONE, null));
 	}
   
 	/**
@@ -32,7 +32,7 @@ public class SignUp extends Controller {
 			"fakeuser", "fake@gmail.com", "secret",
 			new User.Profile("France", "Durand", "Pierre" , "Télécom ParisTech")
 		);
-		return ok(form.render(signupForm.fill(existingUser), Login.loginForm, InfoDisplay.NONE, null));
+		return ok(form.render(Login.getCustSession(), signupForm.fill(existingUser), Login.loginForm, InfoDisplay.NONE, null));
 	}
   
 	/**
@@ -59,18 +59,18 @@ public class SignUp extends Controller {
 				MonDataBase.getInstance().addCustomer(filledForm.field("username").value(), filledForm.field("password").value(), filledForm.field("email").value(), filledForm.field("profile.lastName").valueOr(""), filledForm.field("profile.firstName").valueOr(""), filledForm.field("profile.firm").valueOr(""));
 			} catch(LoginException e) {
 				filledForm.reject("username", "This username is already taken");
-				return badRequest(form.render(filledForm, Login.loginForm, InfoDisplay.ERROR, "Subscription failed : this username is already taken."));
+				return badRequest(form.render(Login.getCustSession(), filledForm, Login.loginForm, InfoDisplay.ERROR, "Subscription failed : this username is already taken."));
 			}
 			catch (Exception e) {
-				return badRequest(form.render(filledForm, Login.loginForm, InfoDisplay.ERROR, "Subscription failed. " + e));
+				return badRequest(form.render(Login.getCustSession(), filledForm, Login.loginForm, InfoDisplay.ERROR, "Subscription failed. " + e));
 			}
 		}
 
 		if(filledForm.hasErrors()) {
-			return badRequest(form.render(filledForm, Login.loginForm, InfoDisplay.ERROR, "Subscription failed : please fill correctly all the requieted fields."));
+			return badRequest(form.render(Login.getCustSession(), filledForm, Login.loginForm, InfoDisplay.ERROR, "Subscription failed : please fill correctly all the requieted fields."));
 		} else {
 			User created = filledForm.get();
-			return ok(summary.render(created, Login.loginForm, InfoDisplay.SUCCESS, "Subscription successful."));
+			return ok(summary.render(Login.getCustSession(), created, Login.loginForm, InfoDisplay.SUCCESS, "Subscription successful."));
 		}
 	}
 }

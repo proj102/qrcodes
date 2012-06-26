@@ -1,10 +1,10 @@
-@(uploadForm: Form[CSVUpload], loginForm: Form[Client], infosType: Int, infosContent: String)
+@(custSession: CustomerSession, uploadForm: Form[CSVUpload], loginForm: Form[Client], infosType: Int, infosContent: String)
 
 @import helper._
 
 @main("Qr Codes from CSV"){
 
-	@header(loginForm)
+	@header(loginForm, custSession)
 <div class="container">
 @informations(infosType, infosContent)
 <div class="row">

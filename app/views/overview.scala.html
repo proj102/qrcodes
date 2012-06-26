@@ -1,7 +1,7 @@
-@(loginForm: Form[Client])
+@(custSession: CustomerSession, loginForm: Form[Client])
 @main("my Qr Codes"){
 
-    @header(loginForm)
+    @header(loginForm, custSession)
 <div class="container">
 
 <script type="text/javascript" >
