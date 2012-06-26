@@ -65,7 +65,6 @@ public class CustomerSession {
 	/**
 	  *To get all the information from a customer
 	  *
-	  *TODO: implement the MongoDB method in MonDataBase.java to getInfos(id)
 	 **/
 	public void getInfo(){
 		MonDataBase db = MonDataBase.getInstance();

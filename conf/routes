@@ -30,6 +30,7 @@ GET		/login/verify		controllers.Login.verify()
 
 # Edit
 GET		/edit				controllers.Edit.edit()
+POST		/edit				controllers.Edit.submit()
 
 # Qr table
 GET		/myQrTable			controllers.QrTable.blank()

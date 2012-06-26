@@ -26,6 +26,23 @@
 					</div>
 				<div class="span12">
 					<h2>Edit My Profile</h2>
+					@form(action = routes.Edit.submit) {
+						<input type="hidden" name="id" value="@custSession.getId()" />
+						@inputText(
+							qrForm("login"),
+							'_label -> "Login",
+							'_help -> "",
+						)
+
+						@inputText(
+							qrForm("urlToAvatar"),
+							'_label -> "The url of the image you chose as avatar",
+							'_help -> "",
+						)
+
+
+						<input type="submit" class="btn-primary btn-large" value="Modify" />
+					}
 					
 				</div>
 			</div>
