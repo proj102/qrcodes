@@ -100,7 +100,7 @@ public class Login extends Controller {
 		}
 		catch (CustomerException e) {
 			try {
-				String customerId = db.addCustomer(email, firstName, lastName);
+				String customerId = db.addCustomer(email, lastName, firstName);
 				response().setCookie("connected", customerId, sessionDuration);
 				CustomerSession custSession = new CustomerSession(customerId, firstName + " " + lastName);
 			
