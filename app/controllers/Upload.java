@@ -27,12 +27,10 @@ public class Upload extends Controller {
      * Display a blank form.
      */ 
     public static Result blank() {
-<<<<<<< HEAD
  	 
-        return ok(batchGeneratorCSV.render(uploadForm, Login.loginForm));
-=======
+        //return ok(batchGeneratorCSV.render(uploadForm, Login.loginForm));
         return ok(batchGeneratorCSV.render(uploadForm, Login.loginForm, InfoDisplay.NONE, null));
->>>>>>> 57942df5936cd5d6f63594f6100c074f90391697
+
     }
   
     
@@ -56,11 +54,11 @@ public class Upload extends Controller {
    
     
     if(filledForm.hasErrors()) {
-<<<<<<< HEAD
-            return badRequest(batchGeneratorCSV.render(filledForm, Login.loginForm/*, new ArrayList<String>() */));
-=======
+
+            //return badRequest(batchGeneratorCSV.render(filledForm, Login.loginForm/*, new ArrayList<String>() */));
+
             return badRequest(batchGeneratorCSV.render(filledForm, Login.loginForm, InfoDisplay.ERROR, "Please fill correctly the fields"));
->>>>>>> 57942df5936cd5d6f63594f6100c074f90391697
+
         } else {
             CSVUpload created = filledForm.get();
             created.filepath = file.getAbsolutePath();
@@ -74,19 +72,6 @@ public class Upload extends Controller {
         
         
     }
-     public static Result addField() {
-     	Form<CSVUpload> filledForm = uploadForm.bindFromRequest();
-    	
-    	if(filledForm.hasErrors()) {
-            return badRequest(batchGeneratorCSV.render(filledForm, Login.loginForm/*, new ArrayList<String>() */));
-        } else {
-            CSVUpload created = filledForm.get();
-            ArrayList<String> fieldsTitlesList = created.getAdditionalFieldsTitles();
-    			fieldsTitlesList.add("TitleTest");
-    			
-    			
-            return ok(batchGeneratorCSV.render(uploadForm, Login.loginForm/*, fieldsTitlesList*/));
-        }
- }
+     
   
 }

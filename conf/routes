@@ -48,8 +48,7 @@ POST	/myQr				controllers.MyQr.submit()
 #Route to page generating QR Codes through CSV Files
 GET     /upload				controllers.Upload.blank()
 POST    /upload				controllers.Upload.submit()
-GET	  /addField    		controllers.Upload.addField()
-POST	  /addField    		controllers.Upload.addField()
+
 
 
 GET		/test/:key			controllers.Application.test(key: String)
