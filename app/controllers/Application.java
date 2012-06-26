@@ -117,8 +117,7 @@ public class Application extends Controller {
 		ArrayList<BasicDBObject> json = new ArrayList<BasicDBObject>();
 		try {
 			// get array of json document from csv file
-			json = Utils.parseCSV("./doc/tab.csv", mapTitles, ";");
-			
+			json = Utils.parseCSV("./doc/tab.csv", "redirection",";");
 			// insertion in db only if document doesn't exist in collection
 			for (BasicDBObject j : json){
 				if ( !db.isCreated(key, j.get(key), "qrcodes") ) 

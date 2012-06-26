@@ -12,32 +12,20 @@ public class CSVUpload {
 	public String urlRedirection;
 	public String type;
 	public String filepath;
-	public ArrayList<String> additionalFieldsTitles = new ArrayList<String>();
-	public ArrayList<String> additionalFieldsValues = new ArrayList<String>();
 	public List<AdditionalTitle> additionalTitles;
 
-
-	
-	public CSVUpload() {			
-		}
+	public CSVUpload() {}
 	
 	public CSVUpload(File file, String urlRedirection, String type, AdditionalTitle... additionalTitles) {
-        this.file = file;
-        this.urlRedirection = urlRedirection;
-        this.type = type;
-        this.additionalTitles = new ArrayList<AdditionalTitle>();
-        for(AdditionalTitle additionalTitle: additionalTitles) {
-            this.additionalTitles.add(additionalTitle);
-        }
+        	this.file = file;
+	        this.urlRedirection = urlRedirection;
+        	this.type = type;
+	        this.additionalTitles = new ArrayList<AdditionalTitle>();
+        	for(AdditionalTitle additionalTitle: additionalTitles) {
+	            this.additionalTitles.add(additionalTitle);
+        	}
     }
     
-    public ArrayList<String> getAdditionalFieldsTitles(){
-	return additionalFieldsTitles;
-	}
-    
-    
-	
-	
 
 public static class AdditionalTitle{
 
