@@ -1,8 +1,8 @@
-@(custSession: CustomerSession, url: String, loginForm: Form[Client], infosType: Int, infosContent: String)
+@(custSession: CustomerSession, url: String, infosType: Int, infosContent: String)
 
 @main("Here is the result:") {
 
-    @header(loginForm, custSession)
+    @header(custSession)
 	
 	<div class="container-fluid">
 		@informations(infosType, infosContent)

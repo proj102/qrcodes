@@ -20,13 +20,7 @@ GET     /overview          	controllers.Application.overview()
 GET     /createQr         	controllers.Application.createQr()
 
 
-# Signup
-GET     /signup            	controllers.SignUp.blank()
-GET     /users/fakeuser    	controllers.SignUp.edit()
-POST    /signup         	controllers.SignUp.submit()
-
 # Login
-POST	/login				controllers.Login.submit()
 GET		/logout				controllers.Login.logout()
 GET		/login/auth			controllers.Login.auth()
 GET		/login/verify		controllers.Login.verify()

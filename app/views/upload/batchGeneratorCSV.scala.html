@@ -1,4 +1,4 @@
-@(custSession: CustomerSession, uploadForm: Form[CSVUpload], loginForm: Form[Client], infosType: Int, infosContent: String)
+@(custSession: CustomerSession, uploadForm: Form[CSVUpload], infosType: Int, infosContent: String)
 
 @import helper._
 
@@ -44,7 +44,7 @@
 
 @main("Qr Codes from CSV"){
 
-	@header(loginForm, custSession)
+	@header(custSession)
 
  @if(uploadForm.hasErrors) {
         <div class="alert-message error">

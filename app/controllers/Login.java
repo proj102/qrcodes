@@ -17,7 +17,6 @@ import play.mvc.*;
 import play.data.*;
 
 import views.html.*;
-import views.html.signup.*;
 
 import models.*;
 
@@ -29,8 +28,6 @@ import play.libs.OpenID.UserInfo;
 public class Login extends Controller {
     
 	public static int sessionDuration = 3600*24*30;
-	
-	static Form<Client> loginForm = form(Client.class);
 	
 	@SuppressWarnings("serial")
 	public static final Map<String, String> identifiers = new HashMap<String, String>() {
@@ -45,7 +42,7 @@ public class Login extends Controller {
 		String returnToUrl = "http://localhost:9000/login/verify";
 		
 		if (providerUrl == null)
-			return badRequest(index.render(getCustSession(), loginForm, InfoDisplay.ERROR, "Provider could not be found."));
+			return badRequest(index.render(getCustSession(), InfoDisplay.ERROR, "Provider could not be found."));
 			
 		// set the information to get
 		Map<String, String> attributes = new HashMap<String, String>();
@@ -58,28 +55,6 @@ public class Login extends Controller {
 		return redirect(redirectUrl.get());
 	}
 
-	// try to authenticate with a provider
-	/*public static Result auth() {
-		auth("google");
-		Logger.debug("authenticate");
-		String providerId = "google";
-		String providerUrl = identifiers.get(providerId);
-		String returnToUrl = "http://localhost:9000/login/verify";
-		//"http://localhost:9000/login/verify";
-		//String returnToUrl = "https://qrteam.herokuapp.com/login/verify";
-
-		if (providerUrl == null)
-			return badRequest(index.render(loginForm, InfoDisplay.ERROR, "Provider could not be found."));
-
-		Map<String, String> attributes = new HashMap<String, String>();
-		attributes.put("Email", "http://schema.openid.net/contact/email");
-		attributes.put("FirstName", "http://schema.openid.net/namePerson/first");
-		attributes.put("LastName", "http://schema.openid.net/namePerson/last");
-
-		Promise<String> redirectUrl = OpenID.redirectURL(providerUrl, returnToUrl, attributes);
-		return redirect(redirectUrl.get());
-	}*/
-	
 	// return the session of the logged customer
 	public static CustomerSession getCustSession() {
 		MonDataBase db = MonDataBase.getInstance();
@@ -96,8 +71,6 @@ public class Login extends Controller {
 			return null;
 		}
 	}
-	
-	
 	
 	public boolean isConnected() {
 		return (getCustSession() != null);
@@ -122,58 +95,33 @@ public class Login extends Controller {
 			
 			CustomerSession custSession = new CustomerSession(customerId, MonDataBase.getInstance().getLogin(customerId));
 			
-			return ok(index.render(custSession, loginForm, InfoDisplay.SUCCESS, "You are now connected."));					
+			return ok(index.render(custSession, InfoDisplay.SUCCESS, "You are now connected."));					
 		}
 		catch (CustomerException e) {
-			// no account with this mail
-			User existingUser = new User(
-				firstName + " " + lastName, email, "",
-				new User.Profile("", lastName, firstName , " ")
-			);
-			return ok(form.render(getCustSession(), SignUp.signupForm.fill(existingUser), Login.loginForm, InfoDisplay.INFO, "No account matching your google address found. Do you want to create one now ?"));
-		}
-		catch (Exception e) {
-			return badRequest(index.render(getCustSession(), loginForm, InfoDisplay.ERROR, "Error when logging-in with Google. " + e));
-		}
-	}
-	
-	/*public static void checkSession() {
-		try {
-			if (custSession != null) {
-				if (!custSession.getJustLogged())
-					getConnected();
-				else
-					custSession.setJustLogged(false);
+			try {
+				String customerId = db.addCustomer(email, firstName, lastName);
+				response().setCookie("connected", customerId, sessionDuration);
+				CustomerSession custSession = new CustomerSession(customerId, firstName + " " + lastName);
+			
+				return ok(index.render(custSession, InfoDisplay.SUCCESS, "You are now connected"));
+			}
+			catch (Exception f) {
+				return badRequest(index.render(getCustSession(), InfoDisplay.ERROR, "Error when logging in. " + f));
 			}
 		}
 		catch (Exception e) {
-			Logger.debug("problem with session/cookies");
-		}
-	}*/
-	
-	public static String getLogin() {
-		try {
-			String customerId = getConnected();
-			
-			if (customerId == null)
-				return "Connected";
-			else 
-				return MonDataBase.getInstance().getLogin(customerId);
-		}
-		catch (Exception e) {
-			return "Connected";
+			return badRequest(index.render(getCustSession(), InfoDisplay.ERROR, "Error when logging in. " + e));
 		}
 	}
-		
 	
-	public static String connection(String login, String password) throws Exception {
+	/*public static String connection(String login, String password) throws Exception {
 		MonDataBase db = MonDataBase.getInstance();
 	
 		String customerId = db.connection(login, password);
 		response().setCookie("connected", customerId, sessionDuration);
 			
 		return customerId;
-	}
+	}*/
 	
 	public static String getConnected() throws Exception {
 		CustomerSession custSession = getCustSession();
@@ -184,31 +132,12 @@ public class Login extends Controller {
 		return custSession.getId();
 	}
 	
-	/*public static String getConnected() throws Exception {
-		MonDataBase db = MonDataBase.getInstance();
-		Http.Cookie cookie = request().cookies().get("connected");
-		
-		if (cookie != null) {
-			String custId = cookie.value();
-			String isCo = db.custExists(custId);
-			
-			if (isCo == null)
-				custSession = null;
-				
-			return isCo;
-		}
-		else
-			custSession = null;
-			
-		return null;
-	}*/
-	
 	public static Result logout() {
 		response().discardCookies("connected");
-		return ok(index.render(null, Login.loginForm, InfoDisplay.INFO, "You are now logged out."));
+		return ok(index.render(null, InfoDisplay.INFO, "You are now logged out."));
 	}
 
-	public static Result submit() {
+	/*public static Result submit() {
 			Form<Client> filledForm = loginForm.bindFromRequest();
 			
 			//Check in the database if login exist and if it matches with the password
@@ -233,7 +162,7 @@ public class Login extends Controller {
 				}
 			}
 			return badRequest(index.render(getCustSession(), filledForm, InfoDisplay.ERROR, "Error when logging in. Please fill correctly all the fields."));
-	}
+	}*/
 }
 
 

@@ -25,10 +25,10 @@ public class QrTable extends Controller {
 		MonDataBase db = MonDataBase.getInstance();
 		
 		try {
-			return ok(myQrTable.render(Login.getCustSession(), Login.loginForm, db.getCustomersQrs(), InfoDisplay.NONE, null));
+			return ok(myQrTable.render(Login.getCustSession(), db.getCustomersQrs(), InfoDisplay.NONE, null));
 		}
 		catch (Exception e) {
-			return badRequest(myQrTable.render(Login.getCustSession(), Login.loginForm, new ArrayList<Qrcode>(), InfoDisplay.ERROR, "Impossible to get your Qrcodes." + e));
+			return badRequest(myQrTable.render(Login.getCustSession(), new ArrayList<Qrcode>(), InfoDisplay.ERROR, "Impossible to get your Qrcodes." + e));
 		}
     }
 	

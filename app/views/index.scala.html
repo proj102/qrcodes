@@ -1,4 +1,4 @@
-@(custSession: CustomerSession, loginForm: Form[Client], infosType: Int, infosContent: String)
+@(custSession: CustomerSession, infosType: Int, infosContent: String)
 
 @import helper._
 @import helper.twitterBootstrap._
@@ -6,7 +6,7 @@
 
 @main("QR Team") {
 
-@header(loginForm, custSession)
+@header(custSession)
 
 <div class="container">
 	@informations(infosType, infosContent)

@@ -97,65 +97,28 @@ public class MonDataBase {
 		return authentification;
 	}
 	
-	// add a customer to the db after checking the validity of
-	// the informations given and after generating a unique ID
-	public void addCustomer(String login, String password, String mail, String name, String firstname, String firm) throws Exception {
-		// let's check the validity of their validity
-		DBCollection coll = db.getCollection("customers");
-		
-		BasicDBObject query  = new BasicDBObject();
-		query.put("login", login);
-		DBCursor data  = coll.find(query);
-		if (data.count() != 0)
-			throw new LoginException("Login already used.");
-		
-		// crypt the password in SHA-1
-		password = Utils.sha1Encrypt(password);
-		
-		// add the customer
-		BasicDBObject customerInfos = new BasicDBObject();
-		customerInfos.put("login", login);
-		customerInfos.put("password", password);
-		customerInfos.put("mail", mail);
-		customerInfos.put("assoMail", "");
-		customerInfos.put("inscription", System.currentTimeMillis());
-		customerInfos.put("name", name);
-		customerInfos.put("firstname", firstname);
-		customerInfos.put("firm", firm);
-		customerInfos.put("avatar", "");
-		customerInfos.put("qrs", "[]");
-		customerInfos.put("active", 0);
-		customerInfos.put("key", "");
-		customerInfos.put("account", 1); // normal account
-		coll.insert(customerInfos);
-	}
-	
 	// add a customer that registers via a provider
-	public void addCustomerProvider(String login, String mail, String associatedMail, String name, String firstname) throws Exception {
-		// let's check the validity of their validity
+	public String addCustomer(String mail, String lastName, String firstName) throws Exception {
 		DBCollection coll = db.getCollection("customers");
 		
 		BasicDBObject query  = new BasicDBObject();
-		query.put("login", login);
+		query.put("mail", mail);
 		DBCursor data  = coll.find(query);
 		if (data.count() != 0)
-			throw new LoginException("Login already used.");
+			throw new CustomerException("Account already existing.");
 		
 		// add the customer
 		BasicDBObject customerInfos = new BasicDBObject();
-		customerInfos.put("login", login);
+		customerInfos.put("login", firstName + " " + lastName);
 		customerInfos.put("mail", mail);
-		customerInfos.put("assoMail", associatedMail);
 		customerInfos.put("inscription", System.currentTimeMillis());
-		customerInfos.put("name", name);
-		customerInfos.put("firstname", firstname);
-		customerInfos.put("firm", "");
+		customerInfos.put("name", lastName);
+		customerInfos.put("firstname", firstName);
 		customerInfos.put("avatar", "");
 		customerInfos.put("qrs", "[]");
-		customerInfos.put("active", 0);
-		customerInfos.put("key", "");
-		customerInfos.put("account", 0); // account via provider
 		coll.insert(customerInfos);
+		
+		return customerInfos.get("_id").toString();
 	}
 	
 	// insert a qrcode in the database with the given json content
@@ -219,7 +182,7 @@ public class MonDataBase {
 	
 	// try to log-in the customer : return the customer's id if 
 	// the connection is successfull, -1 otherwise
-	public String connection(String login, String password) throws Exception {
+	/*public String connection(String login, String password) throws Exception {
 		DBCollection customers = db.getCollection("customers");
 		
 		BasicDBObject query  = new BasicDBObject();
@@ -243,38 +206,21 @@ public class MonDataBase {
 			else
 				throw new PasswordException();
 		}
-	}
-	
-	public void activateAccount(String id) throws Exception {
-		DBCollection customers = db.getCollection("customers");
-		BasicDBObject query  = new BasicDBObject();
-		query.put("_id", new ObjectId(id));
-		DBCursor data  = customers.find(query);
-		
-		if (data.size() == 0)
-			throw new CustomerException("Account not found.");
-			
-		BasicDBObject newCustDoc = new BasicDBObject().append("$set", new BasicDBObject().append("active", 1));
-		customers.update(new BasicDBObject().append("_id", new ObjectId(id)), newCustDoc);
-	}
+	}*/
 	
 	// connection with email (OpenId with google)
 	public String connection(String email) throws Exception {
 		DBCollection customers = db.getCollection("customers");
 		
 		BasicDBObject query  = new BasicDBObject();
-		query.put("assoMail", email);
+		query.put("mail", email);
 		DBCursor data  = customers.find(query);
 		
 		if (data.size() == 0)
-			throw new CustomerException("You google address does not match your email.");
+			throw new CustomerException("No account with this email.");
 		else {
 			DBObject cust = data.next();
-			
-			if (getIntElement(cust, "active") == 1)
-				return cust.get("_id").toString();
-			else
-				throw new CustomerException("Your account exists but you need to activate it. Please check your mails.");
+			return cust.get("_id").toString();
 		}
 	}
 	
@@ -307,12 +253,8 @@ public class MonDataBase {
 	public ArrayList<Qrcode> getCustomersQrs() throws Exception {
 		String customerId = Login.getConnected();
 		
-		/*if (customerId == null)
-			throw new CustomerException("You must be connected.");*/
-			
 		DBCollection customers = db.getCollection("customers");
 		BasicDBObject query  = new BasicDBObject();
-		query.put("_id", new ObjectId(customerId));
 		query.put("_id", new ObjectId(customerId));
 		DBCursor customer = customers.find(query);
 		
@@ -349,9 +291,6 @@ public class MonDataBase {
 	
 	public Qrcode getQrCode(String id) throws Exception {
 		String customerId = Login.getConnected();
-		
-		/*if (customerId == null)
-			throw new CustomerException("You are not connected.");*/
 		
 		DBCollection customers = db.getCollection("customers");
 		BasicDBObject query  = new BasicDBObject();
