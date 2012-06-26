@@ -32,6 +32,9 @@ public class Login extends Controller {
 	
 	static Form<Client> loginForm = form(Client.class);
 	
+	// session of the customer
+	public static CustomerSession custSession;
+	
 
 	
 	@SuppressWarnings("serial")
@@ -41,6 +44,7 @@ public class Login extends Controller {
 		}
 	};
 
+	// try to authenticate with a provider
 	public static Result auth() {
 		Logger.debug("authenticate");
 		String providerId = "google";
@@ -50,7 +54,7 @@ public class Login extends Controller {
 		//String returnToUrl = "https://qrteam.herokuapp.com/login/verify";
 
 		if (providerUrl == null)
-			return badRequest(index.render(Application.urlForm, loginForm, InfoDisplay.ERROR, "Provider could not be found."));
+			return badRequest(index.render(loginForm, InfoDisplay.ERROR, "Provider could not be found."));
 
 		Map<String, String> attributes = new HashMap<String, String>();
 		attributes.put("Email", "http://schema.openid.net/contact/email");
@@ -61,6 +65,7 @@ public class Login extends Controller {
 		return redirect(redirectUrl.get());
 	}
 
+	// get the result of openid
 	public static Result verify() {
 		Logger.debug("verifyLogin");
 		Promise<UserInfo> userInfoPromise = OpenID.verifiedId();
@@ -74,15 +79,29 @@ public class Login extends Controller {
 		try {
 			String customerId = db.connection(email);
 			
-			if (customerId != null)
+			if (customerId != null) {
 				response().setCookie("connected", customerId, sessionDuration);
+				custSession = new CustomerSession(customerId, MonDataBase.getInstance().getLogin(customerId));
+			}
 			
-			//flash("coco", "ok");
-			
-			return ok(index.render(Application.urlForm, loginForm, InfoDisplay.SUCCESS, "You are now connected."));					
+			return ok(index.render(loginForm, InfoDisplay.SUCCESS, "You are now connected."));					
 		}
 		catch (Exception e) {
-			return badRequest(index.render(Application.urlForm, loginForm, InfoDisplay.ERROR, "Error when logging-in with Google. " + e));
+			return badRequest(index.render(loginForm, InfoDisplay.ERROR, "Error when logging-in with Google. " + e));
+		}
+	}
+	
+	public static void checkSession() {
+		try {
+			if (custSession != null) {
+				if (!custSession.getJustLogged())
+					getConnected();
+				else
+					custSession.setJustLogged(false);
+			}
+		}
+		catch (Exception e) {
+			Logger.debug("problem with session/cookies");
 		}
 	}
 	
@@ -126,17 +145,24 @@ public class Login extends Controller {
 		
 		if (cookie != null) {
 			String custId = cookie.value();
+			String isCo = db.custExists(custId);
 			
-			return db.custExists(custId);
+			if (isCo == null)
+				custSession = null;
+				
+			return isCo;
 		}
+		else
+			custSession = null;
 			
 		return null;
 	}
 	
 	public static Result logout() {
 		response().discardCookies("connected");
+		custSession = null;
 		
-		return ok(index.render(Application.urlForm, Login.loginForm, InfoDisplay.INFO, "You are now logged out."));
+		return ok(index.render(Login.loginForm, InfoDisplay.INFO, "You are now logged out."));
 	}
 
 	public static Result blank() {
@@ -151,22 +177,24 @@ public class Login extends Controller {
 				try {
 					String checker = connection(filledForm.field("login").value(), filledForm.field("password").value());
 					
+					custSession = new CustomerSession(checker, filledForm.field("login").value());
+					
 					Client created = filledForm.get();
-					return ok(index.render(Application.urlForm, filledForm, InfoDisplay.SUCCESS, "You are now connected."));					
+					return ok(index.render(filledForm, InfoDisplay.SUCCESS, "You are now connected."));					
 				}
 				catch (LoginException e) {
 					filledForm.reject("login", "This login does not exist");
-					return badRequest(index.render(Application.urlForm, filledForm, InfoDisplay.ERROR, "Error when logging in. This login does not exist."));
+					return badRequest(index.render(filledForm, InfoDisplay.ERROR, "Error when logging in. This login does not exist."));
 				}
 				catch (PasswordException e) {
 					filledForm.reject("password", "The password does not match");
-					return badRequest(index.render(Application.urlForm, filledForm, InfoDisplay.ERROR, "Error when logging in. The password does not match."));
+					return badRequest(index.render(filledForm, InfoDisplay.ERROR, "Error when logging in. The password does not match."));
 				}
 				catch(Exception e) {
-					return badRequest(index.render(Application.urlForm, filledForm, InfoDisplay.ERROR, "Error when logging in. " + e));
+					return badRequest(index.render(filledForm, InfoDisplay.ERROR, "Error when logging in. " + e));
 				}
 			}
-			return badRequest(index.render(Application.urlForm, filledForm, InfoDisplay.ERROR, "Error when logging in. Please fill correctly all the fields."));
+			return badRequest(index.render(filledForm, InfoDisplay.ERROR, "Error when logging in. Please fill correctly all the fields."));
 	}
 }
 

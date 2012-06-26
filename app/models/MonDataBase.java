@@ -228,11 +228,14 @@ public class MonDataBase {
 		}
 	}
 	
-	public String getLogin(String customerId) {
+	public String getLogin(String customerId) throws Exception {
 		DBCollection customers = db.getCollection("customers");
 		BasicDBObject query  = new BasicDBObject();
 		query.put("_id", new ObjectId(customerId));
 		DBObject data  = customers.findOne(query);
+		
+		if (data == null)
+			throw new CustomerException("Unknown customer.");
 		
 		return getElement(data, "login");
 	}
