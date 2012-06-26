@@ -59,7 +59,11 @@ public class Application extends Controller {
 	}
 	
 	public static Result overview() {
-		return ok(overview.render(Login.getCustSession()));
+		return ok(overview.render(Login.getCustSession(), InfoDisplay.NONE, null));
+	}
+	
+	public static Result contact() {
+		return ok(contact.render(Login.getCustSession(), InfoDisplay.NONE, null));
 	}
 	
 	public static Result createQr() {
