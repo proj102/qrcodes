@@ -23,11 +23,13 @@ GET     /createQr         	controllers.Application.createQr()
 
 
 # Login
-GET		/edit				controllers.Login.edit()
 GET		/logout				controllers.Login.logout()
 GET		/login/auth/google		controllers.Login.auth1()
 GET		/login/auth/facebook	controllers.Login.auth2()
 GET		/login/verify		controllers.Login.verify()
+
+# Edit
+GET		/edit				controllers.Edit.edit()
 
 # Qr table
 GET		/myQrTable			controllers.QrTable.blank()

@@ -153,11 +153,7 @@ public class Login extends Controller {
 		return ok(index.render(null, InfoDisplay.INFO, "You are now logged out."));
 	}
 
-	public static Result edit() {
-		CustomerSession custSession = getCustSession();
-		custSession.getInfo();
-		return ok(edit.render(custSession, InfoDisplay.NONE, null));
-	}
+
 }
 
 
