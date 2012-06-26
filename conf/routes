@@ -50,5 +50,6 @@ GET     /upload				controllers.Upload.blank()
 POST    /upload				controllers.Upload.submit()
 
 
+
 GET		/test/:key			controllers.Application.test(key: String)
 

@@ -1,6 +1,7 @@
 package models;
 
 import controllers.*;
+import java.util.ArrayList;
 
 // depicts a Qrcode
 public class Qrcode {
@@ -12,6 +13,8 @@ public class Qrcode {
 	private String place;
 	private long creationDate;
 	private int flashs;
+	private ArrayList<String> additionalFieldsTitles = new ArrayList<String>();
+	private ArrayList<String> additionalFieldsValues = new ArrayList<String>();
 	
 	
 	public Qrcode() {
@@ -62,6 +65,13 @@ public class Qrcode {
 	
 	public int getFlashs() {
 		return flashs;
+	}
+	
+	public ArrayList<String> getAdditionalFieldsTitles() {
+		return additionalFieldsTitles;
+	}
+	public ArrayList<String> getAdditionalFieldsValues() {
+		return additionalFieldsValues;
 	}
 }
 
