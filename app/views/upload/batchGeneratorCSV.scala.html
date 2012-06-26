@@ -2,28 +2,87 @@
 
 @import helper._
 
+@phoneField(field: Field, className: String = "title") = {
+    @input(field, '_label -> "Additional field", '_class -> className) { (id, name, value, _) =>
+        <input type="text" name="@name" value="@value"> 
+        <a class="removePhone btn danger">Remove</a>
+    }
+}
+
+@informationGroup(field: Field, className: String = "profile") = {
+    
+                
+        <div class="titles">
+
+            @repeat(field("titles"), min = 0) { title =>
+                
+                @phoneField(title("title"))
+    
+            }
+            
+            @**
+             * Keep an hidden block that will be used as template for Javascript copy code
+             **@
+            @phoneField(
+                field("titles[x].title"),
+                className = "phone_template"
+            )
+            
+            <div class="clearfix">
+                <div class="input">
+                    <a class="addPhone btn success">Add a field</a>
+                </div>
+            </div>
+        
+        </div>
+
+   
+}
+
+<!-- Probleme au niveau de la structure de données pour phones-->
+
+
 @main("Qr Codes from CSV"){
 
 	@header(loginForm, custSession)
+
+ @if(uploadForm.hasErrors) {
+        <div class="alert-message error">
+            <p><strong>Oops</strong> Please fix all errors</p>
+        </div>
+    }
+
 <div class="container">
 @informations(infosType, infosContent)
 <div class="row">
 <h1>Enter the names of your document's columns</h1>
-@helper.form(action = routes.Upload.submit, 'enctype -> "multipart/form-data") {
+@helper.form(action = routes.Upload.submit, 'enctype -> "multipart/form-data", 'id -> "form") {
 <fieldset>
 		    <legend>Name of the columns</legend>
 
-@inputText(uploadForm("urlRedirection"), '_label -> "url Redirection"    )
+@inputText(uploadForm("urlRedirection"), '_label -> "Url Redirection"    )
 		    
 @inputText(	        uploadForm("type"), 
-		        '_label -> "type"
+		        '_label -> "Type"
 		    )
+
+
+
+<div id="profiles">      
+                
+                @**
+                 * Keep an hidden block that will be used as template for Javascript copy code
+                 **@
+                @informationGroup(
+                    uploadForm("additionalTitles[0]"),
+                    className = "profile_template"
+                )
+                                         
+            </div>
 
 		    
 </fieldset>
-<div class="actions">
-<button class="btn">Add</button>
-</div>
+
 		    
 
 
@@ -39,11 +98,51 @@
 		    )-->
     
         <input type="submit" name="submit" value="Upload">
-
+</fieldset>
     
 }
-</fieldset>
+
 	</div>
 </div>
+<script type="text/javascript" >
+$('.removePhone').live('click', function(e) {
+            var titles = $(this).parents('.titles')
+            $(this).parents('.title').remove()
+            renumber(titles)
+        })
+        $('.removeProfile').live('click', function(e) {
+            $(this).parents('.profile').remove()
+            renumber()
+        })
+        
+        $('.addPhone').live('click', function(e) {
+            var titles = $(this).parents('.titles')
+            var template = $('.phone_template', titles)
+            template.before('<div class="clearfix title">' + template.html() + '</div>')
+            renumber(titles)
+            
+        })
+        $('.addProfile').live('click', function(e) {
+            var template = $('.profile_template')
+            template.before('<div class="twipsies well profile">' + template.html() + '</div>')
+            renumber()
+        })
+        
+        $('#form').submit(function() {
+            $('.phone_template').remove()
+            $('.profile_template').remove()
+        })
+        
+         var renumber = function(titles) {
+            $('.titles').each(function(i) {
+                
+                $('.title input', this).each(function(i) {
+                    $(this).attr('name', $(this).attr('name').replace(/titles\[.+\]/g, 'titles[' + i + ']'))
+                })
+            })
+        }
+        </script>
+
+    }
     
-}
+    
