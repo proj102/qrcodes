@@ -128,9 +128,6 @@ public class MonDataBase {
 		// get the id of the customer currently connected
 		String customerId = Login.getConnected();
 		
-		/*if (customerId == null)
-			throw new CustomerException("You must be connected.");*/
-		
 		DBCollection customers = db.getCollection("customers");
 		BasicDBObject query  = new BasicDBObject();
 		query.put("_id", new ObjectId(customerId));
@@ -179,34 +176,6 @@ public class MonDataBase {
 		
 		return insertQr(qrInfos);
 	}
-	
-	// try to log-in the customer : return the customer's id if 
-	// the connection is successfull, -1 otherwise
-	/*public String connection(String login, String password) throws Exception {
-		DBCollection customers = db.getCollection("customers");
-		
-		BasicDBObject query  = new BasicDBObject();
-		query.put("login", login);
-		DBCursor data  = customers.find(query);
-		
-		if (data.size() == 0)
-			throw new LoginException();
-		else {
-			DBObject cust = data.next();
-			
-			String passSha1 = Utils.sha1Encrypt(password);
-			String passCustomerSha1 = getElement(cust, "password");
-			
-			if (passSha1.equals(passCustomerSha1)) {
-				if (getIntElement(cust, "active") == 1)
-					return cust.get("_id").toString();
-				else
-					throw new CustomerException("You must activate your account. Please check your mails.");
-			}
-			else
-				throw new PasswordException();
-		}
-	}*/
 	
 	// connection with email (OpenId with google)
 	public String connection(String email) throws Exception {

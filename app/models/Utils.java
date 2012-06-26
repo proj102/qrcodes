@@ -31,7 +31,7 @@ public class Utils {
 	*  default => 	separator : ';'
 	*		string encapsulation : " "
 	*/
-	public static ArrayList<BasicDBObject> parseCSV(String file, HashMap<String, String> mapTitles, String separator ) throws IOException{
+	public static ArrayList<BasicDBObject> parseCSV(String file, String redirection, String separator ) throws IOException{
 		BufferedReader buff;
 		String line;
 		String[] tabLine;
@@ -41,23 +41,15 @@ public class Utils {
 		while ((line = buff.readLine()).length() == 0);
 		// First ligne => Columns titles
 		tabLine = getStringTable(line,separator);
-		ArrayList<String> titles = getColumnsTitles(tabLine);
-
+		ArrayList<String> titles = getColumnsTitles(tabLine, redirection);
 		// for each line of data
 		while ((line = buff.readLine()) != null){
-			if (line.length() != 0)
+			if (line.length() != 0){
 				tabLine = getStringTable(line,separator);
-				documents.add(getJSONDocument(tabLine, titles, mapTitles));
+				documents.add(getJSONDocument(tabLine, titles));
+			}
 		}
 		return documents;
-	}
-
-	/**
-	*  check if titles in document match titles wrote by user
-	*/
-	private static void matchColumnsTitles(ArrayList<String> titles, 
-	HashMap<String, String> mapTitles){
-		//to do
 	}
 
 	/**
@@ -67,17 +59,12 @@ public class Utils {
 	*  and send to db as query
 	*/
 	private static BasicDBObject getJSONDocument(String[] element,
-	ArrayList<String> titles, HashMap<String, String> mapTitles){
+	ArrayList<String> titles){
 		BasicDBObject b = new BasicDBObject();
-		int i = 0;
 		// set the JSON document 
-		for (String title : titles){
-			//match betwin title in doc and title enter by the user
-			if (mapTitles.get(title) == null) // if no title for coll
-				b.put(generateColumnTitle(), element[i]);
-			else 
-				b.put(mapTitles.get(title), element[i]);
-			i++;
+		for (int i=0; i<titles.size(); i++){
+			b.put(titles.get(i), element[i]);
+			//b.put(mapTitles.get(title), element[i]);
 		}
 		return b;
 	}
@@ -85,15 +72,25 @@ public class Utils {
 	/**
 	*  Set columns titles and save in public array title
 	*/
-	private static ArrayList<String> getColumnsTitles(String[] element){
+	private static ArrayList<String> getColumnsTitles(String[] element, String redirection){
 		ArrayList<String> titles = new ArrayList<String>();
-		for (String t : element)
-			titles.add(t);
+		int i = 0;
+		for (String t : element){
+			if (t == "")
+				titles.add("unknow"+i);
+			else if (t == redirection) // redirection = value wrote by the user
+				titles.add(redirection);
+			else
+				titles.add(t);
+		}
 		return titles;
 	}
 
-	private static String generateColumnTitle(){
-		return UUID.randomUUID().toString();	
+	// not using function
+	private static String format_text(String text){
+		StringUtils.lowerCase(text);
+		StringUtils.replaceChars("société", "é", "e");
+		return "";
 	}
 
 	private static String[] getStringTable(String line, String separator){
