@@ -27,10 +27,8 @@ public class Upload extends Controller {
      * Display a blank form.
      */ 
     public static Result blank() {
- 	 
         //return ok(batchGeneratorCSV.render(uploadForm, Login.loginForm));
-        return ok(batchGeneratorCSV.render(uploadForm, Login.loginForm, InfoDisplay.NONE, null));
-
+        return ok(batchGeneratorCSV.render(Login.getCustSession(), uploadForm, InfoDisplay.NONE, null));
     }
   
     
@@ -54,15 +52,11 @@ public class Upload extends Controller {
    
     
     if(filledForm.hasErrors()) {
-
-            //return badRequest(batchGeneratorCSV.render(filledForm, Login.loginForm/*, new ArrayList<String>() */));
-
-            return badRequest(batchGeneratorCSV.render(filledForm, Login.loginForm, InfoDisplay.ERROR, "Please fill correctly the fields"));
-
+            return badRequest(batchGeneratorCSV.render(Login.getCustSession(), filledForm, InfoDisplay.ERROR, "Please fill correctly the fields"));
         } else {
             CSVUpload created = filledForm.get();
             created.filepath = file.getAbsolutePath();
-            return ok(uploadSummary.render(created, Login.loginForm));
+            return ok(uploadSummary.render(Login.getCustSession(), created));
         }
   } else {
     flash("error", "Missing file");

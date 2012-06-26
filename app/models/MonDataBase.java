@@ -97,36 +97,28 @@ public class MonDataBase {
 		return authentification;
 	}
 	
-	// add a customer to the db after checking the validity of
-	// the informations given and after generating a unique ID
-	public void addCustomer(String login, String password, String mail, String name, String firstname, String firm) throws Exception {
-		// let's check the validity of their validity
+	// add a customer that registers via a provider
+	public String addCustomer(String mail, String lastName, String firstName) throws Exception {
 		DBCollection coll = db.getCollection("customers");
 		
 		BasicDBObject query  = new BasicDBObject();
-		query.put("login", login);
+		query.put("mail", mail);
 		DBCursor data  = coll.find(query);
 		if (data.count() != 0)
-			throw new LoginException("Login already used.");
-		
-		// crypt the password in SHA-1
-		password = Utils.sha1Encrypt(password);
+			throw new CustomerException("Account already existing.");
 		
 		// add the customer
 		BasicDBObject customerInfos = new BasicDBObject();
-		customerInfos.put("login", login);
-		customerInfos.put("password", password);
+		customerInfos.put("login", firstName + " " + lastName);
 		customerInfos.put("mail", mail);
 		customerInfos.put("inscription", System.currentTimeMillis());
-		customerInfos.put("name", name);
-		customerInfos.put("firstname", firstname);
-		customerInfos.put("firm", firm);
+		customerInfos.put("name", lastName);
+		customerInfos.put("firstname", firstName);
 		customerInfos.put("avatar", "");
 		customerInfos.put("qrs", "[]");
 		coll.insert(customerInfos);
 		
-		// get the id of the customer
-		//String customerId = CustomerInfos.get("_id").toString();;
+		return customerInfos.get("_id").toString();
 	}
 	
 	// insert a qrcode in the database with the given json content
@@ -136,8 +128,8 @@ public class MonDataBase {
 		// get the id of the customer currently connected
 		String customerId = Login.getConnected();
 		
-		if (customerId == null)
-			throw new CustomerException("You must be connected.");
+		/*if (customerId == null)
+			throw new CustomerException("You must be connected.");*/
 		
 		DBCollection customers = db.getCollection("customers");
 		BasicDBObject query  = new BasicDBObject();
@@ -190,7 +182,7 @@ public class MonDataBase {
 	
 	// try to log-in the customer : return the customer's id if 
 	// the connection is successfull, -1 otherwise
-	public String connection(String login, String password) throws Exception {
+	/*public String connection(String login, String password) throws Exception {
 		DBCollection customers = db.getCollection("customers");
 		
 		BasicDBObject query  = new BasicDBObject();
@@ -201,15 +193,20 @@ public class MonDataBase {
 			throw new LoginException();
 		else {
 			DBObject cust = data.next();
+			
 			String passSha1 = Utils.sha1Encrypt(password);
 			String passCustomerSha1 = getElement(cust, "password");
 			
-			if (passSha1.equals(passCustomerSha1))
-				return cust.get("_id").toString();
+			if (passSha1.equals(passCustomerSha1)) {
+				if (getIntElement(cust, "active") == 1)
+					return cust.get("_id").toString();
+				else
+					throw new CustomerException("You must activate your account. Please check your mails.");
+			}
 			else
 				throw new PasswordException();
 		}
-	}
+	}*/
 	
 	// connection with email (OpenId with google)
 	public String connection(String email) throws Exception {
@@ -220,10 +217,9 @@ public class MonDataBase {
 		DBCursor data  = customers.find(query);
 		
 		if (data.size() == 0)
-			throw new CustomerException("You google address does not match your email.");
+			throw new CustomerException("No account with this email.");
 		else {
 			DBObject cust = data.next();
-			
 			return cust.get("_id").toString();
 		}
 	}
@@ -257,12 +253,8 @@ public class MonDataBase {
 	public ArrayList<Qrcode> getCustomersQrs() throws Exception {
 		String customerId = Login.getConnected();
 		
-		if (customerId == null)
-			throw new CustomerException("You must be connected.");
-			
 		DBCollection customers = db.getCollection("customers");
 		BasicDBObject query  = new BasicDBObject();
-		query.put("_id", new ObjectId(customerId));
 		query.put("_id", new ObjectId(customerId));
 		DBCursor customer = customers.find(query);
 		
@@ -299,9 +291,6 @@ public class MonDataBase {
 	
 	public Qrcode getQrCode(String id) throws Exception {
 		String customerId = Login.getConnected();
-		
-		if (customerId == null)
-			throw new CustomerException("You are not connected.");
 		
 		DBCollection customers = db.getCollection("customers");
 		BasicDBObject query  = new BasicDBObject();
