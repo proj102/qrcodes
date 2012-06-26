@@ -13,6 +13,9 @@ public class Client {
     @Required
     @MinLength(6)
     public String password;
+	
+	public String action1;
+	public String action2;
 
     public Client() {}
     

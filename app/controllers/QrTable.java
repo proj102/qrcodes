@@ -16,7 +16,7 @@ public class QrTable extends Controller {
     /**
      * Defines a form wrapping the User class.
      */ 
-   // final static Form<User> signupForm = form(User.class);
+	//final static Form<QrTableModel> deleteForm = form(QrTableModel.class);
   
     /**
      * Display a blank form.
@@ -48,9 +48,16 @@ public class QrTable extends Controller {
      * Handle the form submission.
      */
     public static Result submit() {
-        /*Form<User> filledForm = signupForm.bindFromRequest();
-        
-        // Check accept conditions
+        //Form<QrTableModel> filledForm = deleteForm.bindFromRequest();
+	
+/*	String result;
+	for (String id : filledForm.get().idList){
+		result += id;
+		result += " ";
+	}
+	return ok("peut être...." + result);*/
+
+        /*// Check accept conditions
         if(!"true".equals(filledForm.field("accept").value())) {
             filledForm.reject("accept", "You must accept the terms and conditions");
         }
@@ -77,9 +84,10 @@ public class QrTable extends Controller {
         } else {
             User created = filledForm.get();
             return ok(summary.render(created, Login.loginForm));
-        }*/
-		
+        }
+		*/
 		return badRequest("To be implemented ...");
+
     }
   
 }

@@ -1,4 +1,4 @@
-@(uploadForm: Form[CSVUpload], loginForm: Form[Client])
+@(uploadForm: Form[CSVUpload], loginForm: Form[Client], infosType: Int, infosContent: String)
 
 @import helper._
 
@@ -52,6 +52,7 @@
 
 	@header(loginForm)
 <div class="container">
+@informations(infosType, infosContent)
 <div class="row">
 <h1>Enter the names of your document's columns</h1>
 @helper.form(action = routes.Upload.submit, 'enctype -> "multipart/form-data", 'id -> "form") {

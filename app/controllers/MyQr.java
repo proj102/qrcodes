@@ -14,6 +14,7 @@ import java.io.File;
 import play.mvc.Http.MultipartFormData.*;
 import play.mvc.Http.MultipartFormData;
 
+import com.mongodb.MongoException;
 
 public class MyQr extends Controller {
 
@@ -67,10 +68,10 @@ public class MyQr extends Controller {
 		
 				MongoDB.updateQRCode(hmap);
 				Qrcode qr = MongoDB.getQrCode(filledForm.field("id").value());
-				return ok(myQr.render(qr, Login.loginForm, InfoDisplay.SUCCESS, "Your changes have been uploaded"));
+				return ok(myQr.render(qr, Login.loginForm, InfoDisplay.SUCCESS, "Your changes have been updated."));
 			} else {
 				Qrcode qr = MongoDB.getQrCode(filledForm.field("id").value());
-				return ok(myQr.render(qr, Login.loginForm, InfoDisplay.ERROR, "No changes detected"));
+				return ok(myQr.render(qr, Login.loginForm, InfoDisplay.ERROR, "Please fill at least one field."));
 			}
 		}catch(Exception e){
 			return badRequest("not implemented");
@@ -79,4 +80,17 @@ public class MyQr extends Controller {
 		return badRequest("not implemented");
 	}
 	*/
+
+	public static Result removeQr(String id){
+		MonDataBase db = MonDataBase.getInstance();
+		
+		try {
+			db.removeQRCode(id);
+			ArrayList<Qrcode> qrs =  db.getCustomersQrs();
+			return ok(myQrTable.render(Login.loginForm, qrs,InfoDisplay.SUCCESS, "Qr code deleted" ));
+		}
+		catch (Exception e){
+			return ok(myQrTable.render(Login.loginForm, new ArrayList<Qrcode>() ,InfoDisplay.ERROR, "Problem when trying to delete " + e ));
+		}
+	}
 }
