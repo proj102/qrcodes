@@ -1,0 +1,25 @@
+@(custSession: CustomerSession, infosType: Int, infosContent: String)
+
+@import helper._
+@import helper.twitterBootstrap._
+
+@main("Edit my Profile") {
+	@header(custSession)
+	<div class="container">
+		@informations(infosType, infosContent)
+		<div class="hero-unit">
+			<div class="row">
+				<div class="span5">
+					@if(custSession.getAvatar().size==0){
+						<img src="@routes.Assets.at("images/Profile.png")" alt="avatar" height="30%" width="100%" style="margin-bottom:10px;"/>
+					} else {
+						<img src="@routes.Assets.at("custSession.getAvatar()")" alt="avatar" height="30%" width="100%" style="margin-bottom:10px;"/>
+					}
+				</div>
+				<div class="span5">
+					<p>@(custSession.getLogin())</p>
+				</div>
+			</div>
+		</div>
+	</div>
+}

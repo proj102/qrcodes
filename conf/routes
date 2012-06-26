@@ -21,6 +21,7 @@ GET     /createQr         	controllers.Application.createQr()
 
 
 # Login
+GET		/edit				controllers.Login.edit()
 GET		/logout				controllers.Login.logout()
 GET		/login/auth			controllers.Login.auth()
 GET		/login/verify		controllers.Login.verify()

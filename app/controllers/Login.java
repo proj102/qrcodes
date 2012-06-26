@@ -164,6 +164,15 @@ public class Login extends Controller {
 			}
 			return badRequest(index.render(getCustSession(), filledForm, InfoDisplay.ERROR, "Error when logging in. Please fill correctly all the fields."));
 	}*/
+
+	/**
+	  *To edit the customer profile 
+	 **/
+	public static Result edit() {
+		CustomerSession custSession = getCustSession();
+		custSession.getInfo();
+		return ok(edit.render(null, InfoDisplay.INFO, "You are now logged out."));
+	}
 }
 
 
