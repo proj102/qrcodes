@@ -1,5 +1,5 @@
 @(custSession: CustomerSession, infosType: Int, infosContent: String)
-@main("My Qr Codes"){
+@main("Overview"){
 
     @header(custSession)
 <div class="container">
@@ -20,8 +20,9 @@
        
       
 <script type="text/javascript" >
-$('.carousel').carousel();
-
+$('#myCarousel').carousel({
+  interval: 1200;
+})
 </script>
 	<div class="row-fluid">
 		

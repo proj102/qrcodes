@@ -75,10 +75,16 @@ public class Application extends Controller {
 			return badRequest(createQr.render(Login.getCustSession(), urlForm, InfoDisplay.ERROR, "The QrCode could not be generated. Please fill correctly all the requieted fields."));
 		else {
 			Url data = form.get();
+			ArrayList<String> urlList = new ArrayList<String>();
+			urlList.add("http://wwww.google.com");
+			urlList.add("http://www.google.com");
 			String url = data.url;
+			
+			
 			
 			if (!url.startsWith("http://") && !url.startsWith("https://"))
 				url = "http://" + url;
+				
 			
 			String regex = "^(https?)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]";
 			if (Pattern.matches(regex, url)) {
@@ -127,6 +133,8 @@ public class Application extends Controller {
 			return badRequest("Error" + e);
 		}
 	}
+	
+	
 }
 
 
