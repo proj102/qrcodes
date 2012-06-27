@@ -84,7 +84,8 @@ public class Application extends Controller {
 			if (Pattern.matches(regex, url)) {
 				try {
 					String qrId = db.addQrFromForm("url", url, data.title, data.place);
-					return ok(qrGenerator.render(Login.getCustSession(), domain + "r/" + qrId, InfoDisplay.SUCCESS, "You have successfully created a QrCode that redirects to " + url + " ."));
+					//return ok(qrGenerator.render(Login.getCustSession(), domain + "r/" + qrId, InfoDisplay.SUCCESS, "You have successfully created a QrCode that redirects to " + url + " ."));
+					return controllers.MyQr.viewQr(qrId);
 				}
 				catch (Exception e) {
 					return badRequest(createQr.render(Login.getCustSession(), urlForm, InfoDisplay.ERROR, "The QrCode could not be generated. " + e));
