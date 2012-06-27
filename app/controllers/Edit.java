@@ -50,14 +50,14 @@ public class Edit extends Controller {
 
 				MongoDB.updateCustomer(hmap);
 				CustomerSession customer = Login.getCustSession();
-				return ok(edit.render(Login.getCustSession(), customForm.fill(customer), InfoDisplay.SUCCESS, "Your changes have been updated."));
+				return ok(edit.render(customer, customForm.fill(customer), InfoDisplay.SUCCESS, "Your changes have been updated."));
 			} else {
 				CustomerSession customer = Login.getCustSession();
-				return ok(edit.render(Login.getCustSession(), customForm.fill(customer), InfoDisplay.ERROR, "You must enter a correct url, check if it's correct and if it's a PNG, JPG or GIF image"));			
+				return ok(edit.render(customer, customForm.fill(customer), InfoDisplay.ERROR, "You must enter a correct url, check if it's correct and if it's a PNG, JPG or GIF image"));			
 			}
 		} else {
 			CustomerSession customer = Login.getCustSession();
-			return ok(edit.render(Login.getCustSession(), customForm.fill(customer), InfoDisplay.ERROR, "Please fill at least one field."));
+			return ok(edit.render(customer, customForm.fill(customer), InfoDisplay.ERROR, "Please fill at least one field."));
 		}
 	}
 
