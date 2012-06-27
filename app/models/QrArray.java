@@ -24,4 +24,8 @@ public class QrArray extends ArrayList<Qrcode> {
 		}
 		return ret;
 	}
+	
+	public int getNumber() {
+		return totalNumber;
+	}
 }

@@ -5,10 +5,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.*;
-
+import play.data.validation.Constraints.*;
 
 public class CSVUpload {
 	File file;
+	@Required
+	@MinLength(5)
 	public String urlRedirection;
 	public String type;
 	public String filepath;

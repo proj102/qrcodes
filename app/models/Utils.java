@@ -31,7 +31,7 @@ public class Utils {
 	*  default => 	separator : ';'
 	*		string encapsulation : " "
 	*/
-	public static ArrayList<BasicDBObject> parseCSV(String file, String redirection, String separator ) throws IOException{
+	public static ArrayList<BasicDBObject> parseCSV(String file, String redirection, String separator ) throws Exception{
 		BufferedReader buff;
 		String line;
 		String[] tabLine;
@@ -42,6 +42,8 @@ public class Utils {
 		// First ligne => Columns titles
 		tabLine = getStringTable(line,separator);
 		ArrayList<String> titles = getColumnsTitles(tabLine, redirection);
+		// if no title match with the redirection field give by user
+		if(!checkRedirection(titles))throw new Exception("No field name '" + redirection + "' in the file" );
 		// for each line of data
 		while ((line = buff.readLine()) != null){
 			if (line.length() != 0){
@@ -50,6 +52,13 @@ public class Utils {
 			}
 		}
 		return documents;
+	}
+
+	private static boolean checkRedirection(ArrayList<String> titles){
+		for (String t : titles){
+			if (t.equals("redirection")) return true;
+		}
+		return false;
 	}
 
 	/**
@@ -72,14 +81,16 @@ public class Utils {
 	/**
 	*  Set columns titles and save in public array title
 	*/
-	private static ArrayList<String> getColumnsTitles(String[] element, String redirection){
+	private static ArrayList<String> getColumnsTitles(String[] element, String redirection) throws Exception{
 		ArrayList<String> titles = new ArrayList<String>();
 		int i = 0;
 		for (String t : element){
 			if (t == "")
 				titles.add("unknow"+i);
-			else if (t == redirection) // redirection = value wrote by the user
-				titles.add(redirection);
+			else if (t.equals(redirection)) // redirection = value wrote by the user
+				titles.add("redirection");
+			else if (t.equals("redirection"))
+				throw new Exception("You can't use the name 'redirection' if it's not for the redirection url");
 			else
 				titles.add(t);
 		}

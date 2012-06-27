@@ -13,6 +13,7 @@
 			<div class="span4"></div>
 			<div class="span8">
 				@if(qrs != null && qrs.size() > 0) {
+					You currently have @qrs.getNumber() Qrcodes.<br/>
 					@form(action = routes.QrTable.submit) {
 						<table class="table table-striped">
 							<thead>
