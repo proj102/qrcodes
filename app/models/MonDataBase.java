@@ -150,12 +150,18 @@ public class MonDataBase {
 			
 		// everything is fine
 		try {
+			/*String stats = "[";
+			for (int i = 1 ; i < 31*12*5; i++)
+				stats += "0,";
+			stats += "0]";*/
+		
 			// let's add the qrcode to the qrcodes collection
 			DBCollection qrs = db.getCollection("qrcodes");
 			
 			qrInfos.put("creation", System.currentTimeMillis());
 			qrInfos.put("flashs", 0);
 			qrInfos.put("active", 1); // active = 1 => qrcode active
+			//qrInfos.put("stats", stats);
 			qrs.insert(qrInfos);
 			// get the id the the qrcode we just created
 			String qrId = qrInfos.get("_id").toString();
