@@ -28,10 +28,10 @@ public class MyQr extends Controller {
 			
 			try {
 				Stats stats = db.getQrStats(id);
-				return ok(myQr.render(Login.getCustSession(), qr, qrForm.fill(qr), InfoDisplay.INFO, stats.getInfo()));
+				return ok(myQr.render(Login.getCustSession(), qr, qrForm.fill(qr), stats, InfoDisplay.INFO, stats.getInfo()));
 			}
 			catch (Exception e) {
-				return ok(myQr.render(Login.getCustSession(), qr, qrForm.fill(qr), InfoDisplay.INFO, " " + e));
+				return ok(myQr.render(Login.getCustSession(), qr, qrForm.fill(qr), null, InfoDisplay.INFO, " " + e));
 			}
 
 			
@@ -77,10 +77,10 @@ public class MyQr extends Controller {
 				MongoDB.updateQRCode(hmap);
 				Qrcode qr = MongoDB.getQrCode(filledForm.field("id").value());
 
-				return ok(myQr.render(Login.getCustSession(), qr,qrForm.fill(qr), InfoDisplay.SUCCESS, "Your changes have been updated."));
+				return ok(myQr.render(Login.getCustSession(), qr,qrForm.fill(qr), null, InfoDisplay.SUCCESS, "Your changes have been updated."));
 			} else {
 				Qrcode qr = MongoDB.getQrCode(filledForm.field("id").value());
-				return ok(myQr.render(Login.getCustSession(), qr,qrForm.fill(qr), InfoDisplay.ERROR, "Please fill at least one field."));
+				return ok(myQr.render(Login.getCustSession(), qr,qrForm.fill(qr), null, InfoDisplay.ERROR, "Please fill at least one field."));
 			}
 		}catch(Exception e){
 			return badRequest("not implemented");
