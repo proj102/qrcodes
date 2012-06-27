@@ -1,26 +1,15 @@
-@(custSession: CustomerSession, csvUpload : CSVUpload)
+@(custSession: CustomerSession, csvUpload : CSVUpload, infosType: Int, infosContent: String)
 
 @main("File Uploaded") {
-
-	 @header(custSession)   
+	@header(custSession)
 
 	<div class="container">
-	  <h1>File Uploaded !</h1>
-	 <div class="row">
-  
-  <p>@csvUpload.urlRedirection</p>
-  <p>@csvUpload.filepath</p>
-  <ul>
-  @for(t <- csvUpload.additionalTitles.get(0).getTitles()){
-	<li>field : @t.getTitle()</li>  
-  
-  }
-  </ul>
-  <p>@csvUpload.additionalTitles.get(0).getTitles().get(0).getTitle()
-</p>
-    
-	    
-	 </div>
+	@informations(infosType, infosContent)
+		<h1>File Uploaded !</h1>
+		<div class="row">
+			<p>@csvUpload.urlRedirection</p>
+			<p><a href="@routes.QrTable.blank" >Go check your new QRCodes!</a><p>
+		</div>
 	</div>  
 	    
 }

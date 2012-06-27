@@ -36,6 +36,7 @@ POST		/edit				controllers.Edit.submit()
 GET		/myQrTable			controllers.QrTable.blank()
 POST	/myQrTable			controllers.QrTable.submit()
 GET	/myQrTable/remove/:id	controllers.MyQr.removeQr(id: String)
+GET		/myQrTable/:page	controllers.QrTable.viewPage(page: Int)
 
 
 # My Qr
@@ -48,7 +49,8 @@ POST	/myQr				controllers.MyQr.submit()
 GET     /upload				controllers.Upload.blank()
 POST    /upload				controllers.Upload.submit()
 
-
+# User-Agent test
+GET		/userAgent			controllers.Application.testAgent()
 
 GET		/test/:key			controllers.Application.test(key: String)
 

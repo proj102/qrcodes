@@ -28,8 +28,6 @@ import play.libs.OpenID.UserInfo;
 public class Login extends Controller {
     
 	public static int sessionDuration = 3600*24*30;
-	//public static String returnToUrl = "http://localhost:9000/login/verify";
-	public static String returnToUrl = Application.domain+ "/login/verify";
 	
 	@SuppressWarnings("serial")
 	public static final Map<String, String> identifiers = new HashMap<String, String>() {
@@ -42,6 +40,7 @@ public class Login extends Controller {
 	public static Result auth1() {
 		String providerId = "google";
 		String providerUrl = identifiers.get(providerId);
+		String returnToUrl = "http://" + request().host() + "/login/verify";
 		
 		if (providerUrl == null)
 			return badRequest(index.render(getCustSession(), InfoDisplay.ERROR, "Provider could not be found."));
@@ -60,6 +59,7 @@ public class Login extends Controller {
 	public static Result auth2() {
 		String providerId = "facebook";
 		String providerUrl = identifiers.get(providerId);
+		String returnToUrl = "http://" + request().host() + "/login/verify";
 		
 		if (providerUrl == null)
 			return badRequest(index.render(getCustSession(), InfoDisplay.ERROR, "Provider could not be found."));

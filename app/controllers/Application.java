@@ -33,13 +33,18 @@ public class Application extends Controller {
 	public static Result index() {
 		return ok(index.render(Login.getCustSession(), InfoDisplay.NONE, null));
 	}
+	
+	public static Result testAgent() {
+		
+		return ok(request().getHeader("User-Agent"));
+	}
 
 	// Manage the redirection
 	public static Result redirection(String id) {
 		MonDataBase db = MonDataBase.getInstance();
 
-		try {
-			return redirect(db.getUrl(id));
+		try {			
+			return redirect(db.getUrl(id, request().getHeader("User-Agent")));
 		}
 		catch (Exception e) {
 			return badRequest(index.render(Login.getCustSession(), InfoDisplay.ERROR, "Redirection failed. Reason : " + e));
@@ -84,10 +89,10 @@ public class Application extends Controller {
 			Url data = form.get();
 			String url = data.url;
 			
-			if (!url.startsWith("http://") && !url.startsWith("https://") && !url.startsWith("file://") && !url.startsWith("ftp://"))
+			if (!url.startsWith("http://") && !url.startsWith("https://"))
 				url = "http://" + url;
 			
-			String regex = "^(https?|ftp|file)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]";
+			String regex = "^(https?)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]";
 			if (Pattern.matches(regex, url)) {
 				try {
 					String qrId = db.addQrFromForm("url", url, data.title, data.place);

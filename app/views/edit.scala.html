@@ -11,39 +11,44 @@
 			<h2 style="text-align: center; margin: 20px;">My Profile</h2>
 				<div class="row">
 					<div class="span5">
-						@if(custSession.getAvatar().size==0){
+						@if(custSession.getAvatar().size==0 || custSession.getAvatar()=="default"){
 							<img src="@routes.Assets.at("images/Profile.png")" alt="avatar" style="margin-bottom:10px;"/>
 						} else {
 							<img src="@custSession.getAvatar()" alt="avatar" style="margin-bottom:10px;"/>
 						}
 					</div>
-					<div class="span5">
-						<ul>
-							<p><span style="text-decoration: underline">Login</span>: @(custSession.getLogin())</p>
-							<p><span style="text-decoration: underline">Last Name</span>: @(custSession.getLastName())</p>
-							<p><span style="text-decoration: underline">First Name</span>: @(custSession.getFirstName())</p>
+					<div class="span5" style="font-size: 16px; list-style-type: none;">
+						<ul style="list-style-type: none;">
+							<li><strong>Login</strong>: @(custSession.getLogin())</li>
+							<li><strong>Last Name</strong>: @(custSession.getLastName())</li>
+							<li><strong>First Name</strong>: @(custSession.getFirstName())</li>
+							<li><strong>Avatar url image:</strong> <a href="@custSession.getAvatar()">@custSession.getAvatar()</a></li>
 						</ul>
 					</div>
-				<div class="span12">
-					<h2>Edit My Profile</h2>
-					@form(action = routes.Edit.submit) {
-						<input type="hidden" name="id" value="@custSession.getId()" />
-						@inputText(
-							customForm("login"),
-							'_label -> "Login",
-							'_help -> ""
-						)
+				</div>
+				<div class="row">
+					<div class="span12">
+						<h2>Edit My Profile</h2>
+						@form(action = routes.Edit.submit) {
+							<input type="hidden" name="id" value="@custSession.getId()" />
+							@inputText(
+								customForm("login"),
+								'_label -> "Login",
+								'_help -> ""
+							)
 
-						@inputText(
-							customForm("urlToAvatar"),
-							'_label -> "The url of the image you chose as avatar",
-							'_help -> ""
-						)
+							@inputText(
+								customForm("urlToAvatar"),
+								'_label -> "The url of the image you chose as avatar",
+								'_help -> "",
+								'placeholder -> custSession.getAvatar()
+							)
 
 
-						<input type="submit" class="btn-primary btn-large" value="Modify" />
-					}
+							<input type="submit" class="btn-primary btn-large" value="Modify" />
+						}
 					
+					</div>
 				</div>
 			</div>
 		</div>
