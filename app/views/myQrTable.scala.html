@@ -41,6 +41,18 @@
 								}
 							</tbody>
 						</table>
+						<div class="btn-toolbar">
+						  <div class="btn-group">
+							<a class="btn" href="@routes.QrTable.viewPage(1)">1</a>
+							<a class="btn" href="@routes.QrTable.viewPage(2)">2</a>
+							<a class="btn" href="@routes.QrTable.viewPage(3)">3</a>
+							<a class="btn">...</a>
+							<a class="btn" href="@routes.QrTable.viewPage(98)">98</a>
+							<a class="btn" href="@routes.QrTable.viewPage(99)">99</a>
+							<a class="btn" href="@routes.QrTable.viewPage(100)">100</a>
+						  </div>
+						</div><br/>
+						<input type="submit" value="Delete" action="delete" />
 					}
 				}else {
 					@if(qrs != null) {

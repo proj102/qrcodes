@@ -32,6 +32,18 @@ public class QrTable extends Controller {
 		}
     }
 	
+	public static Result viewPage(int page) {
+		MonDataBase db = MonDataBase.getInstance();
+		
+		try {
+			return ok(myQrTable.render(Login.getCustSession(), db.getCustomersQrs(), InfoDisplay.INFO, "To be implemented ... " + page));
+		}
+		catch (Exception e) {
+			return badRequest(myQrTable.render(Login.getCustSession(), null, InfoDisplay.ERROR, "Impossible to get your Qrcodes." + e));
+		}
+		
+	}
+	
 
 	/**
      * Display a form pre-filled with an existing account.
