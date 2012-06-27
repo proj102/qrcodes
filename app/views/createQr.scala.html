@@ -11,7 +11,7 @@
 	<div class="container">
 		@informations(infosType, infosContent)
 		<div class="hero-unit">
-			<p>Think QrCode in a different way. It's a whole new world beyond the QrCode</p>
+			<p><h3><b>Think QrCode in a different way. It's a whole new world beyond the QrCode</b></h3></p>
 			<div>       
 				@form(action = routes.Application.getUrl, args = 'id -> "urlForm") {
 					@inputText(
@@ -29,8 +29,9 @@
 					)
 					<input type="submit" class="btn-primary btn-large">
 				}
-		
-			</div> 
+			</div><br/><br/>
+			<p><h3><b>OR : upload a csv document</b></h3><p><br/>
+			<a href="@routes.Upload.blank" class="btn-primary btn-large">uplaod page</a>
 		</div>
 	</div>
 }
