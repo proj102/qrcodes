@@ -11,10 +11,11 @@
 			<h2 style="text-align: center; margin: 20px;">My Profile</h2>
 				<div class="row">
 					<div class="span5">
-						@if(custSession.getAvatar().size==0){
+						@if(custSession.getAvatar().size==0 || custSession.getAvatar()=="default"){
 							<img src="@routes.Assets.at("images/Profile.png")" alt="avatar" style="margin-bottom:10px;"/>
 						} else {
 							<img src="@custSession.getAvatar()" alt="avatar" style="margin-bottom:10px;"/>
+							<p style="font-size: 10px;">Link to your avatar image: <a href="@custSession.getAvatar()">@custSession.getAvatar()</a></p>
 						}
 					</div>
 					<div class="span5">
@@ -37,7 +38,8 @@
 						@inputText(
 							customForm("urlToAvatar"),
 							'_label -> "The url of the image you chose as avatar",
-							'_help -> ""
+							'_help -> "",
+							'placeholder -> custSession.getAvatar()
 						)
 
 

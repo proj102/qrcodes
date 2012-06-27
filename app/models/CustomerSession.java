@@ -11,11 +11,19 @@ public class CustomerSession {
 	private String lastName;
 	private String firstName;
 
+	public CustomerSession(){}
 	
+	public CustomerSession(String login, String urlToAvatar, String id){
+		this.login = login;
+		this.urlToAvatar= urlToAvatar;
+		this.id= id;
+	}
+
 	public CustomerSession(String id, String login) {
 		this.login = login;
 		this.id = id;
 		justLogged = true;
+		getInfo();
 	}
 	
 	public String getLogin() {
@@ -70,7 +78,7 @@ public class CustomerSession {
 		MonDataBase db = MonDataBase.getInstance();
 		DBObject dbo   = db.getInfoCustomer(id);
 		login 	       = db.getElement(dbo, "login");
-		urlToAvatar    = db.getElement(dbo, "avatar");	
+		urlToAvatar    = db.getElement(dbo, "avatar");
 		lastName       = db.getElement(dbo, "name");
 		firstName      = db.getElement(dbo, "firstname");	
 	}

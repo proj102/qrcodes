@@ -48,7 +48,8 @@ POST	/myQr				controllers.MyQr.submit()
 GET     /upload				controllers.Upload.blank()
 POST    /upload				controllers.Upload.submit()
 
-
+# User-Agent test
+GET		/userAgent			controllers.Application.testAgent()
 
 GET		/test/:key			controllers.Application.test(key: String)
 
