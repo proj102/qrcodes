@@ -16,8 +16,8 @@ public class Edit extends Controller {
 
 	public static Result edit() {
 		CustomerSession custSession = Login.getCustSession();
-		custSession.getInfo();
-		return ok(edit.render(custSession, customForm, InfoDisplay.NONE, null));
+
+		return ok(edit.render(custSession, customForm.fill(custSession), InfoDisplay.NONE, null));
 	}
 
 	public static Result submit() {
@@ -37,14 +37,15 @@ public class Edit extends Controller {
 
 			// Insert the url field if not empty
 			if(!filledForm.field("urlToAvatar").value().isEmpty()) {
-				hmap.put("urlToAvatar", filledForm.field("urlToAvatar").value());
+				hmap.put("avatar", filledForm.field("urlToAvatar").value());
 			}
 
-			//MongoDB.updateCustomer(hmap);
-			//CustomerSession customer = MongoDB.getCustomer(filledForm.field("id").value());
-			return badRequest("not implemented yet");
+			MongoDB.updateCustomer(hmap);
+			CustomerSession customer = Login.getCustSession();
+			return ok(edit.render(Login.getCustSession(), customForm.fill(customer), InfoDisplay.SUCCESS, "Your changes have been updated."));
 		} else {
-			return badRequest("not implemented yet");			
+			CustomerSession customer = Login.getCustSession();
+			return ok(edit.render(Login.getCustSession(), customForm.fill(customer), InfoDisplay.ERROR, "Please fill at least one field."));			
 		}
 	}
 
