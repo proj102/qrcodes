@@ -51,18 +51,6 @@ public class Application extends Controller {
 		}
 	}
 
-	// visualisation of the qrcodes of the customer
-	public static Result myQrTable() {
-		MonDataBase db = MonDataBase.getInstance();
-		
-		try {
-			return ok(myQrTable.render(Login.getCustSession(), db.getCustomersQrs(), InfoDisplay.NONE, null));
-		}
-		catch (Exception e) {
-			return badRequest(index.render(Login.getCustSession(), InfoDisplay.ERROR, "Impossible to get the Qrcodes. " + e));
-		}
-	}
-	
 	public static Result overview() {
 		return ok(overview.render(Login.getCustSession(), InfoDisplay.NONE, null));
 	}
@@ -87,16 +75,23 @@ public class Application extends Controller {
 			return badRequest(createQr.render(Login.getCustSession(), urlForm, InfoDisplay.ERROR, "The QrCode could not be generated. Please fill correctly all the requieted fields."));
 		else {
 			Url data = form.get();
+			ArrayList<String> urlList = new ArrayList<String>();
+			urlList.add("http://wwww.google.com");
+			urlList.add("http://www.google.com");
 			String url = data.url;
+			
+			
 			
 			if (!url.startsWith("http://") && !url.startsWith("https://"))
 				url = "http://" + url;
+				
 			
 			String regex = "^(https?)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]";
 			if (Pattern.matches(regex, url)) {
 				try {
 					String qrId = db.addQrFromForm("url", url, data.title, data.place);
-					return ok(qrGenerator.render(Login.getCustSession(), domain + "r/" + qrId, InfoDisplay.SUCCESS, "You have successfully created a QrCode that redirects to " + url + " ."));
+					//return ok(qrGenerator.render(Login.getCustSession(), domain + "r/" + qrId, InfoDisplay.SUCCESS, "You have successfully created a QrCode that redirects to " + url + " ."));
+					return controllers.MyQr.viewQr(qrId);
 				}
 				catch (Exception e) {
 					return badRequest(createQr.render(Login.getCustSession(), urlForm, InfoDisplay.ERROR, "The QrCode could not be generated. " + e));
@@ -138,6 +133,8 @@ public class Application extends Controller {
 			return badRequest("Error" + e);
 		}
 	}
+	
+	
 }
 
 

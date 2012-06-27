@@ -56,10 +56,12 @@ public class Upload extends Controller {
 			 	created.filepath = file.getAbsolutePath();
 				// Parse the document .csv and load it in the bd
 				try {
-					parseAndLoad(created.filepath, created.separator);
+					parseAndLoad(created.filepath, created.urlRedirection);
 					return ok(uploadSummary.render(Login.getCustSession(),created, 	InfoDisplay.SUCCESS, "File Upload and loadded!"));
 				}catch(Exception e){
-					return badRequest("Problème dans upload!! " + created.filepath + "\n Erreur: " + e.getMessage());
+					return badRequest(batchGeneratorCSV.render(Login.getCustSession(), filledForm, 
+							InfoDisplay.ERROR, 
+							"Upload Problem!!  Erreur: " + e.getMessage()));
 				}
 			}
 		} else {
@@ -68,11 +70,11 @@ public class Upload extends Controller {
 		}
 	}
 
-	public static void parseAndLoad(String file, String separator) throws Exception{
+	public static void parseAndLoad(String file, String redirection) throws Exception{
 		MonDataBase db = MonDataBase.getInstance();
 		ArrayList<BasicDBObject> json = new ArrayList<BasicDBObject>();
 		// get array of json document from csv file
-		json = Utils.parseCSV(file, separator,";");
+		json = Utils.parseCSV(file, redirection,";");
 		// insertion in db only if document doesn't exist in collection
 		for (BasicDBObject j : json){
 			//if ( !db.isCreated("Société", j.get("Société"), "qrcodes") )

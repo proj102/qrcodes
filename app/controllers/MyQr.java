@@ -25,15 +25,23 @@ public class MyQr extends Controller {
 		
 		try {
 			Qrcode qr = db.getQrCode(id);
+			
+			try {
+				Stats stats = db.getQrStats(id);
+				return ok(myQr.render(Login.getCustSession(), qr, qrForm.fill(qr), stats, InfoDisplay.INFO, stats.getInfo()));
+			}
+			catch (Exception e) {
+				return ok(myQr.render(Login.getCustSession(), qr, qrForm.fill(qr), null, InfoDisplay.INFO, " " + e));
+			}
 
-			return ok(myQr.render(Login.getCustSession(), qr, qrForm.fill(qr), InfoDisplay.NONE, null));
+			
 		}
 		catch (Exception e) {
 			try {
-				return ok(myQrTable.render(Login.getCustSession(), db.getCustomersQrs(), InfoDisplay.ERROR, "Cannot view this QrCode. " + e));
+				return ok(myQrTable.render(Login.getCustSession(), db.getCustomersQrs(0), InfoDisplay.ERROR, "Cannot view this QrCode. " + e));
 			}
 			catch (Exception f) {
-				return badRequest(myQrTable.render(Login.getCustSession(), new ArrayList<Qrcode>(), InfoDisplay.ERROR, "Impossible to get your Qrcodes." + f));
+				return badRequest(myQrTable.render(Login.getCustSession(), null, InfoDisplay.ERROR, "Impossible to get your Qrcodes." + f));
 			}
 		}
 	}
@@ -69,10 +77,10 @@ public class MyQr extends Controller {
 				MongoDB.updateQRCode(hmap);
 				Qrcode qr = MongoDB.getQrCode(filledForm.field("id").value());
 
-				return ok(myQr.render(Login.getCustSession(), qr,qrForm.fill(qr), InfoDisplay.SUCCESS, "Your changes have been updated."));
+				return ok(myQr.render(Login.getCustSession(), qr,qrForm.fill(qr), null, InfoDisplay.SUCCESS, "Your changes have been updated."));
 			} else {
 				Qrcode qr = MongoDB.getQrCode(filledForm.field("id").value());
-				return ok(myQr.render(Login.getCustSession(), qr,qrForm.fill(qr), InfoDisplay.ERROR, "Please fill at least one field."));
+				return ok(myQr.render(Login.getCustSession(), qr,qrForm.fill(qr), null, InfoDisplay.ERROR, "Please fill at least one field."));
 			}
 		}catch(Exception e){
 			return badRequest("not implemented");
@@ -84,11 +92,11 @@ public class MyQr extends Controller {
 		
 		try {
 			db.removeQRCode(id);
-			ArrayList<Qrcode> qrs =  db.getCustomersQrs();
-			return ok(myQrTable.render(Login.getCustSession(), qrs,InfoDisplay.SUCCESS, "Qr code deleted" ));
+			QrArray qrs =  db.getCustomersQrs(0);
+			return ok(myQrTable.render(Login.getCustSession(), qrs, InfoDisplay.SUCCESS, "Qr code deleted" ));
 		}
 		catch (Exception e){
-			return ok(myQrTable.render(Login.getCustSession(), new ArrayList<Qrcode>() ,InfoDisplay.ERROR, "Problem when trying to delete " + e ));
+			return ok(myQrTable.render(Login.getCustSession(), null ,InfoDisplay.ERROR, "Problem when trying to delete " + e ));
 		}
 	}
 }
