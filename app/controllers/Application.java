@@ -33,13 +33,18 @@ public class Application extends Controller {
 	public static Result index() {
 		return ok(index.render(Login.getCustSession(), InfoDisplay.NONE, null));
 	}
+	
+	public static Result testAgent() {
+		
+		return ok(request().getHeader("User-Agent"));
+	}
 
 	// Manage the redirection
 	public static Result redirection(String id) {
 		MonDataBase db = MonDataBase.getInstance();
 
-		try {
-			return redirect(db.getUrl(id));
+		try {			
+			return redirect(db.getUrl(id, request().getHeader("User-Agent")));
 		}
 		catch (Exception e) {
 			return badRequest(index.render(Login.getCustSession(), InfoDisplay.ERROR, "Redirection failed. Reason : " + e));

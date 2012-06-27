@@ -25,7 +25,7 @@
 					<strong>Redirection</strong> : @qr.getRedirection()<br/>
 					<strong>Creation date</strong> : @qr.getCreationDate()<br/>
 					<strong>Number of flashs</strong> : @qr.getFlashs()<br/>
-					<a href="" id="pngUrl">Save As PNG</a>
+					<a href="" id="pngUrl">Save As PNG</a><br/>
 				</div>
 				<script>jQuery('#qrcodeCanvas').qrcode({text : "@qr.getUrl()"});</script>
 				
@@ -41,7 +41,6 @@
 		
 						  var linkElement = document.getElementById("pngUrl");  //Get the a object
 						  linkElement.href = myImage;
-						  
 						} 
 					putImage();
 				</script>

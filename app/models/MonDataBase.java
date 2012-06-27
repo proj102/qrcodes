@@ -71,7 +71,7 @@ public class MonDataBase {
 	}
 
 	// Retrieve the url of the document whose id is equal to the argument id
-	public String getUrl(String id) throws Exception {
+	public String getUrl(String id, String userAgent) throws Exception {
 		DBCollection coll = db.getCollection("qrcodes");
 		BasicDBObject query  = new BasicDBObject();
 		query.put("_id", new ObjectId(id));
@@ -88,6 +88,19 @@ public class MonDataBase {
 		int newNumber = getIntElement(currentQr, "flashs") + 1;
 		BasicDBObject newQrDoc = new BasicDBObject().append("$set", new BasicDBObject().append("flashs", newNumber));
 		coll.update(new BasicDBObject().append("_id", new ObjectId(id)), newQrDoc);
+		
+		// add this flash to the logs
+		try {
+			DBCollection logsColl = db.getCollection("logs");
+			BasicDBObject logInfo  = new BasicDBObject();
+			logInfo.put("qrId", id);
+			logInfo.put("time", System.currentTimeMillis());
+			logInfo.put("userAgent", userAgent);
+			logsColl.insert(logInfo);
+		}
+		catch (Exception e) {
+			// error when adding log : can't disturb customer though
+		}
 		
 		return getElement(currentQr, "redirection");
 	}
