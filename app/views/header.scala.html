@@ -44,12 +44,8 @@
 					<li class="dropdown">
 						<a href="#" class="dropdown-toggle" data-toggle="dropdown">@(custSession.getLogin())<b class="caret"></b></a>
 						<ul class="dropdown-menu"> 
-							<li>
-								<div class="actions">
-									<a href="@routes.Edit.edit" class="btn primary">Edit my Profile</a>
-									<a href="@routes.Login.logout" class="btn primary">Log out</a>
-								</div>
-							</li>
+							<a href="@routes.Edit.edit">My profile</a>
+							<a href="@routes.Login.logout" class="btn">Log out</a>
 						</ul>
 					</li>
 				}
