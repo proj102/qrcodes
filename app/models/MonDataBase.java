@@ -348,14 +348,30 @@ public class MonDataBase {
 			removeQRCode(i);	
 	}
 
-	public void updateQRCode(HashMap<String, String> map){
+	public void updateQRCode(HashMap<String, String> map) throws MongoException {
 		DBCollection coll = db.getCollection("qrcodes");
-		BasicDBObject query = new BasicDBObject();
+		updateDocument(map, coll);
+	/*	BasicDBObject query = new BasicDBObject();
 		BasicDBObject update = new BasicDBObject();
 		query.put("_id", new ObjectId(map.get("id")));
-		for (Map.Entry<String, String> qr : map.entrySet()){
-			update.put("$set",new BasicDBObject(qr.getKey(),qr.getValue()));
+		for (Map.Entry<String, String> m : map.entrySet()){
+			update.put("$set",new BasicDBObject(m.getKey(),m.getValue()));
 			coll.update(query, update);
-		}
+		}*/
+	}
+
+	public void updateCustomer(HashMap<String, String> map) throws MongoException{
+		DBCollection coll = db.getCollection("customers");
+		updateDocument(map, coll);
+	}
+
+	public void updateDocument(HashMap<String, String> map, DBCollection coll) throws MongoException{
+                BasicDBObject query = new BasicDBObject();
+                BasicDBObject update = new BasicDBObject();
+                query.put("_id", new ObjectId(map.get("id")));
+                for (Map.Entry<String, String> m : map.entrySet()){
+                        update.put("$set",new BasicDBObject(m.getKey(),m.getValue()));
+                        coll.update(query, update);
+                }
 	}
 }
