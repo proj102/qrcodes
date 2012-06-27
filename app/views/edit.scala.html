@@ -1,4 +1,4 @@
-@(custSession: CustomerSession, infosType: Int, infosContent: String)
+@(custSession: CustomerSession, customForm: Form[CustomerSession], infosType: Int, infosContent: String)
 
 @import helper._
 @import helper.twitterBootstrap._
@@ -29,15 +29,15 @@
 					@form(action = routes.Edit.submit) {
 						<input type="hidden" name="id" value="@custSession.getId()" />
 						@inputText(
-							qrForm("login"),
+							customForm("login"),
 							'_label -> "Login",
-							'_help -> "",
+							'_help -> ""
 						)
 
 						@inputText(
-							qrForm("urlToAvatar"),
+							customForm("urlToAvatar"),
 							'_label -> "The url of the image you chose as avatar",
-							'_help -> "",
+							'_help -> ""
 						)
 
 

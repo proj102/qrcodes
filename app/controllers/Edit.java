@@ -17,7 +17,7 @@ public class Edit extends Controller {
 	public static Result edit() {
 		CustomerSession custSession = Login.getCustSession();
 		custSession.getInfo();
-		return ok(edit.render(custSession, InfoDisplay.NONE, null));
+		return ok(edit.render(custSession, customForm, InfoDisplay.NONE, null));
 	}
 
 	public static Result submit() {
@@ -40,11 +40,11 @@ public class Edit extends Controller {
 				hmap.put("urlToAvatar", filledForm.field("urlToAvatar").value());
 			}
 
-			MongoDB.updateCustomer(hmap);
-			Customer cust = MongoDB.getCustomer(filledForm.field("id").value());
-
+			//MongoDB.updateCustomer(hmap);
+			//CustomerSession customer = MongoDB.getCustomer(filledForm.field("id").value());
+			return badRequest("not implemented yet");
 		} else {
-			
+			return badRequest("not implemented yet");			
 		}
 	}
 
