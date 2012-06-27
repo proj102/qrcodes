@@ -41,11 +41,11 @@ public class Upload extends Controller {
 		Form<CSVUpload> filledForm = uploadForm.bindFromRequest();
 
 		MultipartFormData body = request().body().asMultipartFormData();
-		FilePart picture = body.getFile("picture");
-		if (picture != null) {
-			String fileName = picture.getFilename();
-			String contentType = picture.getContentType(); 
-			File file = picture.getFile();
+		FilePart file_input = body.getFile("file_input");
+		if (file_input != null) {
+			String fileName = file_input.getFilename();
+			String contentType = file_input.getContentType(); 
+			File file = file_input.getFile();
 			File dir = new File("./tmp");
 			file.renameTo(new File(dir, file.getName()));
 	
@@ -56,8 +56,8 @@ public class Upload extends Controller {
 			 	created.filepath = file.getAbsolutePath();
 				// Parse the document .csv and load it in the bd
 				try {
-					parseAndLoad(created.filepath);
-					return ok(uploadSummary.render(Login.getCustSession(),created));
+					parseAndLoad(created.filepath, created.separator);
+					return ok(uploadSummary.render(Login.getCustSession(),created, 	InfoDisplay.SUCCESS, "File Upload and loadded!"));
 				}catch(Exception e){
 					return badRequest("Problème dans upload!! " + created.filepath + "\n Erreur: " + e.getMessage());
 				}
@@ -68,15 +68,15 @@ public class Upload extends Controller {
 		}
 	}
 
-	public static void parseAndLoad(String file) throws Exception{
+	public static void parseAndLoad(String file, String separator) throws Exception{
 		MonDataBase db = MonDataBase.getInstance();
 		ArrayList<BasicDBObject> json = new ArrayList<BasicDBObject>();
 		// get array of json document from csv file
-		json = Utils.parseCSV(file, "redirection",";");
+		json = Utils.parseCSV(file, separator,";");
 		// insertion in db only if document doesn't exist in collection
 		for (BasicDBObject j : json){
-			if ( !db.isCreated("Société", j.get("Société"), "qrcodes") )
-				db.insertQr(j);
+			//if ( !db.isCreated("Société", j.get("Société"), "qrcodes") )
+			db.insertQr(j);
 		}
 	}
 }
