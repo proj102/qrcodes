@@ -13,6 +13,7 @@ public class CSVUpload {
 	public String type;
 	public String filepath;
 	public List<AdditionalTitle> additionalTitles;
+	public String separator;
 
 	public CSVUpload() {}
 	

@@ -1,6 +1,6 @@
 @(custSession: CustomerSession, uploadForm: Form[CSVUpload], infosType: Int, infosContent: String)
 
-@import helper._
+<!--@import helper._
 
 @phoneField(field: Field, className: String = "title") = {
     @input(field, '_label -> "Additional field", '_class -> className) { (id, name, value, _) =>
@@ -37,73 +37,49 @@
         </div>
 
    
-}
+}-->
 
 <!-- Probleme au niveau de la structure de données pour phones-->
 
 
 @main("Qr Codes from CSV"){
-
 	@header(custSession)
 
- @if(uploadForm.hasErrors) {
+	@if(uploadForm.hasErrors) {
         <div class="alert-message error">
             <p><strong>Oops</strong> Please fix all errors</p>
         </div>
-    }
+	}
 
-<div class="container">
-@informations(infosType, infosContent)
-<div class="row">
-<h1>Enter the names of your document's columns</h1>
-@helper.form(action = routes.Upload.submit, 'enctype -> "multipart/form-data", 'id -> "form") {
-<fieldset>
-		    <legend>Name of the columns</legend>
-
-@inputText(uploadForm("urlRedirection"), '_label -> "Url Redirection"    )
-		    
-@inputText(	        uploadForm("type"), 
-		        '_label -> "Type"
-		    )
-
-
-
-<div id="profiles">      
-                
-                @**
-                 * Keep an hidden block that will be used as template for Javascript copy code
-                 **@
-                @informationGroup(
-                    uploadForm("additionalTitles[0]"),
-                    className = "profile_template"
-                )
-                                         
-            </div>
-
-		    
-</fieldset>
-
-		    
-
-
+	<div class="container">
+	@informations(infosType, infosContent)
+		<div class="row">
+			<h1>Create your QrCodes from a csv document!</h1>
+			@helper.form(action = routes.Upload.submit, 'enctype -> "multipart/form-data", 'id -> "form") {
+			<fieldset>
+			<legend><b>1. Parameters</b></legend><br/>
+				@helper.inputText(uploadForm("urlRedirection"), '_label -> "Url Redirection") 
+				@helper.inputText(uploadForm("separator"), '_label -> "Separator", 'size -> 5) 
+				
+			<!--	@inputText(uploadForm("type"), '_label -> "Type")
+			<div id="profiles">
+				@**
+				* Keep an hidden block that will be used as template for Javascript copy code
+				**@
+				@informationGroup(uploadForm("additionalTitles[0]"),className = "profile_template")
+			</div>-->
+			</fieldset>
 	
-		<fieldset>	
-	
-    
-    <input type="file" name="picture">
-    <!-- @inputFile(
-		        uploadForm("file"), 
-		        '_label -> "picture",
-		        '_name -> "picture"
-		    )-->
-    
-        <input type="submit" name="submit" value="Upload">
-</fieldset>
-    
-}
+			<fieldset>
+			<legend><b>2. Select your file</b></legend><br/>
+			<input type="file" name="choice"/>
+		        <input type="submit" name="submit" value="Upload"/>
+			</fieldset>
+			}
 
+		</div>
 	</div>
-</div>
+
 <script type="text/javascript" >
 $('.removePhone').live('click', function(e) {
             var titles = $(this).parents('.titles')

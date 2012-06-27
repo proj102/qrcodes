@@ -54,6 +54,7 @@ public class Upload extends Controller {
 			} else {
 				CSVUpload created = filledForm.get();
 			 	created.filepath = file.getAbsolutePath();
+				// Parse the document .csv and load it in the bd
 				try {
 					parseAndLoad(created.filepath);
 					return ok(uploadSummary.render(Login.getCustSession(),created));
