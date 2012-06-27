@@ -18,11 +18,11 @@ public class Url {
 		public Url(){};
 		
 		public static String randomUrl(String[] urlArray){
-				int size = urlList.length;
+				int size = urlArray.length;
 				Random rn = new Random();
 				int randomInt = rn.nextInt(size-1);
 				
-				return urlList.get(randomInt);
+				return urlArray[randomInt];
 				
 						
 			}
