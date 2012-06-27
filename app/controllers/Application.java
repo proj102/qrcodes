@@ -51,18 +51,6 @@ public class Application extends Controller {
 		}
 	}
 
-	// visualisation of the qrcodes of the customer
-	public static Result myQrTable() {
-		MonDataBase db = MonDataBase.getInstance();
-		
-		try {
-			return ok(myQrTable.render(Login.getCustSession(), db.getCustomersQrs(), InfoDisplay.NONE, null));
-		}
-		catch (Exception e) {
-			return badRequest(index.render(Login.getCustSession(), InfoDisplay.ERROR, "Impossible to get the Qrcodes. " + e));
-		}
-	}
-	
 	public static Result overview() {
 		return ok(overview.render(Login.getCustSession(), InfoDisplay.NONE, null));
 	}

@@ -30,7 +30,7 @@ public class MyQr extends Controller {
 		}
 		catch (Exception e) {
 			try {
-				return ok(myQrTable.render(Login.getCustSession(), db.getCustomersQrs(), InfoDisplay.ERROR, "Cannot view this QrCode. " + e));
+				return ok(myQrTable.render(Login.getCustSession(), db.getCustomersQrs(0), InfoDisplay.ERROR, "Cannot view this QrCode. " + e));
 			}
 			catch (Exception f) {
 				return badRequest(myQrTable.render(Login.getCustSession(), new ArrayList<Qrcode>(), InfoDisplay.ERROR, "Impossible to get your Qrcodes." + f));
