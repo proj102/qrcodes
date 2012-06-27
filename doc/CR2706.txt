@@ -1,0 +1,34 @@
+======================= CR du 27/06/12 =================================
+
+
+***********           Objectifs du jour               *****************
+
+Flash des élèves!
+Création de la page overview pour présenter le projet : done
+Création et modification des profils utilisateurs : fait en grande partie
+CSV Parser à partir du fichier csv uploadé : done :  on peut maintenant ajouter des Qrcodes en uploadant un fichier CSV.
+Avoir une imprimante fonctionelle : done !!
+
+
+Réalisé en plus :
+	- Gestion de la Qr table par pages
+	- collection "logs" qui enregistre tous les flashs avec leur timestamp et l'id du qrcode flashé
+	- début d'implémentation des statistiques : recherche dans "logs" des flashs concernant un certain 
+	qrCode et répartition des flashs par jours et par mois.
+	- début de la gestion des checkboxs dans la Qr table
+  	- début d'implémentation sur la redirection aléatoire parmi une liste d'urls.
+
+
+
+Commencer à préparer la soutenance : en cours
+Penser à faire des tests de scalability : à faire
+
+
+
+
+**********	Objectifs de la journée de Jeudi     ******************
+ - tests de scability
+ - réaliser le service de statistiques : graphiques ...
+ - avoir une QrTable opérationnelle : suppression des QrCodes sélectionnés ...
+ - réfléchir au système de transfert de Qr d'une personne à l'autre ...
+ - pour imprimer / downloader directement un QrCode
