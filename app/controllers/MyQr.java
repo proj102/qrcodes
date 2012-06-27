@@ -25,8 +25,16 @@ public class MyQr extends Controller {
 		
 		try {
 			Qrcode qr = db.getQrCode(id);
+			
+			try {
+				Stats stats = db.getQrStats(id);
+				return ok(myQr.render(Login.getCustSession(), qr, qrForm.fill(qr), InfoDisplay.INFO, stats.getInfo()));
+			}
+			catch (Exception e) {
+				return ok(myQr.render(Login.getCustSession(), qr, qrForm.fill(qr), InfoDisplay.INFO, " " + e));
+			}
 
-			return ok(myQr.render(Login.getCustSession(), qr, qrForm.fill(qr), InfoDisplay.NONE, null));
+			
 		}
 		catch (Exception e) {
 			try {

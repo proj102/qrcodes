@@ -198,6 +198,44 @@ public class MonDataBase {
 		return insertQr(qrInfos);
 	}
 	
+	public Stats getQrStats(String id) throws Exception {
+		DBCollection logs = db.getCollection("logs");
+		
+		BasicDBObject query  = new BasicDBObject();
+		query.put("qrId", id);
+		BasicDBObject sortQuery  = new BasicDBObject();
+		sortQuery.put("time", -1);
+		DBCursor data  = logs.find(query).sort(sortQuery);
+		
+		if (data.size() == 0)
+			throw new Exception("No statistics available.");
+		
+		Stats ret = new Stats();
+		
+		long currentTime = System.currentTimeMillis();
+		long currentDay = currentTime / (1000*3600*24);
+		long currentMonth = currentDay / 31;
+		
+		while (data.hasNext()) {
+			DBObject log = data.next();
+			
+			long logTime = getLongElement(log, "time");
+			long logDay = logTime / (1000*3600*24);
+			long logMonth = logDay / 31;
+			
+			if (currentDay - logDay < 32) {
+				ret.addToMonth((int) (currentDay - logDay));
+				ret.addToYear(0);
+			}
+			else if (currentMonth - logMonth < 13)
+				ret.addToYear((int) (currentMonth - logMonth));
+			else
+				break;
+		}
+		
+		return ret;
+	}
+	
 	// connection with email (OpenId with google)
 	public String connection(String email) throws Exception {
 		DBCollection customers = db.getCollection("customers");
@@ -380,6 +418,13 @@ public class MonDataBase {
 		
 		JsonNode json = mapper.readValue(obj.toString(), JsonNode.class);
 		return json.findPath(key).getIntValue();
+	}
+	
+	public long getLongElement(DBObject obj, String key) throws Exception {
+		mapper.configure(JsonParser.Feature.ALLOW_SINGLE_QUOTES, true);
+		
+		JsonNode json = mapper.readValue(obj.toString(), JsonNode.class);
+		return json.findPath(key).getLongValue();
 	}
 
 	// check if value ok the key already in collection
