@@ -13,24 +13,36 @@ import models.*;
 
 public class QrTable extends Controller {
     
+	public static final int qrPerPage = 25;
+	
     /**
      * Defines a form wrapping the User class.
      */ 
 	//final static Form<QrTableModel> deleteForm = form(QrTableModel.class);
   
-    /**
-     * Display a blank form.
-     */ 
+	// visualisation of the Qrcodes of the customer
     public static Result blank() {
 		MonDataBase db = MonDataBase.getInstance();
 		
 		try {
-			return ok(myQrTable.render(Login.getCustSession(), db.getCustomersQrs(), InfoDisplay.NONE, null));
+			return ok(myQrTable.render(Login.getCustSession(), db.getCustomersQrs(0), InfoDisplay.NONE, null));
 		}
 		catch (Exception e) {
 			return badRequest(myQrTable.render(Login.getCustSession(), null, InfoDisplay.ERROR, "Impossible to get your Qrcodes." + e));
 		}
     }
+	
+	public static Result viewPage(int page) {
+		MonDataBase db = MonDataBase.getInstance();
+		
+		try {
+			return ok(myQrTable.render(Login.getCustSession(), db.getCustomersQrs(page), InfoDisplay.NONE, null));
+		}
+		catch (Exception e) {
+			return badRequest(myQrTable.render(Login.getCustSession(), null, InfoDisplay.ERROR, "Impossible to get your Qrcodes." + e));
+		}
+		
+	}
 	
 
 	/**

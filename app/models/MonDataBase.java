@@ -1,6 +1,7 @@
 package models;
 
 import java.lang.Exception;
+import java.lang.Math;
 import java.util.*;
 
 // To process strings
@@ -24,6 +25,7 @@ import org.bson.types.ObjectId;
 import com.mongodb.MongoException;
 
 import controllers.Login;
+import controllers.QrTable;
 
 
 // Class depicting a MongoDB database
@@ -148,12 +150,18 @@ public class MonDataBase {
 			
 		// everything is fine
 		try {
+			/*String stats = "[";
+			for (int i = 1 ; i < 31*12*5; i++)
+				stats += "0,";
+			stats += "0]";*/
+		
 			// let's add the qrcode to the qrcodes collection
 			DBCollection qrs = db.getCollection("qrcodes");
 			
 			qrInfos.put("creation", System.currentTimeMillis());
 			qrInfos.put("flashs", 0);
 			qrInfos.put("active", 1); // active = 1 => qrcode active
+			//qrInfos.put("stats", stats);
 			qrs.insert(qrInfos);
 			// get the id the the qrcode we just created
 			String qrId = qrInfos.get("_id").toString();
@@ -247,6 +255,47 @@ public class MonDataBase {
 		ArrayList<Qrcode> ret = new ArrayList<Qrcode>();
 		DBCollection collQrs = db.getCollection("qrcodes");
 		for (int i = 0 ; i < qrsIds.length ; i++) {
+			String qrId = qrsIds[i];
+			query = new BasicDBObject();
+			query.put("_id", new ObjectId(qrId));
+			DBObject currentQr = collQrs.findOne(query);
+			
+			mapper.configure(JsonParser.Feature.ALLOW_SINGLE_QUOTES, true);
+			JsonNode json = mapper.readValue(currentQr.toString(), JsonNode.class);
+			
+			if (json.findPath("active").getIntValue() == 1) {
+				ret.add(new Qrcode(
+					qrId,
+					json.findPath("redirection").getTextValue(),
+					json.findPath("type").getTextValue(),
+					json.findPath("title").getTextValue(),
+					json.findPath("place").getTextValue(),
+					json.findPath("creation").getLongValue(),
+					json.findPath("flashs").getIntValue()
+				));
+			}
+		}
+		
+		return ret;
+	}
+	
+	// get only the qrcodes of the given page : if page=0, return the first qrs
+	public QrArray getCustomersQrs(int page) throws Exception {
+		String customerId = Login.getConnected();
+		
+		DBCollection customers = db.getCollection("customers");
+		BasicDBObject query  = new BasicDBObject();
+		query.put("_id", new ObjectId(customerId));
+		DBCursor customer = customers.find(query);
+		
+		String custQrs = getElement(customer.next(), "qrs");
+		custQrs = custQrs.substring(1, custQrs.length()-1);
+		String[] qrsIds = StringUtils.split(custQrs, ",");
+		
+		QrArray ret = new QrArray();
+		ret.setNumber(qrsIds.length);
+		DBCollection collQrs = db.getCollection("qrcodes");
+		for (int i = page*QrTable.qrPerPage ; i < Math.min((page+1)*QrTable.qrPerPage, qrsIds.length) ; i++) {
 			String qrId = qrsIds[i];
 			query = new BasicDBObject();
 			query.put("_id", new ObjectId(qrId));
