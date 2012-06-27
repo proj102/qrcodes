@@ -35,13 +35,15 @@
 					function putImage()
 						{
 						  var myCanvas = document.getElementsByTagName("canvas");
-						  var canvas1 = myCanvas [0];       
+						  var canvas1 = myCanvas [0];
 						  var ctx = canvas1.getContext("2d");                // Get the context for the canvas.
 						  var myImage = canvas1.toDataURL("image/png");      // Get the data as an image.
+						  
 		
 						  var linkElement = document.getElementById("pngUrl");  //Get the a object
-						  linkElement.href = myImage;
-						} 
+						  linkElement.href = myImage
+						}
+												
 					putImage();
 				</script>
 					
