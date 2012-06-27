@@ -1,0 +1,51 @@
+@(custSession: CustomerSession, customForm: Form[CustomerSession], infosType: Int, infosContent: String)
+
+@import helper._
+@import helper.twitterBootstrap._
+
+@main("Edit my Profile") {
+	@header(custSession)
+	<div class="container">
+		@informations(infosType, infosContent)
+		<div class="hero-unit">
+			<h2 style="text-align: center; margin: 20px;">My Profile</h2>
+				<div class="row">
+					<div class="span5">
+						@if(custSession.getAvatar().size==0){
+							<img src="@routes.Assets.at("images/Profile.png")" alt="avatar" style="margin-bottom:10px;"/>
+						} else {
+							<img src="@custSession.getAvatar()" alt="avatar" style="margin-bottom:10px;"/>
+						}
+					</div>
+					<div class="span5">
+						<ul>
+							<p><span style="text-decoration: underline">Login</span>: @(custSession.getLogin())</p>
+							<p><span style="text-decoration: underline">Last Name</span>: @(custSession.getLastName())</p>
+							<p><span style="text-decoration: underline">First Name</span>: @(custSession.getFirstName())</p>
+						</ul>
+					</div>
+				<div class="span12">
+					<h2>Edit My Profile</h2>
+					@form(action = routes.Edit.submit) {
+						<input type="hidden" name="id" value="@custSession.getId()" />
+						@inputText(
+							customForm("login"),
+							'_label -> "Login",
+							'_help -> ""
+						)
+
+						@inputText(
+							customForm("urlToAvatar"),
+							'_label -> "The url of the image you chose as avatar",
+							'_help -> ""
+						)
+
+
+						<input type="submit" class="btn-primary btn-large" value="Modify" />
+					}
+					
+				</div>
+			</div>
+		</div>
+	</div>
+}

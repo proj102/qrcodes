@@ -152,6 +152,8 @@ public class Login extends Controller {
 		response().discardCookies("connected");
 		return ok(index.render(null, InfoDisplay.INFO, "You are now logged out."));
 	}
+
+
 }
 
 
