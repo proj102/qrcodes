@@ -84,10 +84,10 @@ public class Application extends Controller {
 			Url data = form.get();
 			String url = data.url;
 			
-			if (!url.startsWith("http://") && !url.startsWith("https://") && !url.startsWith("file://") && !url.startsWith("ftp://"))
+			if (!url.startsWith("http://") && !url.startsWith("https://"))
 				url = "http://" + url;
 			
-			String regex = "^(https?|ftp|file)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]";
+			String regex = "^(https?)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]";
 			if (Pattern.matches(regex, url)) {
 				try {
 					String qrId = db.addQrFromForm("url", url, data.title, data.place);
