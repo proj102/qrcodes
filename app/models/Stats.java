@@ -23,16 +23,16 @@ public class Stats {
 	
 	public void addToUserAgent(String userAgent){
 			if (userAgent.contains("Android")){
-				userAgent[0]++;				
+				this.userAgent[0]++;				
 				}
 			else if(userAgent.contains("iPhone")){
-				userAgent[1]++;				
+				this.userAgent[1]++;				
 				}
 			else if(userAgent.contains("Windows Phone")){
-				userAgent[2]++;				
+				this.userAgent[2]++;				
 				}
 			else
-				userAgent[3]++;
+				this.userAgent[3]++;
 		}
 	
 	public String getInfo() {
