@@ -28,10 +28,10 @@ public class MyQr extends Controller {
 			
 			try {
 				Stats stats = db.getQrStats(id);
-				return ok(myQr.render(Login.getCustSession(), qr, qrForm.fill(qr), stats, InfoDisplay.INFO, stats.getInfo()));
+				return ok(myQr.render(Login.getCustSession(), qr, qrForm.fill(qr), stats, InfoDisplay.NONE, null));
 			}
 			catch (Exception e) {
-				return ok(myQr.render(Login.getCustSession(), qr, qrForm.fill(qr), null, InfoDisplay.INFO, " " + e));
+				return ok(myQr.render(Login.getCustSession(), qr, qrForm.fill(qr), null, InfoDisplay.INFO, e.toString()));
 			}
 
 			

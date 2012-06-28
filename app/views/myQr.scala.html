@@ -11,22 +11,43 @@
 		@informations(infosType, infosContent)
 		<div class="hero-unit">
 			<div class="row">
-				
-				<div class="span12" >
-					<h2 style="margin:10px;">My QrCode</h2>
+				<div class="alert alert-info">
+					<strong>Title: </strong>@qr.getTitle() <strong>Creation date: </strong>@qr.getCreationDate() <strong>Place: </strong>@qr.getPlace() <strong>Number of flash(s): </strong>@qr.getFlashs()
 				</div>
+			</div>
+			<div class="row">
 				<div class="span5">
 					<div id="qrcodeCanvas" class="thumbnail"></div>
+					<a href="" id="pngUrl">Save As PNG</a>
 				</div>
 				<div class="span5" style="font-size:16px;">
-					<br />
-					<strong>Title</strong> : @qr.getTitle()<br/>
-					<strong>Place</strong> : @qr.getPlace()<br/>
-					<strong>Redirection</strong> : @qr.getRedirection()<br/>
-					<strong>Creation date</strong> : @qr.getCreationDate()<br/>
-					<strong>Number of flashs</strong> : @qr.getFlashs()<br/>
-					<a href="" id="pngUrl">Save As PNG</a><br/>
+
+					@form(action = routes.MyQr.submit) {
+							<input type="hidden" name="id" value="@qr.getId()" />
+							@inputText(
+								qrForm("redirection"),
+								'_label -> "Url of redirection",
+								'_help -> "",
+								'_error -> "Please choose a valid redirection url."
+							)
+
+							@inputText(
+								qrForm("title"),
+								'_label -> "Qr code's Title",
+								'_help -> "",
+								'_error -> "Please choose a valid title."
+							)
+
+							@inputText(
+								qrForm("place"),
+								'_label -> "Where is your Qr code",
+								'_help -> "",
+								'_error -> "Please choose a valid place."
+							)
+							<input type="submit" class="btn-primary btn-large" value="Modify" />
+						}
 				</div>
+			</div>
 				<script>jQuery('#qrcodeCanvas').qrcode({text : "@qr.getUrl()"});</script>
 				
 		
@@ -48,38 +69,76 @@
 					putImage();
 				</script>
 					
-				
-				<div class="span12" style="border:">
-					<h2 style="margin:10px;">To modify my QrCode</h2>
-					@form(action = routes.MyQr.submit) {
-						<input type="hidden" name="id" value="@qr.getId()" />
-						@inputText(
-							qrForm("redirection"),
-							'_label -> "Url of redirection",
-							'_help -> "",
-							'_error -> "Please choose a valid redirection url."
-						)
+				<div class="row">
+					<div class="span5" id="chart_div2">
+						<!--Load the AJAX API-->
+						<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+						<script type="text/javascript">
+							google.load("visualization", "1", {packages:["corechart"]});
+							google.setOnLoadCallback(drawChart);
+							function drawChart() {
+								var data = google.visualization.arrayToDataTable([
+									['Days', 'Scans'],
+									@for(d<- 0 until stats.getMonth().length){
+										[@d, @stats.getMonth()(d)],
+									}
+								]);
 
-						@inputText(
-							qrForm("title"),
-							'_label -> "Qr code's Title",
-							'_help -> "",
-							'_error -> "Please choose a valid title."
-						)
+								var options = {
+									title: 'Scans history',
+									hAxis: {title: 'Month',  titleTextStyle: {color: 'red'},},
+									'backgroundColor':'none',
+									'animation.duration':3000,
+									'animation.easing':'inAndOut',
+									'hAxis.gridline.count': @stats.getMonth().max
+								};
 
-						@inputText(
-							qrForm("place"),
-							'_label -> "Where is your Qr code",
-							'_help -> "",
-							'_error -> "Please choose a valid place."
-						)
-						<input type="submit" class="btn-primary btn-large" value="Modify" />
-					}
+								var chart = new google.visualization.AreaChart(document.getElementById('chart_div2'));
+								chart.draw(data, options);
+							}
+						</script>						
+					</div>
+					<div class="span5" id="chart_div">
+						<script type="text/javascript">
+
+							// Load the Visualization API and the piechart package.
+							google.load('visualization', '1.0', {'packages':['corechart']});
+
+							// Set a callback to run when the Google Visualization API is loaded.
+							google.setOnLoadCallback(drawChart);
+
+							// Callback that creates and populates a data table,
+							// instantiates the pie chart, passes in the data and
+							// draws it.
+							function drawChart() {
+
+							// Create the data table.
+								var data = new google.visualization.DataTable();
+								data.addColumn('string', 'User Agent');
+								data.addColumn('number', 'Scans');
+								data.addRows([
+								['Android', @stats.getUserAgent()(0)],
+								['iPhone', @stats.getUserAgent()(1)],
+								['Windows Phone', @stats.getUserAgent()(2)],
+								['BlackBerry', @stats.getUserAgent()(3)],
+								['Others', @stats.getUserAgent()(4)]
+								]);
+
+								// Set chart options
+								var options = {'title':'Users\' terminals',
+								       'width':400,
+								       'height':300,
+								       'backgroundColor':'none',
+								       'is3D':'true'};
+
+								// Instantiate and draw our chart, passing in some options.
+								var chart = new google.visualization.PieChart(document.getElementById('chart_div'));
+								chart.draw(data, options);
+							}
+					    </script>
+					</div>
 				</div>
-			</div>
-		</div>
-
-		<div class="span5">
+			
 		</div>
 	</div>
 }
