@@ -9,7 +9,7 @@
 
 	<div class="container">
 		@informations(infosType, infosContent)
-		<div class="hero-unit">
+		<div class="hero-unit" style="padding-top: 40px;">
 			<div class="row">
 				<div class="alert alert-info">
 					<strong>Title: </strong>@qr.getTitle() <strong>Creation date: </strong>@qr.getCreationDate() <strong>Place: </strong>@qr.getPlace() <strong>Number of flash(s): </strong>@qr.getFlashs()
@@ -68,9 +68,10 @@
 						  
 					putImage();
 				</script>
-					
+				
+				@if(stats!=null){
 				<div class="row">
-					<div class="span5" id="chart_div2">
+					<div class="span5" id="chart_div2" style = "margin-top: 30px;">
 						<!--Load the AJAX API-->
 						<script type="text/javascript" src="https://www.google.com/jsapi"></script>
 						<script type="text/javascript">
@@ -86,11 +87,10 @@
 
 								var options = {
 									title: 'Scans history',
-									hAxis: {title: 'Month',  titleTextStyle: {color: 'red'},},
+									hAxis: {title: 'x days ago',},
 									'backgroundColor':'none',
 									'animation.duration':3000,
 									'animation.easing':'inAndOut',
-									'hAxis.gridline.count': @stats.getMonth().max
 								};
 
 								var chart = new google.visualization.AreaChart(document.getElementById('chart_div2'));
@@ -137,6 +137,7 @@
 							}
 					    </script>
 					</div>
+					}
 				</div>
 			
 		</div>

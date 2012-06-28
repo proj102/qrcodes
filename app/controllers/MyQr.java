@@ -30,8 +30,8 @@ public class MyQr extends Controller {
 				Stats stats = db.getQrStats(id);
 				return ok(myQr.render(Login.getCustSession(), qr, qrForm.fill(qr), stats, InfoDisplay.NONE, null));
 			}
-			catch (Exception e) {
-				return ok(myQr.render(Login.getCustSession(), qr, qrForm.fill(qr), null, InfoDisplay.INFO, e.toString()));
+			catch (QrCodeException e) {
+				return ok(myQr.render(Login.getCustSession(), qr, qrForm.fill(qr), null, InfoDisplay.ALERT, "No statistics available."));
 			}
 
 			

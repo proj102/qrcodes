@@ -31,7 +31,7 @@ public class Stats {
 			else if(userAgent.contains("Windows Phone")){
 				this.userAgent[2]++;				
 				}
-			else if(userAgent.contains("Windows Phone")){
+			else if(userAgent.contains("BlackBerry")){
 				this.userAgent[3]++;				
 			}
 			else

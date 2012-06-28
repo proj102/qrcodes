@@ -209,7 +209,7 @@ public class MonDataBase {
 		
 	
 		if (data.size() == 0)
-			throw new Exception("No statistics available.");
+			throw new QrCodeException("No statistics available.");
 		
 		Stats ret = new Stats();
 		
