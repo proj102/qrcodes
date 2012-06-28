@@ -207,6 +207,7 @@ public class MonDataBase {
 		sortQuery.put("time", -1);
 		DBCursor data  = logs.find(query).sort(sortQuery);
 		
+	
 		if (data.size() == 0)
 			throw new Exception("No statistics available.");
 		
@@ -222,7 +223,10 @@ public class MonDataBase {
 			long logTime = getLongElement(log, "time");
 			long logDay = logTime / (1000*3600*24);
 			long logMonth = logDay / 31;
-			
+
+			String userAgent = getElement(log, "userAgent");
+			ret.addToUserAgent(userAgent);
+	
 			if (currentDay - logDay < 32) {
 				ret.addToMonth((int) (currentDay - logDay));
 				ret.addToYear(0);
