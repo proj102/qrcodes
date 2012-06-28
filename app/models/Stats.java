@@ -37,6 +37,17 @@ public class Stats {
 			else
 				this.userAgent[4]++;
 		}
+	public int[] getMonth(){
+			return this.month;		
+		}
+		
+	public int[] getYear(){
+			return this.year;		
+		}
+		
+	public int[] getUserAgent(){
+			return this.userAgent;		
+		}
 	
 	public String getInfo() {
 		return "today : " + month[0] + ", this month : " + year[0]+ " , Android : "+userAgent[0]+ " , iPhone : "+userAgent[1]+ " , Windows Phone : "+userAgent[2]+ " , BlackBerry : "+userAgent[3]+ " , Autre : "+userAgent[4];
