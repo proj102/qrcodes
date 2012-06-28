@@ -8,7 +8,7 @@ public class Stats {
 	public Stats() {
 		month = new int[31];
 		year = new int[12];
-		userAgent= new int[4];
+		userAgent= new int[5];
 	}
 	
 	public void addToMonth(int day) {
@@ -31,11 +31,14 @@ public class Stats {
 			else if(userAgent.contains("Windows Phone")){
 				this.userAgent[2]++;				
 				}
+			else if(userAgent.contains("Windows Phone")){
+				this.userAgent[3]++;				
+			}
 			else
-				this.userAgent[3]++;
+				this.userAgent[4]++;
 		}
 	
 	public String getInfo() {
-		return "today : " + month[0] + ", this month : " + year[0]+ " , Android : "+userAgent[0];
+		return "today : " + month[0] + ", this month : " + year[0]+ " , Android : "+userAgent[0]+ " , iPhone : "+userAgent[1]+ " , Windows Phone : "+userAgent[2]+ " , BlackBerry : "+userAgent[3]+ " , Autre : "+userAgent[4];
 	}
 }
