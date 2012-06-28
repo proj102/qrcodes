@@ -6,9 +6,11 @@ import controllers.QrTable;
 public class QrArray extends ArrayList<Qrcode> {
 
 	private int totalNumber;
+	private int current;
 	
 	public QrArray() {
 		totalNumber = 0;
+		current = 0;
 	}
 	
 	public void setNumber(int number) {
@@ -23,6 +25,11 @@ public class QrArray extends ArrayList<Qrcode> {
 			ret.add(i+1);
 		}
 		return ret;
+	}
+	
+	// get the current qr that is processed
+	public int getCurrent() {
+		return ++current;
 	}
 	
 	public int getNumber() {
