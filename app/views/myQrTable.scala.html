@@ -1,4 +1,4 @@
-@(custSession: CustomerSession, qrs:QrArray, infosType: Int, infosContent: String)
+@(custSession: CustomerSession, qrsForm: Form[QrTableModel], qrs:QrArray, infosType: Int, infosContent: String)
 
 @import helper._
 @import helper.twitterBootstrap._
@@ -30,7 +30,9 @@
 							<tbody>
 								@for(qrcode <- qrs) {
 									<tr>
-										<td><input type="checkbox" id="checkqr_@qrcode.getId()" /></td>
+										<td>
+											<input name="item[@qrs.getCurrent()]" type="checkbox" value="@qrcode.getId()" />
+										</td>
 										<td>@qrcode.getTitle()</td>
 										<td>@qrcode.getPlace()</td>
 										<td><a href="@qrcode.getRedirection()">@qrcode.getRedirection()</a></td>

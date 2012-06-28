@@ -150,11 +150,6 @@ public class MonDataBase {
 			
 		// everything is fine
 		try {
-			/*String stats = "[";
-			for (int i = 1 ; i < 31*12*5; i++)
-				stats += "0,";
-			stats += "0]";*/
-		
 			// let's add the qrcode to the qrcodes collection
 			DBCollection qrs = db.getCollection("qrcodes");
 			
@@ -199,6 +194,11 @@ public class MonDataBase {
 	}
 	
 	public Stats getQrStats(String id) throws Exception {
+		// check we ca see the stats
+		if (!isQrMine(id))
+			throw new QrCodeException("This QrCode does not exist.");
+		
+		// logs
 		DBCollection logs = db.getCollection("logs");
 		
 		BasicDBObject query  = new BasicDBObject();
@@ -335,9 +335,9 @@ public class MonDataBase {
 		String[] qrsIds = StringUtils.split(custQrs, ",");
 		
 		QrArray ret = new QrArray();
-		ret.setNumber(qrsIds.length);
 		DBCollection collQrs = db.getCollection("qrcodes");
-		for (int i = page*QrTable.qrPerPage ; i < Math.min((page+1)*QrTable.qrPerPage, qrsIds.length) ; i++) {
+		int j = 0;
+		for (int i = 0 ; i < qrsIds.length ; i++) {
 			String qrId = qrsIds[i];
 			query = new BasicDBObject();
 			query.put("_id", new ObjectId(qrId));
@@ -347,17 +347,21 @@ public class MonDataBase {
 			JsonNode json = mapper.readValue(currentQr.toString(), JsonNode.class);
 			
 			if (json.findPath("active").getIntValue() == 1) {
-				ret.add(new Qrcode(
-					qrId,
-					json.findPath("redirection").getTextValue(),
-					json.findPath("type").getTextValue(),
-					json.findPath("title").getTextValue(),
-					json.findPath("place").getTextValue(),
-					json.findPath("creation").getLongValue(),
-					json.findPath("flashs").getIntValue()
-				));
+				if (j >= page*QrTable.qrPerPage && ret.size() < QrTable.qrPerPage) {
+					ret.add(new Qrcode(
+						qrId,
+						json.findPath("redirection").getTextValue(),
+						json.findPath("type").getTextValue(),
+						json.findPath("title").getTextValue(),
+						json.findPath("place").getTextValue(),
+						json.findPath("creation").getLongValue(),
+						json.findPath("flashs").getIntValue()
+					));
+				}
+				j++;
 			}
 		}
+		ret.setNumber(j);
 		
 		return ret;
 	}
@@ -390,18 +394,22 @@ public class MonDataBase {
 		query.put("_id", new ObjectId(id));
 		DBObject currentQr = collQrs.findOne(query);
 		
-		mapper.configure(JsonParser.Feature.ALLOW_SINGLE_QUOTES, true);
-		JsonNode json = mapper.readValue(currentQr.toString(), JsonNode.class);
-		
-		return new Qrcode(
-			id,
-			json.findPath("redirection").getTextValue(),
-			json.findPath("type").getTextValue(),
-			json.findPath("title").getTextValue(),
-			json.findPath("place").getTextValue(),
-			json.findPath("creation").getLongValue(),
-			json.findPath("flashs").getIntValue()
-		);
+		if (getIntElement(currentQr, "active") == 1) {
+			mapper.configure(JsonParser.Feature.ALLOW_SINGLE_QUOTES, true);
+			JsonNode json = mapper.readValue(currentQr.toString(), JsonNode.class);
+			
+			return new Qrcode(
+				id,
+				json.findPath("redirection").getTextValue(),
+				json.findPath("type").getTextValue(),
+				json.findPath("title").getTextValue(),
+				json.findPath("place").getTextValue(),
+				json.findPath("creation").getLongValue(),
+				json.findPath("flashs").getIntValue()
+			);
+		}
+		else
+			throw new QrCodeException("This QrCode does not exist.");
 	}
 
 	// Decode JSON in DBCursor and get the "key" element
@@ -442,9 +450,28 @@ public class MonDataBase {
                         return false;
                 return true;
         }
+		
+	public boolean isQrMine(String id) throws Exception {
+		String customerId = Login.getConnected();
+		
+		DBCollection customers = db.getCollection("customers");
+		BasicDBObject query  = new BasicDBObject();
+		query.put("_id", new ObjectId(customerId));
+		DBCursor customer = customers.find(query);
+		
+		String custQrs = getElement(customer.next(), "qrs");
+		
+		// throw an exception if the qrCode does not belong to the customer
+		if (custQrs.indexOf(id) == -1)
+			return false;
+		return true;
+	}
 
 	// remove qrcode : set active field to '0'
-	public void removeQRCode(String id) throws MongoException {
+	public void removeQRCode(String id) throws Exception {
+		if (!isQrMine(id))
+			throw new QrCodeException("This QrCode does not exist.");
+		
 		DBCollection coll = db.getCollection("qrcodes");
 		BasicDBObject query = new BasicDBObject();
 		BasicDBObject update = new BasicDBObject();
@@ -454,9 +481,32 @@ public class MonDataBase {
 		coll.update(query, update);
 	}
 
-	public void removeQRCode(String[] id) throws MongoException {
+	public void removeQRCode(String[] id) throws Exception {
 		for (String i: id)
 			removeQRCode(i);	
+	}
+	
+	public void removeQrCode(ArrayList<String> ids) throws Exception {
+		String customerId = Login.getConnected();
+		
+		DBCollection customers = db.getCollection("customers");
+		BasicDBObject query  = new BasicDBObject();
+		query.put("_id", new ObjectId(customerId));
+		DBCursor customer = customers.find(query);
+		
+		String custQrs = getElement(customer.next(), "qrs");
+		DBCollection coll = db.getCollection("qrcodes");
+		
+		for (String i : ids) {
+			if (custQrs.indexOf(i) != -1) {
+				BasicDBObject query2 = new BasicDBObject();
+				BasicDBObject update = new BasicDBObject();
+				query2.put("_id", new ObjectId(i));
+				update.put("$set", new BasicDBObject("active", 0));
+
+				coll.update(query2, update);
+			}
+		}
 	}
 
 	public void updateQRCode(HashMap<String, String> map) throws MongoException {
