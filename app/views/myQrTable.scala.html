@@ -24,7 +24,7 @@
 									<th>Redirection</th>
 									<th>Creation date</th>
 									<th>Flashs</th>
-									<th>Modify</th>
+									<th>View</th>
 								</tr>
 							</thead>
 							<tbody>
@@ -38,7 +38,7 @@
 										<td><a href="@qrcode.getRedirection()">@qrcode.getRedirection()</a></td>
 										<td>@qrcode.getCreationDate()</td>
 										<td>@qrcode.getFlashs()</td>
-										<td><a href="@routes.MyQr.viewQr(qrcode.getId())">Modify</a></td>
+										<td><a href="@routes.MyQr.viewQr(qrcode.getId())">View</a></td>
 										<td><a href="@routes.MyQr.removeQr(qrcode.getId())">Delete</a></td>
 									</tr>
 								}
