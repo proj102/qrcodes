@@ -38,10 +38,10 @@ public class MyQr extends Controller {
 		}
 		catch (Exception e) {
 			try {
-				return ok(myQrTable.render(Login.getCustSession(), db.getCustomersQrs(0), InfoDisplay.ERROR, "Cannot view this QrCode. " + e));
+				return ok(myQrTable.render(Login.getCustSession(), QrTable.deleteForm, db.getCustomersQrs(0), InfoDisplay.ERROR, "Cannot view this QrCode. " + e));
 			}
 			catch (Exception f) {
-				return badRequest(myQrTable.render(Login.getCustSession(), null, InfoDisplay.ERROR, "Impossible to get your Qrcodes." + f));
+				return badRequest(myQrTable.render(Login.getCustSession(), QrTable.deleteForm, null, InfoDisplay.ERROR, "Impossible to get your Qrcodes." + f));
 			}
 		}
 	}
@@ -93,10 +93,10 @@ public class MyQr extends Controller {
 		try {
 			db.removeQRCode(id);
 			QrArray qrs =  db.getCustomersQrs(0);
-			return ok(myQrTable.render(Login.getCustSession(), qrs, InfoDisplay.SUCCESS, "Qr code deleted" ));
+			return ok(myQrTable.render(Login.getCustSession(), QrTable.deleteForm, qrs, InfoDisplay.SUCCESS, "Qr code deleted" ));
 		}
 		catch (Exception e){
-			return ok(myQrTable.render(Login.getCustSession(), null ,InfoDisplay.ERROR, "Problem when trying to delete " + e ));
+			return ok(myQrTable.render(Login.getCustSession(), QrTable.deleteForm, null ,InfoDisplay.ERROR, "Problem when trying to delete " + e ));
 		}
 	}
 }
