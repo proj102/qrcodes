@@ -4,24 +4,43 @@
 	@header(custSession)
 	<div class="container">
 	@informations(infosType, infosContent)
-		<div class="row">
-			<h1>Create your QrCodes from a csv document!</h1>
-			<h3> Two steps only<h3>
-			<p>In this section you can directly create your QRCodes from a csv document. In just 2 steps generate the QRCodes for all your collaborators, products...</p>
-			@helper.form(action = routes.Upload.submit, 'enctype -> "multipart/form-data", 'id -> "form") {
-			<fieldset>
-			<legend><b>1. Parameters</b></legend><br/>
-			<p>We need 2 informations about your document :  the name of your column of the redirection url and the caracter used to separate informations</p>
-				@helper.inputText(uploadForm("urlRedirection"), '_label -> "Name of the redirection's column") 
-				@helper.inputText(uploadForm("separator"), '_label -> "Separator") 
-			</fieldset>
-	
-			<fieldset>
-			<legend><b>2. Select your file</b></legend><br/>
-			<input type="file" name="file_input"/>
-		        <input type="submit" name="submit" value="Upload"/>
-			</fieldset>
-			}
+		<div class="hero-unit">
+			<div class="row">
+				<div class="span12">
+					<h2>Create your QrCodes from a csv document!</h2>
+				</div>
+			</div>
+			<div class="row">
+				<div class="span11" style="padding-top: 20px;">
+					<h3> Two steps only</h3>
+					<small>In this section you can directly create your QRCodes from a csv document. In just 2 steps generate the QRCodes for all your collaborators, products...</small>
+				</div>
+			</div>
+			<div class="row">
+				<div class="span11" style="padding-top: 10px;">
+					@helper.form(action = routes.Upload.submit, 'enctype -> "multipart/form-data", 'id -> "form") {
+					<fieldset>
+						<legend><b>1. Parameters</b></legend><br/>
+						<small>We need 2 informations about your document :  the name of your column of the redirection url and the caracter used to separate informations</small>
+							@helper.inputText(uploadForm("urlRedirection"), '_label -> "Name of the redirection's column") 
+							@helper.inputText(uploadForm("separator"), '_label -> "Separator") 
+					</fieldset>
+				</div>
+			</div>
+			<div class="row">
+				<div class="span11">
+					<fieldset>
+						<legend><b>2. Select your file</b></legend><br/>
+						<input type="file" name="file_input"/>
+					</fieldset>
+					}
+				</div>
+			</div>
+			<div class="row" style="padding-top:3px;">
+				<div class="span4 offset4">
+						<input type="submit" class="btn-primary btn-large" name="submit" value="Upload"/>
+				</div>
+			</div>
 		</div>
 	</div>
 
